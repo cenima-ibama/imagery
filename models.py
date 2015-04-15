@@ -33,7 +33,7 @@ class Scene(models.Model):
     date = models.DateField()
     name = models.CharField(max_length=28)
     cloud_rate = models.FloatField(null=True, blank=True)
-    status = models.CharField(choices=status_options, max_length=50, blank=True)
+    status = models.CharField(choices=status_options, max_length=50)
     files = models.ManyToManyField(File, related_name='scene')
 
     def __str__(self):
