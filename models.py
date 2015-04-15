@@ -1,16 +1,6 @@
 from django.db import models
 
 
-class File(models.Model):
-
-    name = models.CharField(max_length=30)
-    type = models.CharField(max_length=30)
-    creation_date = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return '%s - %s' % (self.name, self.type)
-
-
 class Scene(models.Model):
 
     sat_options = (
@@ -34,7 +24,28 @@ class Scene(models.Model):
     name = models.CharField(max_length=28)
     cloud_rate = models.FloatField(null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
-    files = models.ManyToManyField(File, related_name='scene')
 
     def __str__(self):
         return '%s %s-%s %s' % (self.sat, self.path, self.row, self.date.strftime('%x'))
+
+    def files(self):
+        return self.file_set.all()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Scene, self).save(*args, **kwargs)
+
+
+class File(models.Model):
+
+    name = models.CharField(max_length=30)
+    type = models.CharField(max_length=30)
+    creation_date = models.DateField(auto_now_add=True)
+    scene = models.ForeignKey(Scene)
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(File, self).save(*args, **kwargs)
