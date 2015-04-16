@@ -1,5 +1,6 @@
 from django.db import models
 
+from .utils import three_digit
 
 class Scene(models.Model):
 
@@ -28,17 +29,20 @@ class Scene(models.Model):
     def __str__(self):
         return '%s %s-%s %s' % (self.sat, self.path, self.row, self.date.strftime('%x'))
 
-    def files(self):
-        return self.file_set.all()
+    def day(self):
+        return three_digit(self.date.timetuple().tm_yday)
+
+    def images(self):
+        return self.image_set.all()
 
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Scene, self).save(*args, **kwargs)
 
 
-class File(models.Model):
+class Image(models.Model):
 
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     type = models.CharField(max_length=30)
     creation_date = models.DateField(auto_now_add=True)
     scene = models.ForeignKey(Scene)
@@ -46,6 +50,9 @@ class File(models.Model):
     def __str__(self):
         return '%s' % self.name
 
+    def path(self):
+        return '%s/%s' % (self.scene.name, self.name)
+
     def save(self, *args, **kwargs):
         self.full_clean()
-        super(File, self).save(*args, **kwargs)
+        super(Image, self).save(*args, **kwargs)
