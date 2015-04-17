@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import date, timedelta
 
 
 def three_digit(number):
@@ -12,3 +13,7 @@ def three_digit(number):
         return '0%s' % number
     else:
         return number
+
+
+def calendar_date(year, day):
+    return date(int(year), 1, 1) + timedelta(int(day) -1)
