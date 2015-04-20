@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from datetime import date
+from datetime import date, timedelta
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from ..models import Scene, Image
+from ..models import Scene, Image, ScheduledDownload
 
 
 class TestScene(TestCase):
@@ -87,3 +87,28 @@ class TestImage(TestCase):
                 type='B4',
                 scene=self.scene
                 )
+
+
+class TestScheduledDownload(TestCase):
+
+    def setUp(self):
+        self.sd = ScheduledDownload.objects.create(path='001', row='001',
+            last_date=(date.today() - timedelta(days=16)))
+
+    def test_creation(self):
+        self.assertEqual(self.sd.__str__(), 'LC8 001-001')
+
+        ScheduledDownload.objects.create(path='001', row='002')
+        self.assertEqual(ScheduledDownload.objects.all().count(), 2)
+
+    def test_validation(self):
+        with self.assertRaises(ValidationError):
+            ScheduledDownload.objects.create(path='001', row='001')
+
+    def test_has_new_download(self):
+        self.assertEqual(self.sd.has_new_scene(), True)
+
+        sd = ScheduledDownload.objects.create(path='001', row='002',
+            last_date=(date.today() - timedelta(days=15)))
+
+        self.assertEqual(sd.has_new_scene(), False)

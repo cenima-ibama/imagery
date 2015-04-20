@@ -1,4 +1,8 @@
+from datetime import date, timedelta
+
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from .utils import three_digit
 
@@ -57,3 +61,40 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Image, self).save(*args, **kwargs)
+
+
+class ScheduledDownload(models.Model):
+
+    path = models.CharField(max_length=3)
+    row = models.CharField(max_length=3)
+    creation_date = models.DateField(auto_now_add=True)
+    last_date = models.DateField(_('Last Download Date'), null=True, blank=True)
+
+    def __str__(self):
+        return 'LC8 %s-%s' % (self.path, self.row)
+
+    def has_new_scene(self):
+        if self.last_date is None:
+            return True
+        elif date.today() - self.last_date >= timedelta(16):
+            return True
+        else:
+            return False
+
+    def clean(self):
+        self.clean_fields()
+        try:
+            ScheduledDownload.objects.get(path=self.path, row=self.row)
+            raise ValidationError(
+                _('There is already a scheduled scene with this path and row.')
+                )
+        except self.DoesNotExist:
+            pass
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(ScheduledDownload, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _('Scheduled Download')
+        verbose_name_plural = _('Scheduled Downloads')
