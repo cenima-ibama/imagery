@@ -68,15 +68,21 @@ class ScheduledDownload(models.Model):
     path = models.CharField(max_length=3)
     row = models.CharField(max_length=3)
     creation_date = models.DateField(auto_now_add=True)
-    last_date = models.DateField(_('Last Download Date'), null=True, blank=True)
 
     def __str__(self):
         return 'LC8 %s-%s' % (self.path, self.row)
 
+    def last_scene_date(self):
+        if Scene.objects.filter(path=self.path, row=self.row):
+            return Scene.objects.filter(path=self.path, row=self.row) \
+                .latest('date').date
+        else:
+            return None
+
     def has_new_scene(self):
-        if self.last_date is None:
+        if self.last_scene_date is None:
             return True
-        elif date.today() - self.last_date >= timedelta(16):
+        elif date.today() - self.last_scene_date() >= timedelta(16):
             return True
         else:
             return False
