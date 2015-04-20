@@ -2,6 +2,7 @@ from django.db import models
 
 from .utils import three_digit
 
+
 class Scene(models.Model):
 
     sat_options = (
@@ -22,7 +23,7 @@ class Scene(models.Model):
     row = models.CharField(max_length=3)
     sat = models.CharField('Satellite', choices=sat_options, max_length=50)
     date = models.DateField()
-    name = models.CharField(max_length=28)
+    name = models.CharField(max_length=28, unique=True)
     cloud_rate = models.FloatField(null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
 

@@ -2,6 +2,7 @@
 from datetime import date
 
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 
 from ..models import Scene, Image
 
@@ -30,6 +31,16 @@ class TestScene(TestCase):
             name='LC80010012015017LGN00',
             status='downloading'
             )
+
+        with self.assertRaises(ValidationError):
+            Scene.objects.create(
+                path='001',
+                row='001',
+                sat='LC8',
+                date=date(2015, 1, 17),
+                name='LC80010012015017LGN00',
+                status='downloading'
+                )
 
         self.assertEqual(Scene.objects.all().count(), 2)
 
