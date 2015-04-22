@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 
 from ..models import Scene, Image, ScheduledDownload
+from ..utils import three_digit
 
 
 class TestScene(TestCase):
@@ -115,5 +116,21 @@ class TestScheduledDownload(TestCase):
         with self.assertRaises(ValidationError):
             ScheduledDownload.objects.create(path='001', row='001')
 
-    def test_has_new_download(self):
+    def test_has_new_scene(self):
         self.assertEqual(self.sd.has_new_scene(), True)
+
+        day_number = three_digit(date.today().timetuple().tm_yday)
+        Scene.objects.create(
+            path='001',
+            row='001',
+            sat='LC8',
+            date=date.today(),
+            name='LC80010012015%sLGN00' % day_number,
+            cloud_rate=20.3,
+            status='downloading'
+            )
+
+        self.assertEqual(self.sd.has_new_scene(), False)
+
+        sd = ScheduledDownload.objects.create(path='001', row='002')
+        self.assertEqual(sd.has_new_scene(), True)

@@ -80,7 +80,7 @@ class ScheduledDownload(models.Model):
             return None
 
     def has_new_scene(self):
-        if self.last_scene_date is None:
+        if self.last_scene_date() is None:
             return True
         elif date.today() - self.last_scene_date() >= timedelta(16):
             return True
