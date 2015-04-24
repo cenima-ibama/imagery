@@ -94,8 +94,9 @@ class TestScheduledDownload(TestCase):
 
     def setUp(self):
         self.sd = ScheduledDownload.objects.create(path='001', row='001')
+        self.sd2 = ScheduledDownload.objects.create(path='001', row='002')
 
-        Scene.objects.create(
+        self.scene = Scene.objects.create(
             path='001',
             row='001',
             sat='LC8',
@@ -107,14 +108,15 @@ class TestScheduledDownload(TestCase):
 
     def test_creation(self):
         self.assertEqual(self.sd.__str__(), 'LC8 001-001')
-        self.assertEqual(self.sd.last_scene_date(), date(2015, 1, 1))
-
-        ScheduledDownload.objects.create(path='001', row='002')
         self.assertEqual(ScheduledDownload.objects.all().count(), 2)
 
     def test_validation(self):
         with self.assertRaises(ValidationError):
             ScheduledDownload.objects.create(path='001', row='001')
+
+    def test_last_scene(self):
+        self.assertEqual(self.sd.last_scene(), self.scene)
+        self.assertIsNone(self.sd2.last_scene())
 
     def test_has_new_scene(self):
         self.assertEqual(self.sd.has_new_scene(), True)
@@ -132,5 +134,8 @@ class TestScheduledDownload(TestCase):
 
         self.assertEqual(self.sd.has_new_scene(), False)
 
-        sd = ScheduledDownload.objects.create(path='001', row='002')
-        self.assertEqual(sd.has_new_scene(), True)
+        self.assertEqual(self.sd2.has_new_scene(), True)
+
+    def test_next_scene_name(self):
+        self.assertEqual(self.sd.next_scene_name(), 'LC80010012015017LGN00')
+        self.assertIsNone(self.sd2.next_scene_name())

@@ -72,20 +72,29 @@ class ScheduledDownload(models.Model):
     def __str__(self):
         return 'LC8 %s-%s' % (self.path, self.row)
 
-    def last_scene_date(self):
+    def last_scene(self):
         if Scene.objects.filter(path=self.path, row=self.row):
             return Scene.objects.filter(path=self.path, row=self.row) \
-                .latest('date').date
+                .latest('date')
         else:
             return None
 
     def has_new_scene(self):
-        if self.last_scene_date() is None:
+        if self.last_scene() is None:
             return True
-        elif date.today() - self.last_scene_date() >= timedelta(16):
+        elif date.today() - self.last_scene().date >= timedelta(16):
             return True
         else:
             return False
+
+    def next_scene_name(self):
+        if self.last_scene() is not None:
+            first_part = self.last_scene().name[:13]
+            end = self.last_scene().name[16:]
+            day = three_digit(int(self.last_scene().day()) + 16)
+            return '%s%s%s' % (first_part, day, end)
+        else:
+            return None
 
     def clean(self):
         self.clean_fields()
