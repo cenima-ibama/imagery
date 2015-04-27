@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from lc8_download import lc8
+
 from datetime import date, timedelta
 
 
@@ -16,4 +18,13 @@ def three_digit(number):
 
 
 def calendar_date(year, day):
-    return date(int(year), 1, 1) + timedelta(int(day) -1)
+    return date(int(year), 1, 1) + timedelta(int(day) - 1)
+
+
+def download(scene_name, bands, path=None):
+
+    scene = lc8.Downloader(scene_name)
+    if path is None:
+        return scene.download(bands, metadata=True)
+    else:
+        return scene.download(bands, path, metadata=True)

@@ -4,7 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from .utils import three_digit
+from .utils import three_digit, download
 
 
 class Scene(models.Model):
@@ -95,6 +95,9 @@ class ScheduledDownload(models.Model):
             return '%s%s%s' % (first_part, day, end)
         else:
             return None
+
+    def download(self, bands=[4, 5, 6, 'BQA']):
+        download(self, bands)
 
     def clean(self):
         self.clean_fields()
