@@ -1,3 +1,5 @@
+from lc8_download.lc8 import RemoteFileDoesntExist
+
 from datetime import date, timedelta
 
 from django.db import models
@@ -94,10 +96,16 @@ class ScheduledDownload(models.Model):
             day = three_digit(int(self.last_scene().day()) + 16)
             return '%s%s%s' % (first_part, day, end)
         else:
-            return None
+            year = date.today().year
+            day = three_digit(date.today().timetuple().tm_yday)
+            return 'LC8%s%s%s%sLGN00' % (self.path, self.row, year, day)
 
     def download(self, bands=[4, 5, 6, 'BQA']):
-        download(self, bands)
+        if self.has_new_scene():
+            try:
+                return download(self.next_scene_name(), bands)
+            except RemoteFileDoesntExist:
+                return []
 
     def clean(self):
         self.clean_fields()

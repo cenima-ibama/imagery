@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import date, timedelta
+from datetime import date
+from os import remove
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -93,26 +94,26 @@ class TestImage(TestCase):
 class TestScheduledDownload(TestCase):
 
     def setUp(self):
-        self.sd = ScheduledDownload.objects.create(path='001', row='001')
-        self.sd2 = ScheduledDownload.objects.create(path='001', row='002')
+        self.sd = ScheduledDownload.objects.create(path='220', row='066')
+        self.sd2 = ScheduledDownload.objects.create(path='999', row='002')
 
         self.scene = Scene.objects.create(
-            path='001',
-            row='001',
+            path='220',
+            row='066',
             sat='LC8',
             date=date(2015, 1, 1),
-            name='LC80010012015001LGN00',
+            name='LC82200662015001LGN00',
             cloud_rate=20.3,
             status='downloading'
             )
 
     def test_creation(self):
-        self.assertEqual(self.sd.__str__(), 'LC8 001-001')
+        self.assertEqual(self.sd.__str__(), 'LC8 220-066')
         self.assertEqual(ScheduledDownload.objects.all().count(), 2)
 
     def test_validation(self):
         with self.assertRaises(ValidationError):
-            ScheduledDownload.objects.create(path='001', row='001')
+            ScheduledDownload.objects.create(path='220', row='066')
 
     def test_last_scene(self):
         self.assertEqual(self.sd.last_scene(), self.scene)
@@ -123,11 +124,11 @@ class TestScheduledDownload(TestCase):
 
         day_number = three_digit(date.today().timetuple().tm_yday)
         Scene.objects.create(
-            path='001',
-            row='001',
+            path='220',
+            row='066',
             sat='LC8',
             date=date.today(),
-            name='LC80010012015%sLGN00' % day_number,
+            name='LC82200662015%sLGN00' % day_number,
             cloud_rate=20.3,
             status='downloading'
             )
@@ -137,5 +138,17 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(self.sd2.has_new_scene(), True)
 
     def test_next_scene_name(self):
-        self.assertEqual(self.sd.next_scene_name(), 'LC80010012015017LGN00')
-        self.assertIsNone(self.sd2.next_scene_name())
+        self.assertEqual(self.sd.next_scene_name(), 'LC82200662015017LGN00')
+        year = date.today().year
+        day = three_digit(date.today().timetuple().tm_yday)
+        self.assertEqual(
+            self.sd2.next_scene_name(),
+            'LC8999002%s%sLGN00' % (year, day)
+            )
+
+    def test_download(self):
+        downloaded = self.sd.download(['BQA'])
+        self.assertEqual(len(downloaded), 1)
+        remove(downloaded[0][0])
+
+        self.assertEqual(self.sd2.download(['BQA']), [])
