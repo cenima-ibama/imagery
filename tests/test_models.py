@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import date
-from os import remove
+from os.path import join
+from shutil import rmtree
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -146,9 +147,33 @@ class TestScheduledDownload(TestCase):
             'LC8999002%s%sLGN00' % (year, day)
             )
 
+    def test_create_scene(self):
+        self.sd.create_scene()
+        scene = Scene.objects.get(name='LC82200662015017LGN00')
+        self.assertIsInstance(scene,
+            Scene)
+        self.assertEqual(scene.path, '220')
+        self.assertEqual(scene.row, '066')
+        self.assertEqual(scene.date, date(2015, 1, 17))
+        self.assertEqual(scene.sat, 'LC8')
+
+    def test_create_image(self):
+        self.sd.create_scene()
+        self.sd.create_image('LC82200662015017LGN00_BQA.TIF')
+        image = Image.objects.get(name='LC82200662015017LGN00_BQA.TIF')
+        self.assertIsInstance(image, Image)
+        self.assertEqual(image.type, 'BQA')
+        self.assertEqual(image.scene.name, 'LC82200662015017LGN00')
+
     def test_download(self):
-        downloaded = self.sd.download(['BQA'])
-        self.assertEqual(len(downloaded), 1)
-        remove(downloaded[0][0])
+        downloaded = self.sd.download([11, 'BQA'])
+        self.assertEqual(len(downloaded), 2)
+        self.assertIsInstance(Scene.objects.get(name='LC82200662015017LGN00'),
+            Scene)
+        self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_B11.TIF'),
+        Image)
+        self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_BQA.TIF'),
+        Image)
+        rmtree(downloaded[0][0].replace('/LC82200662015017LGN00_B11.TIF', ''))
 
         self.assertEqual(self.sd2.download(['BQA']), [])

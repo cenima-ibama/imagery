@@ -28,10 +28,10 @@ class TestDownload(TestCase):
 
     def test_download(self):
         with self.assertRaises(RemoteFileDoesntExist):
-            download('LC80010012015367LGN00', ['BQA'], 'imagery/tests/')
+            download('LC80010012015367LGN00', [11], 'imagery/tests/')
 
-        download('LC80030172015001LGN00', ['BQA'], 'imagery/tests/')
+        download('LC80030172015001LGN00', [11], 'imagery/tests/')
 
         self.assertTrue(isfile('imagery/tests/LC80030172015001LGN00/' +
-            'LC80030172015001LGN00_BQA.TIF'))
+            'LC80030172015001LGN00_B11.TIF'))
         rmtree('imagery/tests/LC80030172015001LGN00/')
