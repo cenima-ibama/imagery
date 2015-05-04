@@ -18,11 +18,13 @@ def three_digit(number):
 
 
 def calendar_date(year, day):
+    """Receive a year and the number of the day in the year and return the
+    calendar date.
+    """
     return date(int(year), 1, 1) + timedelta(int(day) - 1)
 
 
 def download(scene_name, bands, path=None):
-
     scene = lc8.Downloader(scene_name)
     if path is None:
         return scene.download(bands, metadata=True)

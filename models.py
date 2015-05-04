@@ -1,6 +1,7 @@
 from lc8_download.lc8 import RemoteFileDoesntExist
 
 from os.path import getsize
+from os import remove
 from datetime import date, timedelta
 
 from django.db import models
@@ -20,7 +21,7 @@ class Scene(models.Model):
 
     status_options = (
         ('downloading', 'Downloading'),
-        ('dl_failed', 'Download Failed'),
+        ('downloaded', 'Downloaded'),
         ('processing', 'Processing'),
         ('p_failed', 'Processing Failed'),
         ('processed', 'Processed')
@@ -117,22 +118,22 @@ class ScheduledDownload(models.Model):
             self.next_scene_name()[9:13],
             self.next_scene_name()[13:16]
             )
-        Scene.objects.create(
+        return Scene.objects.get_or_create(
             path=self.path,
             row=self.row,
             name=self.next_scene_name(),
             date=scene_date,
-            status='processing'
+            status='downloading'
             )
 
     def create_image(self, image_name):
-        Image.objects.create(
+        return Image.objects.get_or_create(
             name=image_name,
             type=image_name.split('_')[1].split('.')[0],
             scene=Scene.objects.get(name=image_name.split('_')[0])
             )
 
-    def download(self, bands=[4, 5, 6, 'BQA']):
+    def download_new_scene(self, bands=[4, 5, 6, 'BQA']):
         if self.has_new_scene():
             try:
                 downloaded = download(self.next_scene_name(), bands)
@@ -140,6 +141,8 @@ class ScheduledDownload(models.Model):
                 for path, size in downloaded:
                     if getsize(path) == size:
                         self.create_image(path.split('/')[-1])
+                    else:
+                        remove(path)
                 return downloaded
             except RemoteFileDoesntExist:
                 return []

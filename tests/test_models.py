@@ -148,10 +148,8 @@ class TestScheduledDownload(TestCase):
             )
 
     def test_create_scene(self):
-        self.sd.create_scene()
-        scene = Scene.objects.get(name='LC82200662015017LGN00')
-        self.assertIsInstance(scene,
-            Scene)
+        scene = self.sd.create_scene()[0]
+        self.assertIsInstance(scene, Scene)
         self.assertEqual(scene.path, '220')
         self.assertEqual(scene.row, '066')
         self.assertEqual(scene.date, date(2015, 1, 17))
@@ -159,14 +157,13 @@ class TestScheduledDownload(TestCase):
 
     def test_create_image(self):
         self.sd.create_scene()
-        self.sd.create_image('LC82200662015017LGN00_BQA.TIF')
-        image = Image.objects.get(name='LC82200662015017LGN00_BQA.TIF')
+        image = self.sd.create_image('LC82200662015017LGN00_BQA.TIF')[0]
         self.assertIsInstance(image, Image)
         self.assertEqual(image.type, 'BQA')
         self.assertEqual(image.scene.name, 'LC82200662015017LGN00')
 
-    def test_download(self):
-        downloaded = self.sd.download([11, 'BQA'])
+    def test_download_new_scene(self):
+        downloaded = self.sd.download_new_scene([11, 'BQA'])
         self.assertEqual(len(downloaded), 2)
         self.assertIsInstance(Scene.objects.get(name='LC82200662015017LGN00'),
             Scene)
@@ -176,4 +173,4 @@ class TestScheduledDownload(TestCase):
         Image)
         rmtree(downloaded[0][0].replace('/LC82200662015017LGN00_B11.TIF', ''))
 
-        self.assertEqual(self.sd2.download(['BQA']), [])
+        self.assertEqual(self.sd2.download_new_scene(['BQA']), [])
