@@ -34,4 +34,6 @@ class TestDownload(TestCase):
 
         self.assertTrue(isfile('imagery/tests/LC80030172015001LGN00/' +
             'LC80030172015001LGN00_B11.TIF'))
+
+    def tearDown(self):
         rmtree('imagery/tests/LC80030172015001LGN00/')

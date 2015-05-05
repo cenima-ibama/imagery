@@ -134,6 +134,7 @@ class ScheduledDownload(models.Model):
             )
 
     def download_new_scene(self, bands=[4, 5, 6, 'BQA']):
+        """Download the bands B4, B5, B6 and BQA of the next scene."""
         if self.has_new_scene():
             try:
                 downloaded = download(self.next_scene_name(), bands)
@@ -145,6 +146,29 @@ class ScheduledDownload(models.Model):
                         remove(path)
                 return downloaded
             except RemoteFileDoesntExist:
+                return []
+
+    def check_last_scene(self, bands=[4, 5, 6, 'BQA']):
+        """Check if the last scene already has all image bands. If not, try to
+        download.
+        """
+        if self.last_scene is not None:
+            if len(self.last_scene().images()) < len(bands):
+                try:
+                    downloaded = download(self.last_scene().name, bands)
+                    for item in downloaded:
+                        # if the image was already download the lc8_download lib
+                        # will return False
+                        if item is not False:
+                            path, size = item
+                            if getsize(path) == size:
+                                self.create_image(path.split('/')[-1])
+                            else:
+                                remove(path)
+                    return downloaded
+                except RemoteFileDoesntExist:
+                    return []
+            else:
                 return []
 
     def clean(self):
