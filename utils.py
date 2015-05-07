@@ -25,6 +25,7 @@ def calendar_date(year, day):
 
 
 def download(scene_name, bands, path=None):
+    """Call the lc8_download library to download Landsat 8 imagery."""
     scene = lc8.Downloader(scene_name)
     if path is None:
         return scene.download(bands, metadata=True)

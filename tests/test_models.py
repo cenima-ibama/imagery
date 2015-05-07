@@ -71,7 +71,7 @@ class TestImage(TestCase):
 
     def test_creation(self):
         self.assertEqual(self.image.__str__(), 'LC80010012015001LGN00_B4.TIF')
-        self.assertEqual(self.image.path(),
+        self.assertEqual(self.image.file_path(),
             'LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
 
         Image.objects.create(

@@ -1,4 +1,5 @@
 from lc8_download.lc8 import RemoteFileDoesntExist
+from indicar.process import Process
 
 from os.path import getsize
 from os import remove
@@ -12,6 +13,7 @@ from .utils import three_digit, calendar_date, download
 
 
 class Scene(models.Model):
+    """Class to register the Scenes of Landsat imagery"""
 
     sat_options = (
         ('LC8', 'Landsat 8'),
@@ -39,10 +41,45 @@ class Scene(models.Model):
         return '%s %s-%s %s' % (self.sat, self.path, self.row, self.date.strftime('%x'))
 
     def day(self):
+        """Return the julian day of the scene's date as a 3 character string"""
         return three_digit(self.date.timetuple().tm_yday)
 
     def images(self):
+        """Return all the Image objects related to this scene"""
         return self.image_set.all()
+
+    def process(self):
+        if self.images().filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
+            self.update(status='processing')
+            process = Process(self.name)
+
+            rgb = process.make_rgb()
+            if rgb is not False:
+                Image.objects.get_or_create(name=rgb.split('/')[-1],
+                    type='r6g5b4',
+                    scene=self)
+
+            ndvi = process.make_ndvi()
+            if ndvi is not False:
+                Image.objects.get_or_create(name=rgb.split('/')[-1],
+                    type='ndvi',
+                    scene=self)
+
+            detection = process.change_detection()
+            if detection is not False:
+                Image.objects.get_or_create(name=rgb.split('/')[-1],
+                    type='detection',
+                    scene=self)
+
+            if rgb and ndvi and detection:
+                self.update(status='processed')
+                return True
+            else:
+                self.update(status='p_failed')
+                return False
+        else:
+            print('Check if you have B4, B5, B6 and BQA in this scene')
+            return False
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -50,6 +87,9 @@ class Scene(models.Model):
 
 
 class Image(models.Model):
+    """Class to register the image files. All Images are associated with
+    one Scene object.False
+    """
 
     name = models.CharField(max_length=30, unique=True)
     type = models.CharField(max_length=30)
@@ -59,7 +99,7 @@ class Image(models.Model):
     def __str__(self):
         return '%s' % self.name
 
-    def path(self):
+    def file_path(self):
         return '%s/%s' % (self.scene.name, self.name)
 
     def save(self, *args, **kwargs):
@@ -68,6 +108,7 @@ class Image(models.Model):
 
 
 class ScheduledDownload(models.Model):
+    """Class to schedule the download of Landsat 8 imagery."""
 
     path = models.CharField(max_length=3)
     row = models.CharField(max_length=3)
@@ -80,8 +121,8 @@ class ScheduledDownload(models.Model):
         """Return the last Scene of this path and row or None if there isn't
         any Scene yet.
         """
-        if Scene.objects.filter(path=self.path, row=self.row):
-            return Scene.objects.filter(path=self.path, row=self.row) \
+        if Scene.objects.filter(path=self.path, row=self.row, sat='LC8'):
+            return Scene.objects.filter(path=self.path, row=self.row, sat='LC8') \
                 .latest('date')
         else:
             return None
@@ -114,6 +155,7 @@ class ScheduledDownload(models.Model):
             return 'LC8%s%s%s%sLGN00' % (self.path, self.row, year, day)
 
     def create_scene(self):
+        """Get or Create a new Scene object for this path and row."""
         scene_date = calendar_date(
             self.next_scene_name()[9:13],
             self.next_scene_name()[13:16]
@@ -127,6 +169,7 @@ class ScheduledDownload(models.Model):
             )
 
     def create_image(self, image_name):
+        """Create a new Image object."""
         return Image.objects.get_or_create(
             name=image_name,
             type=image_name.split('_')[1].split('.')[0],
