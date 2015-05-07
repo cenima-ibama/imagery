@@ -4,6 +4,7 @@ from indicar.process import Process
 from os.path import getsize
 from os import remove
 from datetime import date, timedelta
+from subprocess import call
 
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -23,6 +24,7 @@ class Scene(models.Model):
 
     status_options = (
         ('downloading', 'Downloading'),
+        ('dl_failed', 'Download Failed'),
         ('downloaded', 'Downloaded'),
         ('processing', 'Processing'),
         ('p_failed', 'Processing Failed'),
@@ -50,7 +52,8 @@ class Scene(models.Model):
 
     def process(self):
         if self.images().filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
-            self.update(status='processing')
+            self.status = 'processing'
+            self.save()
             process = Process(self.name)
 
             rgb = process.make_rgb()
@@ -58,6 +61,7 @@ class Scene(models.Model):
                 Image.objects.get_or_create(name=rgb.split('/')[-1],
                     type='r6g5b4',
                     scene=self)
+                call(['16b_2_8b_convert.sh', rgb])
 
             ndvi = process.make_ndvi()
             if ndvi is not False:
@@ -72,10 +76,12 @@ class Scene(models.Model):
                     scene=self)
 
             if rgb and ndvi and detection:
-                self.update(status='processed')
+                self.status = 'processed'
+                self.save()
                 return True
             else:
-                self.update(status='p_failed')
+                self.status = 'p_failed'
+                self.save()
                 return False
         else:
             print('Check if you have B4, B5, B6 and BQA in this scene')
@@ -195,13 +201,14 @@ class ScheduledDownload(models.Model):
         """Check if the last scene already has all image bands. If not, try to
         download.
         """
-        if self.last_scene is not None:
-            if len(self.last_scene().images()) < len(bands):
+        last_scene = self.last_scene()
+        if last_scene is not None:
+            if len(last_scene.images()) < len(bands):
                 try:
-                    downloaded = download(self.last_scene().name, bands)
+                    downloaded = download(last_scene.name, bands)
                     for item in downloaded:
-                        # if the image was already download the lc8_download lib
-                        # will return False
+                        # if the image was already downloaded, the lc8_download
+                        # lib will return False
                         if item is not False:
                             path, size = item
                             if getsize(path) == size:
@@ -210,9 +217,15 @@ class ScheduledDownload(models.Model):
                                 remove(path)
                     return downloaded
                 except RemoteFileDoesntExist:
+                    last_scene.status = 'dl_failed'
+                    last_scene.save()
                     return []
             else:
+                last_scene.status = 'downloaded'
+                last_scene.save()
                 return []
+        else:
+            print('There is not any Scenes registered for this path and row')
 
     def clean(self):
         self.clean_fields()

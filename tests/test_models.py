@@ -26,6 +26,9 @@ class TestScene(TestCase):
     def test_creation(self):
         self.assertEqual(self.scene.__str__(), 'LC8 001-001 01/01/15')
         self.assertEqual(self.scene.day(), '001')
+        self.scene.status = 'downloaded'
+        self.scene.save()
+        self.assertEqual(self.scene.status, 'downloaded')
 
         Scene.objects.create(
             path='001',
@@ -135,6 +138,8 @@ class TestScheduledDownload(TestCase):
             )
 
         self.assertEqual(self.sd.has_new_scene(), False)
+        self.assertEqual(self.sd.last_scene().name,
+            'LC82200662015%sLGN00' % day_number)
 
         self.assertEqual(self.sd2.has_new_scene(), True)
 
@@ -165,14 +170,19 @@ class TestScheduledDownload(TestCase):
     def test_download(self):
         downloaded = self.sd.download_new_scene([10, 11])
         self.assertEqual(len(downloaded), 2)
-        self.assertIsInstance(Scene.objects.get(name='LC82200662015017LGN00'),
-            Scene)
+
+        scene = Scene.objects.get(name='LC82200662015017LGN00')
+        self.assertIsInstance(scene, Scene)
+        self.assertEqual(scene.status, 'downloading')
+
         self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_B10.TIF'),
         Image)
         self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_B11.TIF'),
         Image)
 
         self.assertEqual(self.sd.check_last_scene([10, 11]), [])
+        self.assertEqual(self.sd.last_scene().status, 'downloaded')
+
         downloaded = self.sd.check_last_scene([10, 11, 'BQA'])
         self.assertEqual(len(downloaded), 3)
         self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_BQA.TIF'),
