@@ -6,7 +6,7 @@ from os import remove
 from datetime import date, timedelta
 from subprocess import call
 
-from django.db import models
+from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -17,9 +17,9 @@ class Scene(models.Model):
     """Class to register the Scenes of Landsat imagery"""
 
     sat_options = (
-        ('LC8', 'Landsat 8'),
-        ('LE7', 'Landsat 7'),
-        ('LT5', 'Landsat 5'),
+        ('L8', 'Landsat 8'),
+        ('L7', 'Landsat 7'),
+        ('L5', 'Landsat 5'),
         )
 
     status_options = (
@@ -33,11 +33,14 @@ class Scene(models.Model):
 
     path = models.CharField(max_length=3)
     row = models.CharField(max_length=3)
-    sat = models.CharField('Satellite', choices=sat_options, max_length=50, default='LC8')
+    sat = models.CharField('Satellite', choices=sat_options, max_length=50)
     date = models.DateField()
     name = models.CharField(max_length=28, unique=True)
     cloud_rate = models.FloatField(null=True, blank=True)
+    geom = models.PolygonField(srid=4674, null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
+
+    objects = models.GeoManager()
 
     def __str__(self):
         return '%s %s-%s %s' % (self.sat, self.path, self.row, self.date.strftime('%x'))
@@ -121,14 +124,14 @@ class ScheduledDownload(models.Model):
     creation_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return 'LC8 %s-%s' % (self.path, self.row)
+        return 'L8 %s-%s' % (self.path, self.row)
 
     def last_scene(self):
         """Return the last Scene of this path and row or None if there isn't
         any Scene yet.
         """
-        if Scene.objects.filter(path=self.path, row=self.row, sat='LC8'):
-            return Scene.objects.filter(path=self.path, row=self.row, sat='LC8') \
+        if Scene.objects.filter(path=self.path, row=self.row, sat='L8'):
+            return Scene.objects.filter(path=self.path, row=self.row, sat='L8') \
                 .latest('date')
         else:
             return None
@@ -169,6 +172,7 @@ class ScheduledDownload(models.Model):
         return Scene.objects.get_or_create(
             path=self.path,
             row=self.row,
+            sat='L8',
             name=self.next_scene_name(),
             date=scene_date,
             status='downloading'

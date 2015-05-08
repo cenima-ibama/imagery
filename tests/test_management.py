@@ -30,7 +30,7 @@ class TestInspectFolder(TestCase):
 
         scene = Scene.objects.all()[0]
         image = Image.objects.all()[0]
-        self.assertEqual(scene.sat, 'LC8')
+        self.assertEqual(scene.sat, 'L8')
         self.assertEqual(scene.path, '001')
         self.assertEqual(scene.row, '001')
         self.assertEqual(scene.date, date(2015, 1, 1))

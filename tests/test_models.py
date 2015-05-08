@@ -16,7 +16,7 @@ class TestScene(TestCase):
         self.scene = Scene.objects.create(
             path='001',
             row='001',
-            sat='LC8',
+            sat='L8',
             date=date(2015, 1, 1),
             name='LC80010012015001LGN00',
             cloud_rate=20.3,
@@ -24,7 +24,7 @@ class TestScene(TestCase):
             )
 
     def test_creation(self):
-        self.assertEqual(self.scene.__str__(), 'LC8 001-001 01/01/15')
+        self.assertEqual(self.scene.__str__(), 'L8 001-001 01/01/15')
         self.assertEqual(self.scene.day(), '001')
         self.scene.status = 'downloaded'
         self.scene.save()
@@ -33,7 +33,7 @@ class TestScene(TestCase):
         Scene.objects.create(
             path='001',
             row='001',
-            sat='LC8',
+            sat='L8',
             date=date(2015, 1, 17),
             name='LC80010012015017LGN00',
             status='downloading'
@@ -46,7 +46,7 @@ class TestScene(TestCase):
             Scene.objects.create(
                 path='001',
                 row='001',
-                sat='LC8',
+                sat='L8',
                 date=date(2015, 1, 1),
                 name='LC80010012015001LGN00',
                 status='downloading'
@@ -59,7 +59,7 @@ class TestImage(TestCase):
         self.scene = Scene.objects.create(
             path='001',
             row='001',
-            sat='LC8',
+            sat='L8',
             date=date(2015, 1, 1),
             name='LC80010012015001LGN00',
             cloud_rate=20.3,
@@ -104,7 +104,7 @@ class TestScheduledDownload(TestCase):
         self.scene = Scene.objects.create(
             path='220',
             row='066',
-            sat='LC8',
+            sat='L8',
             date=date(2015, 1, 1),
             name='LC82200662015001LGN00',
             cloud_rate=20.3,
@@ -112,7 +112,7 @@ class TestScheduledDownload(TestCase):
             )
 
     def test_creation(self):
-        self.assertEqual(self.sd.__str__(), 'LC8 220-066')
+        self.assertEqual(self.sd.__str__(), 'L8 220-066')
         self.assertEqual(ScheduledDownload.objects.all().count(), 2)
 
     def test_validation(self):
@@ -130,7 +130,7 @@ class TestScheduledDownload(TestCase):
         Scene.objects.create(
             path='220',
             row='066',
-            sat='LC8',
+            sat='L8',
             date=date.today(),
             name='LC82200662015%sLGN00' % day_number,
             cloud_rate=20.3,
@@ -158,7 +158,7 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(scene.path, '220')
         self.assertEqual(scene.row, '066')
         self.assertEqual(scene.date, date(2015, 1, 17))
-        self.assertEqual(scene.sat, 'LC8')
+        self.assertEqual(scene.sat, 'L8')
 
     def test_create_image(self):
         self.sd.create_scene()

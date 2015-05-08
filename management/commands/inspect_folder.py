@@ -17,7 +17,7 @@ class Command(BaseCommand):
         for dir in args:
             for subdir in listdir(dir):
                 scene = Scene.objects.create(
-                    sat=subdir[:3],
+                    sat='L' + subdir[2],
                     path=subdir[3:6],
                     row=subdir[6:9],
                     date=calendar_date(subdir[9:13], subdir[13:16]),
