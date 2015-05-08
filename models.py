@@ -221,12 +221,14 @@ class ScheduledDownload(models.Model):
                                 remove(path)
                     return downloaded
                 except RemoteFileDoesntExist:
-                    last_scene.status = 'dl_failed'
-                    last_scene.save()
+                    if last_scene.status != 'dl_failed':
+                        last_scene.status = 'dl_failed'
+                        last_scene.save()
                     return []
             else:
-                last_scene.status = 'downloaded'
-                last_scene.save()
+                if last_scene.status != 'downloaded':
+                    last_scene.status = 'downloaded'
+                    last_scene.save()
                 return []
         else:
             print('There is not any Scenes registered for this path and row')
