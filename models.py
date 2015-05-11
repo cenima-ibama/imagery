@@ -1,11 +1,13 @@
+from __future__ import unicode_literals
+
 from lc8_download.lc8 import RemoteFileDoesntExist
 from indicar.process import Process
 
 from os.path import getsize
 from os import remove
 from datetime import date, timedelta
-from subprocess import call
 
+from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -13,6 +15,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from .utils import three_digit, calendar_date, download
 
 
+@python_2_unicode_compatible
 class Scene(models.Model):
     """Class to register the Scenes of Landsat imagery"""
 
@@ -64,7 +67,6 @@ class Scene(models.Model):
                 Image.objects.get_or_create(name=rgb.split('/')[-1],
                     type='r6g5b4',
                     scene=self)
-                #call(['16b_2_8b_convert.sh', rgb])
 
             ndvi = process.make_ndvi()
             if ndvi is not False:
@@ -95,12 +97,13 @@ class Scene(models.Model):
         super(Scene, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class Image(models.Model):
     """Class to register the image files. All Images are associated with
     one Scene object.False
     """
 
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     type = models.CharField(max_length=30)
     creation_date = models.DateField(auto_now_add=True)
     scene = models.ForeignKey(Scene)
@@ -116,6 +119,7 @@ class Image(models.Model):
         super(Image, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class ScheduledDownload(models.Model):
     """Class to schedule the download of Landsat 8 imagery."""
 
