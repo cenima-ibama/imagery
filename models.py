@@ -64,7 +64,7 @@ class Scene(models.Model):
                 Image.objects.get_or_create(name=rgb.split('/')[-1],
                     type='r6g5b4',
                     scene=self)
-                call(['16b_2_8b_convert.sh', rgb])
+                #call(['16b_2_8b_convert.sh', rgb])
 
             ndvi = process.make_ndvi()
             if ndvi is not False:
@@ -210,15 +210,11 @@ class ScheduledDownload(models.Model):
             if len(last_scene.images()) < len(bands):
                 try:
                     downloaded = download(last_scene.name, bands)
-                    for item in downloaded:
-                        # if the image was already downloaded, the lc8_download
-                        # lib will return False
-                        if item is not False:
-                            path, size = item
-                            if getsize(path) == size:
-                                self.create_image(path.split('/')[-1])
-                            else:
-                                remove(path)
+                    for path, size in downloaded:
+                        if getsize(path) == size:
+                            self.create_image(path.split('/')[-1])
+                        else:
+                            remove(path)
                     return downloaded
                 except RemoteFileDoesntExist:
                     if last_scene.status != 'dl_failed':
