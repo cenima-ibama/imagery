@@ -70,13 +70,13 @@ class Scene(models.Model):
 
             ndvi = process.make_ndvi()
             if ndvi is not False:
-                Image.objects.get_or_create(name=rgb.split('/')[-1],
+                Image.objects.get_or_create(name=ndvi.split('/')[-1],
                     type='ndvi',
                     scene=self)
 
             detection = process.change_detection()
             if detection is not False:
-                Image.objects.get_or_create(name=rgb.split('/')[-1],
+                Image.objects.get_or_create(name=detection.split('/')[-1],
                     type='detection',
                     scene=self)
 
