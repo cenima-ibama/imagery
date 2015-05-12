@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+
 from django.core.management.base import BaseCommand
 
 from ...models import Scene, ScheduledDownload
@@ -14,3 +16,5 @@ class Command(BaseCommand):
 
         for scene in Scene.objects.filter(status='downloaded'):
             scene.process()
+
+        sys.exit(0)
