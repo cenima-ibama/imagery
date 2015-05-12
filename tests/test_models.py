@@ -5,6 +5,7 @@ from shutil import rmtree
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.contrib.gis.geos import Polygon
 
 from ..models import Scene, Image, ScheduledDownload
 from ..utils import three_digit
@@ -173,6 +174,11 @@ class TestScheduledDownload(TestCase):
 
         scene = Scene.objects.get(name='LC82200662015017LGN00')
         self.assertIsInstance(scene, Scene)
+        bounds = Polygon(((-45.82864, -7.62564), (-43.75891, -7.62465),
+            (-45.83327, -9.73115), (-43.75197, -9.72989), (-45.82864, -7.62564))
+            )
+        self.assertEqual(scene.cloud_rate, 65.28)
+        self.assertEqual(scene.geom, bounds)
         self.assertEqual(scene.status, 'downloading')
 
         self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_B10.TIF'),

@@ -9,10 +9,11 @@ from datetime import date, timedelta
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Polygon
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from .utils import three_digit, calendar_date, download
+from .utils import three_digit, calendar_date, download, bounds_and_clouds
 
 
 @python_2_unicode_compatible
@@ -173,13 +174,16 @@ class ScheduledDownload(models.Model):
             self.next_scene_name()[9:13],
             self.next_scene_name()[13:16]
             )
+        metadata = bounds_and_clouds(self.next_scene_name())
         return Scene.objects.get_or_create(
             path=self.path,
             row=self.row,
             sat='L8',
             name=self.next_scene_name(),
             date=scene_date,
-            status='downloading'
+            status='downloading',
+            geom=Polygon(metadata[0]),
+            cloud_rate=metadata[1]
             )
 
     def create_image(self, image_name):
@@ -226,7 +230,7 @@ class ScheduledDownload(models.Model):
                         last_scene.save()
                     return []
             else:
-                if last_scene.status != 'downloaded':
+                if last_scene.status == 'downloading':
                     last_scene.status = 'downloaded'
                     last_scene.save()
                 return []
