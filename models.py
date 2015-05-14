@@ -215,7 +215,7 @@ class ScheduledDownload(models.Model):
         """
         last_scene = self.last_scene()
         if last_scene is not None:
-            if len(last_scene.images()) < len(bands):
+            if len(last_scene.images()) < len(bands) or last_scene.status == 'dl_failed':
                 try:
                     downloaded = download(last_scene.name, bands)
                     for path, size in downloaded:
