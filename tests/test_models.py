@@ -174,8 +174,8 @@ class TestScheduledDownload(TestCase):
 
         scene = Scene.objects.get(name='LC82200662015017LGN00')
         self.assertIsInstance(scene, Scene)
-        bounds = Polygon(((-45.82864, -7.62564), (-43.75891, -7.62465),
-            (-45.83327, -9.73115), (-43.75197, -9.72989), (-45.82864, -7.62564))
+        bounds = Polygon(((-45.4508, -7.62855), (-43.75824, -7.98923),
+            (-44.12919, -9.73044), (-45.82968, -9.36601), (-45.4508, -7.62855))
             )
         self.assertEqual(scene.cloud_rate, 65.28)
         self.assertEqual(scene.geom, bounds)

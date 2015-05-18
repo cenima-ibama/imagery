@@ -13,7 +13,8 @@ from django.contrib.gis.geos import Polygon
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from .utils import three_digit, calendar_date, download, bounds_and_clouds
+from .utils import three_digit, calendar_date, download
+from .utils import get_bounds, get_cloud_rate
 
 
 @python_2_unicode_compatible
@@ -174,7 +175,6 @@ class ScheduledDownload(models.Model):
             self.next_scene_name()[9:13],
             self.next_scene_name()[13:16]
             )
-        metadata = bounds_and_clouds(self.next_scene_name())
         return Scene.objects.get_or_create(
             path=self.path,
             row=self.row,
@@ -182,8 +182,8 @@ class ScheduledDownload(models.Model):
             name=self.next_scene_name(),
             date=scene_date,
             status='downloading',
-            geom=Polygon(metadata[0]),
-            cloud_rate=metadata[1]
+            geom=Polygon(get_bounds(self.next_scene_name())),
+            cloud_rate=get_cloud_rate(self.next_scene_name())
             )
 
     def create_image(self, image_name):
