@@ -38,7 +38,6 @@ def download(scene_name, bands, path=None):
 def get_cloud_rate(scene_name):
     """Read the MTL file of the scene and return the cloud_rate of the scene
     """
-
     mtl_path = join(expanduser('~'), 'landsat', scene_name, scene_name + '_MTL.txt')
     with open(mtl_path, 'r') as f:
         lines = f.readlines()
@@ -47,7 +46,7 @@ def get_cloud_rate(scene_name):
 
 
 def get_bounds(scene_name):
-    """Use the Earth Explorer metadata to get bounds of the Scene"""
+    """Use Earth Explorer metadata to get bounds of a Scene"""
     metadata = PyQuery('http://earthexplorer.usgs.gov/fgdc/4923/%s/' % scene_name)
     metadata = metadata.text()[
         metadata.text().find('G-Ring_Latitude:'):
@@ -57,7 +56,10 @@ def get_bounds(scene_name):
                 .replace('G-Ring_Longitude:', '')\
                 .split('\n')
     coords = [float(coord) for coord in coords if coord != '']
+    # create a list of lists with the coordinates
     coords = [coords[i:i + 2] for i in range(0, len(coords), 2)]
+    # use reverse() to change [lat, lon] to [lon, lat]
     [coord.reverse() for coord in coords]
+    # repeat the first coordinate on the end of the list
     coords.append(coords[0])
     return coords
