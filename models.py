@@ -175,6 +175,17 @@ class ScheduledDownload(models.Model):
             self.next_scene_name()[9:13],
             self.next_scene_name()[13:16]
             )
+
+        try:
+            geom = Polygon(get_bounds(self.next_scene_name()))
+        except IndexError:
+            geom = None
+
+        try:
+            cloud_rate = get_cloud_rate(self.next_scene_name())
+        except FileNotFoundError:
+            cloud_rate = None
+
         return Scene.objects.get_or_create(
             path=self.path,
             row=self.row,
@@ -182,9 +193,10 @@ class ScheduledDownload(models.Model):
             name=self.next_scene_name(),
             date=scene_date,
             status='downloading',
-            geom=Polygon(get_bounds(self.next_scene_name())),
-            cloud_rate=get_cloud_rate(self.next_scene_name())
+            geom=geom,
+            cloud_rate=cloud_rate
             )
+
 
     def create_image(self, image_name):
         """Create a new Image object."""
