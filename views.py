@@ -1,7 +1,9 @@
-from os import path
-from datetime import date, timedelta
-from subprocess import call
+from django.views.generic import ListView
 
-from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
-from django.conf import settings
+from .models import Scene
+
+
+class SceneListView(ListView):
+    model = Scene
+    context_object_name = 'scenes'
+    paginate_by = 20

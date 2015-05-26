@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
 
+from .views import SceneListView
 
 urlpatterns = patterns('',
-    url(r'^$', TemplateView.as_view(template_name='base.html'), name='index'),
+    url(r'^$', SceneListView.as_view(template_name='scene_list.html'), name='index'),
 
 )
