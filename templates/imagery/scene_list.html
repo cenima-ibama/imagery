@@ -19,7 +19,7 @@
         <tbody>
           {% for scene in scenes %}
           <tr>
-            <td>{{ scene.name }}</td>
+            <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a></td>
             <td>{{ scene.sat }}</td>
             <td>{{ scene.cloud_rate }}</td>
             <td>{{ scene.date }}</td>
@@ -32,7 +32,7 @@
   {% else %}
     <div class="alert alert-danger">{% trans 'No scenes found.' %}</div>
   {% endif %}
-  
+
   {% if paginator %}
   <p class="text-muted text-pagination">
     Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
