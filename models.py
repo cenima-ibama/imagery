@@ -94,6 +94,11 @@ class Scene(models.Model):
             print('Check if you have B4, B5, B6 and BQA in this scene')
             return False
 
+    def quicklook(self):
+        if self.sat == 'L8':
+            return 'http://earthexplorer.usgs.gov/browse/landsat_8/' +\
+                '%s/%s/%s/%s.jpg' % (self.date.year, self.path, self.row, self.name)
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Scene, self).save(*args, **kwargs)

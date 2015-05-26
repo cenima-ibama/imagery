@@ -42,6 +42,11 @@ class TestScene(TestCase):
 
         self.assertEqual(Scene.objects.all().count(), 2)
 
+    def test_quicklook(self):
+        self.assertEqual(self.scene.quicklook(),
+            'http://earthexplorer.usgs.gov/browse/landsat_8/2015/001/001/LC80010012015001LGN00.jpg'
+        )
+
     def test_validation(self):
         with self.assertRaises(ValidationError):
             Scene.objects.create(
