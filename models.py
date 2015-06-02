@@ -103,6 +103,9 @@ class Scene(models.Model):
         self.full_clean()
         super(Scene, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-date', 'path', 'row']
+
 
 @python_2_unicode_compatible
 class Image(models.Model):
