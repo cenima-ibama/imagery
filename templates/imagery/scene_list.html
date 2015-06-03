@@ -20,7 +20,6 @@
           {% for scene in scenes %}
           <tr>
             <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a>
-              <a href='{% url 'imagery:scene' scene.name %}' data-toggle="modal" data-target=".bs-example-modal-lg"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
             <td>{{ scene.get_sat_display }}</td>
             <td>{% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}</td>
             <td>{{ scene.date|date:"SHORT_DATE_FORMAT" }}</td>

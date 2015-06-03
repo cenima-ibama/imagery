@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block title %}{{ scene.name }}{% endblock title %}
+
+<h1>{% block page_title %}{{ scene.name }}{% endblock page_title %}</h1>
+
 {% block content %}
-  {{ scene.name }}
+  <div class='col-md-6 col-xs-12'>
+    <img src='{{ scene.quicklook }}' alt='{% trans 'Quicklook of the scene' %} {{ scene.name }}' class='img-responsive'>
+  </div>
+  <div class='col-md-6 col-xs-12'>
+    <h3>{{ scene.get_sat_display }} {{ scene.path}} / {{ scene.row }}</h3>
+    <p>
+      <label>{% trans 'Date' %}:</label> {{ scene.date|date:'SHORT_DATE_FORMAT' }}
+    </p>
+    <p>
+      <label>{% trans 'Cloud rate' %}:</label> {% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}
+    </p>
+    <p>
+      <label>{% trans 'Status' %}:</label> {{ scene.get_status_display }}
+    </p>
+  </div>
 {% endblock content %}

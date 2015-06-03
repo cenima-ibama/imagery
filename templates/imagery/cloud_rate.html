@@ -16,7 +16,7 @@
         {% for day, value in cloud_rate_data %}
         <tr>
           <td>{{ day|date:"SHORT_DATE_FORMAT" }}</td>
-          <td>{{ value }}%</td>
+          <td>{{ value|floatformat:"-2" }}%</td>
         </tr>
         {% endfor %}
       </tbody>
