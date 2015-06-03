@@ -31,3 +31,10 @@ class TestSceneDetailView(TestCase):
     def test_scene_detail_response(self):
         response = client.get(reverse('imagery:scene', args=[self.scene.name]))
         self.assertEqual(response.status_code, 200)
+
+
+class TestCloudRateView(TestCase):
+
+    def test_cloud_rate_view(self):
+        response = client.get(reverse('imagery:cloud-rate'))
+        self.assertEqual(response.status_code, 200)

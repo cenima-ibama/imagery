@@ -19,11 +19,12 @@
         <tbody>
           {% for scene in scenes %}
           <tr>
-            <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a></td>
-            <td>{{ scene.sat }}</td>
-            <td>{{ scene.cloud_rate }}</td>
-            <td>{{ scene.date }}</td>
-            <td>{{ scene.status }}</td>
+            <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a>
+              <a href='{% url 'imagery:scene' scene.name %}' data-toggle="modal" data-target=".bs-example-modal-lg"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></a>
+            <td>{{ scene.get_sat_display }}</td>
+            <td>{% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}</td>
+            <td>{{ scene.date|date:"SHORT_DATE_FORMAT" }}</td>
+            <td>{{ scene.get_status_display }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -34,17 +35,17 @@
   {% endif %}
 
   {% if paginator %}
-  <p class="text-muted text-pagination">
-    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-  </p>
-  <ul class="pager">
-    {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}">&larr; Anterior</a></li>
-    {% endif %}
+    <p class="text-muted text-pagination">
+      Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    </p>
+    <ul class="pager">
+      {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&larr; Anterior</a></li>
+      {% endif %}
 
-    {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">Próxima &rarr;</a></li>
-    {% endif %}
-  </ul>
-{% endif %}
+      {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">Próxima &rarr;</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
 {% endblock content %}
