@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import date
 from os.path import join
+from os import makedirs
 from shutil import rmtree
 
 from django.test import TestCase
@@ -79,11 +80,17 @@ class TestImage(TestCase):
             scene=self.scene
             )
 
+        self.image_folder = join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00')
+        makedirs(self.image_folder)
+        f = open(join(self.image_folder, 'LC80010012015001LGN00_B4.TIF'), 'w')
+        f.close()
+
     def test_creation(self):
         self.assertEqual(self.image.__str__(), 'LC80010012015001LGN00_B4.TIF')
         self.assertEqual(self.image.file_path(),
             join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
             )
+        self.assertTrue(self.image.file_exists())
 
         Image.objects.create(
             name='LC80010012015001LGN00_B5.TIF',
@@ -101,6 +108,9 @@ class TestImage(TestCase):
                 type='B4',
                 scene=self.scene
                 )
+
+    def tearDown(self):
+        rmtree(self.image_folder)
 
 
 class TestScheduledDownload(TestCase):

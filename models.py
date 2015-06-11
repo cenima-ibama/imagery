@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from lc8_download.lc8 import RemoteFileDoesntExist
 from indicar.process import Process
 
-from os.path import getsize, join
+from os.path import getsize, join, isfile
 from os import remove
 from datetime import date, timedelta
 
@@ -125,6 +125,9 @@ class Image(models.Model):
     def file_path(self):
         return '%s' % join(settings.MEDIA_ROOT, self.scene.sat, self.scene.name,
             self.name)
+
+    def file_exists(self):
+        return isfile(self.file_path())
 
     def save(self, *args, **kwargs):
         self.full_clean()
