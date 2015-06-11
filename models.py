@@ -100,6 +100,9 @@ class Scene(models.Model):
             return 'http://earthexplorer.usgs.gov/browse/landsat_8/' +\
                 '%s/%s/%s/%s.jpg' % (self.date.year, self.path, self.row, self.name)
 
+    def dir(self):
+        return join(settings.MEDIA_ROOT, self.sat, self.name)
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Scene, self).save(*args, **kwargs)
@@ -123,8 +126,7 @@ class Image(models.Model):
         return '%s' % self.name
 
     def file_path(self):
-        return '%s' % join(settings.MEDIA_ROOT, self.scene.sat, self.scene.name,
-            self.name)
+        return '%s' % join(self.scene.dir(), self.name)
 
     def file_exists(self):
         return isfile(self.file_path())

@@ -29,6 +29,7 @@ class TestScene(TestCase):
     def test_creation(self):
         self.assertEqual(self.scene.__str__(), 'L8 001-001 01/01/15')
         self.assertEqual(self.scene.day(), '001')
+        self.assertEqual(self.scene.dir(), join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00'))
         self.scene.status = 'downloaded'
         self.scene.save()
         self.assertEqual(self.scene.status, 'downloaded')
