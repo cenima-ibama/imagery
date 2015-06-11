@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from lc8_download.lc8 import RemoteFileDoesntExist
 from indicar.process import Process
 
-from os.path import getsize
+from os.path import getsize, join
 from os import remove
 from datetime import date, timedelta
 
@@ -13,6 +13,7 @@ from django.contrib.gis.geos import Polygon
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 
+from django.conf import settings
 from .utils import three_digit, calendar_date, download
 from .utils import get_bounds, get_cloud_rate
 
@@ -82,7 +83,7 @@ class Scene(models.Model):
                     type='detection',
                     scene=self)
 
-            if rgb and ndvi and detection:
+            if rgb and ndvi:
                 self.status = 'processed'
                 self.save()
                 return True
@@ -122,7 +123,8 @@ class Image(models.Model):
         return '%s' % self.name
 
     def file_path(self):
-        return '%s/%s' % (self.scene.name, self.name)
+        return '%s' % join(settings.MEDIA_ROOT, self.scene.sat, self.scene.name,
+            self.name)
 
     def save(self, *args, **kwargs):
         self.full_clean()

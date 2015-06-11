@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.contrib.gis.geos import Polygon
 
+from django.conf import settings
 from ..models import Scene, Image, ScheduledDownload
 from ..utils import three_digit
 
@@ -81,7 +82,8 @@ class TestImage(TestCase):
     def test_creation(self):
         self.assertEqual(self.image.__str__(), 'LC80010012015001LGN00_B4.TIF')
         self.assertEqual(self.image.file_path(),
-            'LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
+            join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
+            )
 
         Image.objects.create(
             name='LC80010012015001LGN00_B5.TIF',
