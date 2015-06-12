@@ -64,10 +64,7 @@ class Scene(models.Model):
             if self.images().filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
                 self.status = 'processing'
                 self.save()
-                process = Process(
-                    self.name,
-                    base_dir=join(settings.MEDIA_ROOT, self.sat)
-                    )
+                process = Process(self.dir)
 
                 rgb = process.make_rgb()
                 if rgb is not False:
