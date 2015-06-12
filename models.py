@@ -60,45 +60,59 @@ class Scene(models.Model):
         return self.image_set.all()
 
     def process(self):
-        if self.images().filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
-            self.status = 'processing'
-            self.save()
-            process = Process(self.name)
-
-            rgb = process.make_rgb()
-            if rgb is not False:
-                Image.objects.get_or_create(name=rgb.split('/')[-1],
-                    type='r6g5b4',
-                    scene=self)
-
-            ndvi = process.make_ndvi()
-            if ndvi is not False:
-                Image.objects.get_or_create(name=ndvi.split('/')[-1],
-                    type='ndvi',
-                    scene=self)
-
-            detection = process.change_detection()
-            if detection is not False:
-                Image.objects.get_or_create(name=detection.split('/')[-1],
-                    type='detection',
-                    scene=self)
-
-            if rgb and ndvi:
-                self.status = 'processed'
+        if self.sat == 'L8':
+            if self.images().filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
+                self.status = 'processing'
                 self.save()
-                return True
+                process = Process(
+                    self.name,
+                    base_dir=join(settings.MEDIA_ROOT, self.sat)
+                    )
+
+                rgb = process.make_rgb()
+                if rgb is not False:
+                    Image.objects.get_or_create(name=rgb.split('/')[-1],
+                        type='r6g5b4',
+                        scene=self)
+
+                ndvi = process.make_ndvi()
+                if ndvi is not False:
+                    Image.objects.get_or_create(name=ndvi.split('/')[-1],
+                        type='ndvi',
+                        scene=self)
+
+                detection = process.change_detection()
+                if detection is not False:
+                    Image.objects.get_or_create(name=detection.split('/')[-1],
+                        type='detection',
+                        scene=self)
+
+                if rgb and ndvi:
+                    self.status = 'processed'
+                    self.save()
+                    return True
+                else:
+                    self.status = 'p_failed'
+                    self.save()
+                    return False
             else:
-                self.status = 'p_failed'
-                self.save()
+                print('Check if you have B4, B5, B6 and BQA in this scene')
                 return False
         else:
-            print('Check if you have B4, B5, B6 and BQA in this scene')
+            print('We can not process %s imagery yet.' % self.get_sat_display)
             return False
 
     def quicklook(self):
+        base_url = 'http://earthexplorer.usgs.gov/browse'
         if self.sat == 'L8':
-            return 'http://earthexplorer.usgs.gov/browse/landsat_8/' +\
-                '%s/%s/%s/%s.jpg' % (self.date.year, self.path, self.row, self.name)
+            return '%s/landsat_8/%s/%s/%s/%s.jpg' % (base_url, self.date.year,
+                self.path, self.row, self.name)
+        if self.sat == 'L7':
+            return '%s/etm/%s/%s/%s/%s_REFL.jpg' % (base_url, int(self.path),
+                int(self.row), self.date.year, self.name)
+        if self.sat == 'L5':
+            return '%s/tm/%s/%s/%s/%s_REFL.jpg' % (base_url, int(self.path),
+                int(self.row), self.date.year, self.name)
 
     def dir(self):
         return join(settings.MEDIA_ROOT, self.sat, self.name)
@@ -211,7 +225,6 @@ class ScheduledDownload(models.Model):
             geom=geom,
             cloud_rate=cloud_rate
             )
-
 
     def create_image(self, image_name):
         """Create a new Image object."""

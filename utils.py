@@ -2,7 +2,7 @@
 from pyquery import PyQuery
 from lc8_download import lc8
 
-from os.path import join, expanduser
+from os.path import join
 from datetime import date, timedelta
 
 from django.conf import settings

@@ -26,10 +26,31 @@ class TestScene(TestCase):
             status='downloading'
             )
 
+        self.l7 = Scene.objects.create(
+            path='227',
+            row='059',
+            sat='L7',
+            date=date(2015, 6, 3),
+            name='LE72270592015154CUB00',
+            cloud_rate=20.3,
+            status='downloading'
+            )
+
+        self.l5 = Scene.objects.create(
+            path='227',
+            row='059',
+            sat='L5',
+            date=date(2011, 10, 22),
+            name='LT52270592011295CUB01',
+            cloud_rate=20.3,
+            status='downloading'
+            )
+
     def test_creation(self):
         self.assertEqual(self.scene.__str__(), 'L8 001-001 01/01/15')
         self.assertEqual(self.scene.day(), '001')
-        self.assertEqual(self.scene.dir(), join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00'))
+        self.assertEqual(self.scene.dir(),
+            join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00'))
         self.scene.status = 'downloaded'
         self.scene.save()
         self.assertEqual(self.scene.status, 'downloaded')
@@ -43,11 +64,17 @@ class TestScene(TestCase):
             status='downloading'
             )
 
-        self.assertEqual(Scene.objects.all().count(), 2)
+        self.assertEqual(Scene.objects.all().count(), 4)
 
     def test_quicklook(self):
         self.assertEqual(self.scene.quicklook(),
             'http://earthexplorer.usgs.gov/browse/landsat_8/2015/001/001/LC80010012015001LGN00.jpg'
+        )
+        self.assertEqual(self.l7.quicklook(),
+            'http://earthexplorer.usgs.gov/browse/etm/227/59/2015/LE72270592015154CUB00_REFL.jpg'
+        )
+        self.assertEqual(self.l5.quicklook(),
+            'http://earthexplorer.usgs.gov/browse/tm/227/59/2011/LT52270592011295CUB01_REFL.jpg'
         )
 
     def test_validation(self):
