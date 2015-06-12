@@ -127,7 +127,7 @@ class TestImage(TestCase):
             )
 
         self.assertEqual(Image.objects.all().count(), 2)
-        self.assertEqual(self.scene.images().count(), 2)
+        self.assertEqual(self.scene.images.count(), 2)
 
     def test_validation(self):
         with self.assertRaises(ValidationError):

@@ -55,13 +55,9 @@ class Scene(models.Model):
         """Return the julian day of the scene's date as a 3 character string"""
         return three_digit(self.date.timetuple().tm_yday)
 
-    def images(self):
-        """Return all the Image objects related to this scene"""
-        return self.image_set.all()
-
     def process(self):
         if self.sat == 'L8':
-            if self.images().filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
+            if self.images.filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
                 self.status = 'processing'
                 self.save()
                 process = Process(self.dir())
@@ -131,7 +127,7 @@ class Image(models.Model):
     name = models.CharField(max_length=100, unique=True)
     type = models.CharField(max_length=30)
     creation_date = models.DateField(auto_now_add=True)
-    scene = models.ForeignKey(Scene)
+    scene = models.ForeignKey(Scene, related_name='images')
 
     def __str__(self):
         return '%s' % self.name
@@ -252,7 +248,7 @@ class ScheduledDownload(models.Model):
         """
         last_scene = self.last_scene()
         if last_scene is not None:
-            if len(last_scene.images()) < len(bands) or last_scene.status == 'dl_failed':
+            if last_scene.images.count() < len(bands) or last_scene.status == 'dl_failed':
                 try:
                     downloaded = download(last_scene.name, bands)
                     for path, size in downloaded:
