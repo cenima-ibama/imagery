@@ -132,6 +132,9 @@ class Image(models.Model):
     def __str__(self):
         return '%s' % self.name
 
+    def url(self):
+        return join(settings.MEDIA_URL, self.scene.sat, self.scene.name, self.name)
+
     def file_path(self):
         return '%s' % join(self.scene.dir(), self.name)
 
