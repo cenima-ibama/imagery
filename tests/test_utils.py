@@ -59,3 +59,4 @@ class TestGetBounds(TestCase):
             [-54.47061, 0.75688],
             [-54.1274, 2.37448]
             ]
+        self.assertEqual(get_bounds('LE72270592015154CUB00'), coords)
