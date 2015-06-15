@@ -7,7 +7,7 @@ from shutil import rmtree
 
 from django.test import TestCase
 
-from ..utils import three_digit, calendar_date, download
+from ..utils import three_digit, calendar_date, download, get_bounds
 
 
 class TestThreeDigit(TestCase):
@@ -37,3 +37,25 @@ class TestDownload(TestCase):
 
     def tearDown(self):
         rmtree('imagery/tests/LC80030172015001LGN00/')
+
+
+class TestGetBounds(TestCase):
+
+    def test_L5_bounds(self):
+        coords = [
+            [-54.10077, 2.36342],
+            [-52.45473, 2.12404],
+            [-52.79384, 0.53251],
+            [-54.43875, 0.77173],
+            [-54.10077, 2.36342]
+            ]
+        self.assertEqual(get_bounds('LT52270592011295CUB01'), coords)
+
+    def test_L7_bounds(self):
+        coords = [
+            [-54.1274, 2.37448],
+            [-52.43042, 2.12839],
+            [-52.77428, 0.51088],
+            [-54.47061, 0.75688],
+            [-54.1274, 2.37448]
+            ]

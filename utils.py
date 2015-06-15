@@ -46,7 +46,16 @@ def get_cloud_rate(scene_name, sat='L8'):
 
 def get_bounds(scene_name):
     """Use Earth Explorer metadata to get bounds of a Scene"""
-    metadata = PyQuery('http://earthexplorer.usgs.gov/fgdc/4923/%s/' % scene_name)
+    if scene_name[2] == '5':
+        url_code = '3119'
+    elif scene_name[2] == '7':
+        url_code = '3373'
+    elif scene_name[2] == '8':
+        url_code = '4923'
+
+    metadata = PyQuery(
+        'http://earthexplorer.usgs.gov/fgdc/%s/%s/' % (url_code, scene_name)
+        )
     metadata = metadata.text()[
         metadata.text().find('G-Ring_Latitude:'):
         metadata.text().find('\n  Keywords:')]
@@ -60,5 +69,6 @@ def get_bounds(scene_name):
     # use reverse() to change [lat, lon] to [lon, lat]
     [coord.reverse() for coord in coords]
     # repeat the first coordinate on the end of the list
-    coords.append(coords[0])
+    if coords[0] != coords[-1]:
+        coords.append(coords[0])
     return coords
