@@ -20,5 +20,13 @@
     <p>
       <label>{% trans 'Status' %}:</label> {{ scene.get_status_display }}
     </p>
+    <p>
+      <label>{% trans 'Images' %}:</label>
+    </p>
+    <ul>
+      {% for image in scene.images.all %}
+        <li><a href="{{ MEDIA_URL }}{{ image.url }}">{{ image.name }}</a></li>
+      {% endfor %}
+    </ul>
   </div>
 {% endblock content %}
