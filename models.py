@@ -56,6 +56,10 @@ class Scene(models.Model):
         return three_digit(self.date.timetuple().tm_yday)
 
     def process(self):
+        """Process the Scene using indicar-tools library. It will create a 654
+        image composition, a NDVI and a change detection to Landsat 8 Scenes.
+        To Landsat 5 and 7, it will create only a 543 composition.
+        """
         if self.sat == 'L8':
             if self.images.filter(type__in=['B4', 'B5', 'B6', 'BQA']).count() == 4:
                 self.status = 'processing'
@@ -114,6 +118,7 @@ class Scene(models.Model):
                 return False
 
     def quicklook(self):
+        """Return the URL of the Natural View quicklook image."""
         base_url = 'http://earthexplorer.usgs.gov/browse'
         if self.sat == 'L8':
             return '%s/landsat_8/%s/%s/%s/%s.jpg' % (base_url, self.date.year,
@@ -151,12 +156,15 @@ class Image(models.Model):
         return '%s' % self.name
 
     def url(self):
-        return join(self.scene.sat, self.scene.name, self.name)
+        """URL string to be used concatenated with MEDIA_URL"""
+        return join(settings.MEDIA_URL, self.scene.sat, self.scene.name, self.name)
 
     def file_path(self):
+        """File path of the Image in the filesystem."""
         return '%s' % join(self.scene.dir(), self.name)
 
     def file_exists(self):
+        """Test if the file exists on filesystem."""
         return isfile(self.file_path())
 
     def save(self, *args, **kwargs):

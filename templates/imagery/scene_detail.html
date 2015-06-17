@@ -7,26 +7,47 @@
 
 {% block content %}
   <div class='col-md-6 col-xs-12'>
-    <img src='{{ scene.quicklook }}' alt='{% trans 'Quicklook of the scene' %} {{ scene.name }}' class='img-responsive'>
+    <h3>{{ scene.get_sat_display }} {{ scene.path}} / {{ scene.row }}</h3>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>{% trans 'Date' %}</h3>
+      </div>
+      <div class='panel-body'>
+        {{ scene.date|date:'SHORT_DATE_FORMAT' }}
+      </div>
+    </div>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>{% trans 'Cloud rate' %}</h3>
+      </div>
+      <div class='panel-body'>
+        {% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}
+      </div>
+    </div>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>{% trans 'Status' %}</h3>
+      </div>
+      <div class='panel-body'>
+        {{ scene.get_status_display }}
+      </div>
+    </div>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <h3 class='panel-title'>{% trans 'Images' %}</h3>
+      </div>
+      <div class='panel-body'>
+        <ul>
+          {% for image in scene.images.all %}
+            <li><a href='{{ image.url }}'>{{ image.name }}</a></li>
+          {% empty %}
+            <p class="text-danger">{% trans 'No images registered to this scene.' %}</p>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
   <div class='col-md-6 col-xs-12'>
-    <h3>{{ scene.get_sat_display }} {{ scene.path}} / {{ scene.row }}</h3>
-    <p>
-      <label>{% trans 'Date' %}:</label> {{ scene.date|date:'SHORT_DATE_FORMAT' }}
-    </p>
-    <p>
-      <label>{% trans 'Cloud rate' %}:</label> {% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}
-    </p>
-    <p>
-      <label>{% trans 'Status' %}:</label> {{ scene.get_status_display }}
-    </p>
-    <p>
-      <label>{% trans 'Images' %}:</label>
-    </p>
-    <ul>
-      {% for image in scene.images.all %}
-        <li><a href="{{ MEDIA_URL }}{{ image.url }}">{{ image.name }}</a></li>
-      {% endfor %}
-    </ul>
+    <img src='{{ scene.quicklook }}' alt='{% trans 'Quicklook of the scene' %} {{ scene.name }}' class='img-responsive'>
   </div>
 {% endblock content %}

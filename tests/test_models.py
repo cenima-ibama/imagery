@@ -120,7 +120,7 @@ class TestImage(TestCase):
             )
         self.assertTrue(self.image.file_exists())
         self.assertEqual(self.image.url(),
-            'L8/LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF'
+            join(settings.MEDIA_URL, 'L8/LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
             )
 
         Image.objects.create(
