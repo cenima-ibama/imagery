@@ -9,8 +9,8 @@ from django.conf import settings
 
 
 def three_digit(number):
-    """ Add 0s to inputs that their length is less than 3.
-    For example: 1 --> 001 | 02 --> 020 | st --> 0st
+    """ Add left zeros to numbers with less than 3 digits.
+    For example: 1 --> '001' | 02 --> '020' | st --> '0st'
     """
     number = str(number)
     if len(number) == 1:
@@ -22,9 +22,7 @@ def three_digit(number):
 
 
 def calendar_date(year, day):
-    """Receive a year and the number of the day in the year and return the
-    calendar date.
-    """
+    """Receive a year and a julian day number and return the calendar date."""
     return date(int(year), 1, 1) + timedelta(int(day) - 1)
 
 
@@ -34,9 +32,9 @@ def download(scene_name, bands, path=join(settings.MEDIA_ROOT, 'L8')):
     return scene.download(bands, path, metadata=True)
 
 
-def get_cloud_rate(scene_name, sat='L8'):
-    """Read the MTL file of the scene and return the cloud_rate of the scene
-    """
+def get_cloud_rate(scene_name):
+    """Read the MTL file and return the cloud_rate of the scene."""
+    sat = 'L%s' % scene_name[2]
     mtl_path = join(settings.MEDIA_ROOT, sat, scene_name, scene_name + '_MTL.txt')
     with open(mtl_path, 'r') as f:
         lines = f.readlines()

@@ -62,7 +62,7 @@ class Scene(models.Model):
                 self.save()
                 process = Process(self.dir())
 
-                rgb = process.make_rgb()
+                rgb = process.make_img([6, 5, 4])
                 if rgb is not False:
                     Image.objects.get_or_create(name=rgb.split('/')[-1],
                         type='r6g5b4',
@@ -89,11 +89,29 @@ class Scene(models.Model):
                     self.save()
                     return False
             else:
-                print('Check if you have B4, B5, B6 and BQA in this scene')
+                print('Check if you have B4, B5, B6 and BQA files of this scene.')
                 return False
-        else:
-            print('We can not process %s imagery yet.' % self.get_sat_display)
-            return False
+
+        elif self.sat in ['L5', 'L7']:
+            if self.images.filter(type__in=['B3', 'B4', 'B5']).count() == 3:
+                self.status = 'processing'
+                self.save()
+                process = Process(self.dir())
+                rgb = process.make_img([5, 4, 3])
+
+                if rgb is not False:
+                    Image.objects.get_or_create(name=rgb.split('/')[-1],
+                        type='r5g4b3',
+                        scene=self)
+                    self.status = 'processed'
+                    self.save()
+                else:
+                    self.status = 'p_failed'
+                    self.save()
+                    return False
+            else:
+                print('Check if you have B3, B4 and B5 files of this scene.')
+                return False
 
     def quicklook(self):
         base_url = 'http://earthexplorer.usgs.gov/browse'
