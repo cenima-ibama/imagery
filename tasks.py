@@ -8,17 +8,19 @@ from .utils import calendar_date, get_bounds, get_cloud_rate
 
 
 def download_all():
+    """Download all new Scenes of ScheduledDownloads."""
     for sd in ScheduledDownload.objects.all():
         sd.download_new_scene()
         sd.check_last_scene()
 
 
 def process_all():
+    """Process all scenes that have status 'downloaded'."""
     for scene in Scene.objects.filter(status='downloaded'):
         scene.process()
 
 
-def inspect_dir(dir):
+def inspect_dir(dir, status='processed'):
     """Create a Scene using the name of the dir and list all TIF files present
     in that dir to create the Image objects in the database.
     """
@@ -42,7 +44,7 @@ def inspect_dir(dir):
         geom=geom,
         cloud_rate=cloud_rate,
         name=scene_name,
-        status='processed'
+        status=status
         )
 
     for image in listdir(dir):
