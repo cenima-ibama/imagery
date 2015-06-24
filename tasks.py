@@ -22,34 +22,46 @@ def process_all():
 
 def inspect_dir(dir, status='processed'):
     """Create a Scene using the name of the dir and list all TIF files present
-    in that dir to create the Image objects in the database.
+    in that dir to create the Image objects in the database. If the Scene already
+    exists, only create the missing Image objects.
     """
     scene_name = dir.split('/')[-1]
 
-    try:
-        geom = Polygon(get_bounds(scene_name))
-    except IndexError:
-        geom = None
-
+    #get cloud_rate of the scene
     try:
         cloud_rate = get_cloud_rate(scene_name)
     except FileNotFoundError:
         cloud_rate = None
 
-    scene = Scene.objects.create(
-        sat='L' + scene_name[2],
-        path=scene_name[3:6],
-        row=scene_name[6:9],
-        date=calendar_date(scene_name[9:13], scene_name[13:16]),
-        geom=geom,
-        cloud_rate=cloud_rate,
-        name=scene_name,
-        status=status
-        )
+    try:
+        scene = Scene.objects.get(name=scene_name)
+        if scene.cloud_rate is None:
+            scene.cloud_rate = cloud_rate
+            scene.save()
+
+        print('%s already exists.' % scene_name)
+
+    except Scene.DoesNotExist:
+        #get geom of the Scene
+        try:
+            geom = Polygon(get_bounds(scene_name))
+        except IndexError:
+            geom = None
+
+        scene = Scene.objects.create(
+            sat='L' + scene_name[2],
+            path=scene_name[3:6],
+            row=scene_name[6:9],
+            date=calendar_date(scene_name[9:13], scene_name[13:16]),
+            geom=geom,
+            cloud_rate=cloud_rate,
+            name=scene_name,
+            status=status
+            )
 
     for image in listdir(dir):
         if image.endswith('.TIF') or image.endswith('.tif'):
-            Image.objects.create(
+            Image.objects.get_or_create(
                 name=image,
                 type=image.split('_')[1].split('.')[0],
                 scene=scene
