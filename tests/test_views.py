@@ -15,6 +15,13 @@ class TestIndexView(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class TestSearchView(TestCase):
+
+    def test_search_response(self):
+        response = client.get(reverse('imagery:search'))
+        self.assertEqual(response.status_code, 200)
+
+
 class TestSceneDetailView(TestCase):
 
     def setUp(self):
