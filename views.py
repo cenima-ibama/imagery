@@ -18,6 +18,9 @@ class SearchView(ListView):
 
     def get_queryset(self):
         self.name = self.request.GET.get('name', None)
+        self.path = self.request.GET.get('path', None)
+        self.row = self.request.GET.get('row', None)
+        self.status = self.request.GET.get('status', None)
         self.sat = self.request.GET.get('sat', None)
         self.start = self.request.GET.get('start', None)
         self.end = self.request.GET.get('end', None)
@@ -30,6 +33,12 @@ class SearchView(ListView):
 
         if self.name:
             queryset = queryset.filter(name__icontains=self.name)
+        if self.path:
+            queryset = queryset.filter(path=self.path)
+        if self.row:
+            queryset = queryset.filter(row=self.row)
+        if self.status:
+            queryset = queryset.filter(status=self.status)
         if self.sat:
             queryset = queryset.filter(sat=self.sat)
         if self.start:
