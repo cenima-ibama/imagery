@@ -63,6 +63,12 @@ class SceneListView(ListView):
         if self.max_cloud:
             context['max_cloud'] = self.max_cloud
 
+        queries_without_page = self.request.GET.copy()
+        if 'page' in queries_without_page:
+            del queries_without_page['page']
+
+        context['queries'] = queries_without_page
+
         return context
 
 
