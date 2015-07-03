@@ -24,11 +24,11 @@
         </div>
         <div class="col-lg-2">
           <label class="pull-center">{% trans 'Satellite' %}</label>
-          <select id="satellite" class="form-control" value="{{ satellite }}">
-            <option value="" default {% if not satellite %} selected="selected" {% endif %}>{% trans 'Satellite' %}</option>
-            <option value="L5" {% if satellite == "L5" %} selected="selected" {% endif %}>Landsat 5</option>
-            <option value="L7" {% if satellite == "L7" %} selected="selected" {% endif %}>Landsat 7</option>
-            <option value="L8" {% if satellite == "L8" %} selected="selected" {% endif %}>Landsat 8</option>
+          <select id="sat" class="form-control" value="{{ sat }}">
+            <option value="" default {% if not sat %} selected="selected" {% endif %}>{% trans 'Satellite' %}</option>
+            <option value="L5" {% if sat == "L5" %} selected="selected" {% endif %}>Landsat 5</option>
+            <option value="L7" {% if sat == "L7" %} selected="selected" {% endif %}>Landsat 7</option>
+            <option value="L8" {% if sat == "L8" %} selected="selected" {% endif %}>Landsat 8</option>
           </select>
         </div>
         <div class="col-lg-2 input-control">
@@ -36,10 +36,10 @@
           <select id="status" class="form-control">
             <option value="" default {% if not status %} selected="selected" {% endif %}>{% trans 'Status' %}</option>
             <option value="processed" {% if status == "processed" %} selected="selected" {% endif %}>{% trans 'Processed' %}</option>
-            <option value="processing" {% if status == "processing" %} selected="selected" {% endif %}>{% trans 'Processing' %}</option>
             <option value="p_failed" {% if status == "p_failed" %} selected="selected" {% endif %}>{% trans 'Process failed' %}</option>
-            <option value="dl_failed" {% if status == "dl_failed" %} selected="selected" {% endif %}>{% trans 'Download failed' %}</option>
+            <option value="processing" {% if status == "processing" %} selected="selected" {% endif %}>{% trans 'Processing' %}</option>
             <option value="downloaded" {% if status == "downloaded" %} selected="selected" {% endif %}>{% trans 'Downloaded' %}</option>
+            <option value="dl_failed" {% if status == "dl_failed" %} selected="selected" {% endif %}>{% trans 'Download failed' %}</option>
             <option value="downloading" {% if status == "downloading" %} selected="selected" {% endif %}>{% trans 'Downloading' %}</option>
           </select>
         </div>
