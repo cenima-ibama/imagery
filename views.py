@@ -10,7 +10,7 @@ from .models import Scene
 class SceneListView(ListView):
     model = Scene
     context_object_name = 'scenes'
-    paginate_by = 1
+    paginate_by = 20
 
     def get_queryset(self):
         queryset = super(SceneListView, self).get_queryset()
