@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
@@ -24,8 +24,7 @@ class SearchView(ListView):
         self.sat = self.request.GET.get('sat', None)
         self.start = self.request.GET.get('start', None)
         self.end = self.request.GET.get('end', None)
-        self.min_cloud = self.request.GET.get('min_cloud', None)
-        self.max_cloud = self.request.GET.get('max_cloud', None)
+        self.max_cloud = self.request.GET.get('max_cloud', 100)
 
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
@@ -33,22 +32,28 @@ class SearchView(ListView):
 
         if self.name:
             queryset = queryset.filter(name__icontains=self.name)
+            context['name'] = self.name
         if self.path:
             queryset = queryset.filter(path=self.path)
+            context['path'] = self.path
         if self.row:
             queryset = queryset.filter(row=self.row)
+            context['row'] = self.row
         if self.status:
             queryset = queryset.filter(status=self.status)
+            context['status'] = self.status
         if self.sat:
             queryset = queryset.filter(sat=self.sat)
+            context['sat'] = self.sat
         if self.start:
             queryset = queryset.filter(date__gte=self.start)
+            context['start'] = self.start
         if self.end:
             queryset = queryset.filter(date__lte=self.end)
-        if self.min_cloud:
-            queryset = queryset.filter(cloud_rate__gte=self.min_cloud)
+            context['end'] = self.end  
         if self.max_cloud:
             queryset = queryset.filter(cloud_rate__lte=self.max_cloud)
+            context['max_cloud'] = self.max_cloud
 
         context['scenes'] = queryset
 

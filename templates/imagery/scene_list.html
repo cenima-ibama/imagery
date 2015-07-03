@@ -4,6 +4,63 @@
 <h1>{% block page_title %}{% trans 'Landsat Catalog' %}{% endblock page_title %}</h1>
 
 {% block content %}
+    <form class="form-horizontal formtype">
+      <div class="row form-line">
+        <div class="col-lg-3">
+          <label>{% trans 'Scene' %}</label>
+          <input id="scene" class="form-control" type="text" placeholder="{% trans 'Scene' %}" value="{{ name }}"/>
+        </div>
+        <div class="col-lg-1">
+          <label>{% trans 'Path' %}</label>
+          <input id="path" class="form-control numberInput" type="number" placeholder="{% trans 'Path' %}" min="0" max="233" value="{{ path }}"/>
+        </div>
+        <div class="col-lg-1">
+          <label>{% trans 'Row' %}</label>
+          <input id="row" class="form-control numberInput" type="number" placeholder="{% trans 'Row' %}" min="0" max="248" value="{{ row }}"/>
+        </div>
+        <div class="col-lg-2">
+          <label class="pull-center">{% trans 'Satellite' %}</label>
+          <select id="satellite" class="form-control" value="{{ satellite }}">
+            <option value="" default {% if not satellite %} selected="selected" {% endif %}>{% trans 'Satellite' %}</option>
+            <option value="L5" {% if satellite == "L5" %} selected="selected" {% endif %}>{% trans 'Landsat 5 (L5)' %}</option>
+            <option value="L7" {% if satellite == "L7" %} selected="selected" {% endif %}>{% trans 'Landsat 7 (L7)' %}</option>
+            <option value="L8" {% if satellite == "L8" %} selected="selected" {% endif %}>{% trans 'Landsat 8 (L8)' %}</option>
+          </select>
+        </div>
+        <div class="col-lg-2 input-control">
+          <label class="pull-center">{% trans 'Status' %}</label>
+          <select id="status" class="form-control">
+            <option value="" default {% if not status %} selected="selected" {% endif %}>{% trans 'Status' %}</option>
+            <option value="processed" {% if status == "processed" %} selected="selected" {% endif %}>{% trans 'Processed' %}</option>
+            <option value="processing" {% if status == "processing" %} selected="selected" {% endif %}>{% trans 'Processing' %}</option>
+            <option value="p_failed" {% if status == "p_failed" %} selected="selected" {% endif %}>{% trans 'Process failed' %}</option>
+            <option value="dl_failed" {% if status == "dl_failed" %} selected="selected" {% endif %}>{% trans 'Download failed' %}</option>
+            <option value="downloaded" {% if status == "downloaded" %} selected="selected" {% endif %}>{% trans 'Downloaded' %}</option>
+            <option value="downloading" {% if status == "downloading" %} selected="selected" {% endif %}>{% trans 'Downloading' %}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row form-line">
+        <div class="col-lg-4">
+          <label class="text-center">{% trans 'Max Cloud Rate' %}</label>
+          <div class="input-group slider-margin">
+            <b>0% </b><input id="cloudRange" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{ max_cloud }}" data-slider-tooltip="show"/><b>100%</b>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <label>{% trans 'Date' %}</label>
+          <div class="input-group">
+            <input id="startDate" class="form-control" data-provide="datepicker" data-date-orientation="top left" placeholder="{% trans 'Start Date' %}" data-date-autoclose="true" value="{{ start }}" data-date-format="yyyy-mm-dd">
+            <span class="input-group-addon"> {% trans 'to' %} </span>
+            <input id="endDate" class="form-control" data-provide="datepicker" data-date-orientation="top left" placeholder="{% trans 'End Date' %}" data-date-autoclose="true" data-date-start-date="" value='{{ end }}' data-date-format="yyyy-mm-dd">
+          </div>
+        </div>
+        <div class="col-lg-2 pull-right">
+          <a id="search" class="btn btn-primary" href="#"> {% trans 'Search' %}</a>
+        </div>
+      </form>
+    </div>
+
   {% if scenes %}
     <div class="table-responsive">
       <table class="table table-striped">
@@ -18,13 +75,13 @@
         </thead>
         <tbody>
           {% for scene in scenes %}
-          <tr>
-            <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a>
-            <td>{{ scene.get_sat_display }}</td>
-            <td>{% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}</td>
-            <td>{{ scene.date|date:"SHORT_DATE_FORMAT" }}</td>
-            <td>{{ scene.get_status_display }}</td>
-          </tr>
+            <tr>
+              <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a>
+              <td>{{ scene.get_sat_display }}</td>
+              <td>{% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}</td>
+              <td>{{ scene.date|date:"SHORT_DATE_FORMAT" }}</td>
+              <td>{{ scene.get_status_display }}</td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
