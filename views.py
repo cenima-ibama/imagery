@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
@@ -12,11 +12,8 @@ class SceneListView(ListView):
     context_object_name = 'scenes'
     paginate_by = 20
 
-
-class SearchView(ListView):
-    template_name = 'imagery/scene_list.html'
-
     def get_queryset(self):
+        queryset = super(SceneListView, self).get_queryset()
         self.name = self.request.GET.get('name', None)
         self.path = self.request.GET.get('path', None)
         self.row = self.request.GET.get('row', None)
@@ -26,8 +23,10 @@ class SearchView(ListView):
         self.end = self.request.GET.get('end', None)
         self.max_cloud = self.request.GET.get('max_cloud', 100)
 
+        return queryset
+
     def get_context_data(self, **kwargs):
-        context = super(SearchView, self).get_context_data(**kwargs)
+        context = super(SceneListView, self).get_context_data(**kwargs)
         queryset = Scene.objects.all()
 
         if self.name:
@@ -50,7 +49,7 @@ class SearchView(ListView):
             context['start'] = self.start
         if self.end:
             queryset = queryset.filter(date__lte=self.end)
-            context['end'] = self.end  
+            context['end'] = self.end
         if self.max_cloud:
             queryset = queryset.filter(cloud_rate__lte=self.max_cloud)
             context['max_cloud'] = self.max_cloud

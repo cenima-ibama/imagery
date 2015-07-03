@@ -4,6 +4,10 @@
 <h1>{% block page_title %}{% trans 'Landsat Catalog' %}{% endblock page_title %}</h1>
 
 {% block content %}
+  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#search-form" aria-expanded="false" aria-controls="search-form">
+  {% trans 'Filter Scenes' %}
+  </button>
+  <div class="collapse" id="search-form">
     <form class="form-horizontal formtype">
       <div class="row form-line">
         <div class="col-lg-3">
@@ -11,20 +15,20 @@
           <input id="scene" class="form-control" type="text" placeholder="{% trans 'Scene' %}" value="{{ name }}"/>
         </div>
         <div class="col-lg-1">
-          <label>{% trans 'Path' %}</label>
-          <input id="path" class="form-control numberInput" type="number" placeholder="{% trans 'Path' %}" min="0" max="233" value="{{ path }}"/>
+          <label>Path</label>
+          <input id="path" class="form-control numberInput" type="number" placeholder="Path" min="0" max="233" value="{{ path }}"/>
         </div>
         <div class="col-lg-1">
-          <label>{% trans 'Row' %}</label>
-          <input id="row" class="form-control numberInput" type="number" placeholder="{% trans 'Row' %}" min="0" max="248" value="{{ row }}"/>
+          <label>Row</label>
+          <input id="row" class="form-control numberInput" type="number" placeholder="Row" min="0" max="248" value="{{ row }}"/>
         </div>
         <div class="col-lg-2">
           <label class="pull-center">{% trans 'Satellite' %}</label>
           <select id="satellite" class="form-control" value="{{ satellite }}">
             <option value="" default {% if not satellite %} selected="selected" {% endif %}>{% trans 'Satellite' %}</option>
-            <option value="L5" {% if satellite == "L5" %} selected="selected" {% endif %}>{% trans 'Landsat 5 (L5)' %}</option>
-            <option value="L7" {% if satellite == "L7" %} selected="selected" {% endif %}>{% trans 'Landsat 7 (L7)' %}</option>
-            <option value="L8" {% if satellite == "L8" %} selected="selected" {% endif %}>{% trans 'Landsat 8 (L8)' %}</option>
+            <option value="L5" {% if satellite == "L5" %} selected="selected" {% endif %}>Landsat 5</option>
+            <option value="L7" {% if satellite == "L7" %} selected="selected" {% endif %}>Landsat 7</option>
+            <option value="L8" {% if satellite == "L8" %} selected="selected" {% endif %}>Landsat 8</option>
           </select>
         </div>
         <div class="col-lg-2 input-control">
@@ -58,8 +62,9 @@
         <div class="col-lg-2 pull-right">
           <a id="search" class="btn btn-primary" href="#"> {% trans 'Search' %}</a>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
 
   {% if scenes %}
     <div class="table-responsive">
