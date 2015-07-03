@@ -10,10 +10,11 @@ from .models import Scene
 class SceneListView(ListView):
     model = Scene
     context_object_name = 'scenes'
-    paginate_by = 20
+    paginate_by = 1
 
     def get_queryset(self):
         queryset = super(SceneListView, self).get_queryset()
+
         self.name = self.request.GET.get('name', None)
         self.path = self.request.GET.get('path', None)
         self.row = self.request.GET.get('row', None)
@@ -23,38 +24,44 @@ class SceneListView(ListView):
         self.end = self.request.GET.get('end', None)
         self.max_cloud = self.request.GET.get('max_cloud', 100)
 
+        if self.name:
+            queryset = queryset.filter(name__icontains=self.name)
+        if self.path:
+            queryset = queryset.filter(path=self.path)
+        if self.row:
+            queryset = queryset.filter(row=self.row)
+        if self.status:
+            queryset = queryset.filter(status=self.status)
+        if self.sat:
+            queryset = queryset.filter(sat=self.sat)
+        if self.start:
+            queryset = queryset.filter(date__gte=self.start)
+        if self.end:
+            queryset = queryset.filter(date__lte=self.end)
+        if self.max_cloud:
+            queryset = queryset.filter(cloud_rate__lte=self.max_cloud)
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(SceneListView, self).get_context_data(**kwargs)
-        queryset = Scene.objects.all()
 
         if self.name:
-            queryset = queryset.filter(name__icontains=self.name)
             context['name'] = self.name
         if self.path:
-            queryset = queryset.filter(path=self.path)
             context['path'] = self.path
         if self.row:
-            queryset = queryset.filter(row=self.row)
             context['row'] = self.row
         if self.status:
-            queryset = queryset.filter(status=self.status)
             context['status'] = self.status
         if self.sat:
-            queryset = queryset.filter(sat=self.sat)
             context['sat'] = self.sat
         if self.start:
-            queryset = queryset.filter(date__gte=self.start)
             context['start'] = self.start
         if self.end:
-            queryset = queryset.filter(date__lte=self.end)
             context['end'] = self.end
         if self.max_cloud:
-            queryset = queryset.filter(cloud_rate__lte=self.max_cloud)
             context['max_cloud'] = self.max_cloud
-
-        context['scenes'] = queryset
 
         return context
 
