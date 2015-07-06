@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-06 17:29-0300\n"
+"PO-Revision-Date: 2015-07-06 17:46-0300\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.2\n"
+
+#: imagery/models.py:307
+msgid "There is already a scheduled scene with this path and row."
+msgstr "Já existe uma cena com esse mesmo path e row."
+
+#: imagery/models.py:317
+msgid "Scheduled Download"
+msgstr "Download Agendado"
+
+#: imagery/models.py:318
+msgid "Scheduled Downloads"
+msgstr "Downloads Agendados"
+
+#: imagery/templates/imagery/cloud_rate.html:4
+msgid "Cloud rates of the last 16 days"
+msgstr "Taxas de nuvens dos últimos 16 dias"
+
+#: imagery/templates/imagery/cloud_rate.html:11
+msgid "Day"
+msgstr "Dia"
+
+#: imagery/templates/imagery/cloud_rate.html:12
+#: imagery/templates/imagery/scene_list.html:76
+msgid "Cloud Rate"
+msgstr "Taxa de Nuvens"
+
+#: imagery/templates/imagery/cloud_rate.html:25
+msgid "No scenes founds in these days."
+msgstr "Nenhuma cena encontrada nestes dias."
+
+#: imagery/templates/imagery/scene_detail.html:13
+#: imagery/templates/imagery/scene_list.html:55
+#: imagery/templates/imagery/scene_list.html:77
+msgid "Date"
+msgstr "Data"
+
+#: imagery/templates/imagery/scene_detail.html:21
+msgid "Cloud rate"
+msgstr "Taxa de Nuvens"
+
+#: imagery/templates/imagery/scene_detail.html:29
+#: imagery/templates/imagery/scene_list.html:35
+#: imagery/templates/imagery/scene_list.html:37
+#: imagery/templates/imagery/scene_list.html:78
+msgid "Status"
+msgstr "Status"
+
+#: imagery/templates/imagery/scene_detail.html:37
+msgid "Images"
+msgstr "Imagens"
+
+#: imagery/templates/imagery/scene_detail.html:44
+msgid "No images registered to this scene."
+msgstr "Nenhuma imagem cadastrada para esta cena."
+
+#: imagery/templates/imagery/scene_detail.html:51
+msgid "Quicklook of the scene"
+msgstr "Pré-visualização da cena"
+
+#: imagery/templates/imagery/scene_list.html:4
+msgid "Landsat Catalog"
+msgstr "Catálogo Landsat"
+
+#: imagery/templates/imagery/scene_list.html:8
+msgid "Filter Scenes"
+msgstr "Filtrar Cenas"
+
+#: imagery/templates/imagery/scene_list.html:14
+#: imagery/templates/imagery/scene_list.html:15
+#: imagery/templates/imagery/scene_list.html:74
+msgid "Scene"
+msgstr "Cena"
+
+#: imagery/templates/imagery/scene_list.html:26
+#: imagery/templates/imagery/scene_list.html:28
+#: imagery/templates/imagery/scene_list.html:75
+msgid "Satellite"
+msgstr "Satélite"
+
+#: imagery/templates/imagery/scene_list.html:38
+msgid "Processed"
+msgstr "Processada"
+
+#: imagery/templates/imagery/scene_list.html:39
+msgid "Process failed"
+msgstr "Processamento falhou"
+
+#: imagery/templates/imagery/scene_list.html:40
+msgid "Processing"
+msgstr "Processando"
+
+#: imagery/templates/imagery/scene_list.html:41
+msgid "Downloaded"
+msgstr "Download finalizado"
+
+#: imagery/templates/imagery/scene_list.html:42
+msgid "Download failed"
+msgstr "Download falhou"
+
+#: imagery/templates/imagery/scene_list.html:43
+msgid "Downloading"
+msgstr "Download em andamento"
+
+#: imagery/templates/imagery/scene_list.html:49
+msgid "Max Cloud Rate"
+msgstr "Taxa de Nuvens Máxima"
+
+#: imagery/templates/imagery/scene_list.html:57
+msgid "Start Date"
+msgstr "Data Inicial"
+
+#: imagery/templates/imagery/scene_list.html:58
+msgid "to"
+msgstr "a"
+
+#: imagery/templates/imagery/scene_list.html:59
+msgid "End Date"
+msgstr "Data Final"
+
+#: imagery/templates/imagery/scene_list.html:63
+msgid "Search"
+msgstr "Buscar"
+
+#: imagery/templates/imagery/scene_list.html:95
+msgid "No scenes found."
+msgstr "Nenhuma cena encontrada."
+
+#: imagery/templates/imagery/scene_list.html:100
+msgid "Page"
+msgstr "Página"
+
+#: imagery/templates/imagery/scene_list.html:100
+msgid "of"
+msgstr "de"
+
+#: imagery/templates/imagery/scene_list.html:104
+msgid "Previous"
+msgstr "Anterior"
+
+#: imagery/templates/imagery/scene_list.html:108
+msgid "Next"
+msgstr "Próxima"
