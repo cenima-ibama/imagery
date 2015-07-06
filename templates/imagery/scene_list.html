@@ -101,11 +101,11 @@
     </p>
     <ul class="pager">
       {% if page_obj.has_previous %}
-        <li><a href="?page={{ page_obj.previous_page_number }}&{{queries.urlencode}}">&larr; {% trans 'Previous' %}</a></li>
+        <li><a href="?page={{ page_obj.previous_page_number }}&{{ queries.urlencode }}">&larr; {% trans 'Previous' %}</a></li>
       {% endif %}
 
       {% if page_obj.has_next %}
-        <li><a href="?page={{ page_obj.next_page_number }}&{{queries.urlencode}}">{% trans 'Next' %} &rarr;</a></li>
+        <li><a href="?page={{ page_obj.next_page_number }}&{{ queries.urlencode }}">{% trans 'Next' %} &rarr;</a></li>
       {% endif %}
     </ul>
   {% endif %}
