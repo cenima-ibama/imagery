@@ -29,12 +29,12 @@ class Scene(models.Model):
         )
 
     status_options = (
-        ('downloading', 'Downloading'),
-        ('dl_failed', 'Download Failed'),
-        ('downloaded', 'Downloaded'),
-        ('processing', 'Processing'),
-        ('p_failed', 'Processing Failed'),
-        ('processed', 'Processed')
+        ('downloading', _('Downloading')),
+        ('dl_failed', _('Download Failed')),
+        ('downloaded', _('Downloaded')),
+        ('processing', _('Processing')),
+        ('p_failed', _('Processing Failed')),
+        ('processed', _('Processed'))
         )
 
     path = models.CharField(max_length=3)

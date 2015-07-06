@@ -36,10 +36,10 @@
           <select id="status" class="form-control">
             <option value="" default {% if not status %} selected="selected" {% endif %}>{% trans 'Status' %}</option>
             <option value="processed" {% if status == "processed" %} selected="selected" {% endif %}>{% trans 'Processed' %}</option>
-            <option value="p_failed" {% if status == "p_failed" %} selected="selected" {% endif %}>{% trans 'Process failed' %}</option>
+            <option value="p_failed" {% if status == "p_failed" %} selected="selected" {% endif %}>{% trans 'Process Failed' %}</option>
             <option value="processing" {% if status == "processing" %} selected="selected" {% endif %}>{% trans 'Processing' %}</option>
             <option value="downloaded" {% if status == "downloaded" %} selected="selected" {% endif %}>{% trans 'Downloaded' %}</option>
-            <option value="dl_failed" {% if status == "dl_failed" %} selected="selected" {% endif %}>{% trans 'Download failed' %}</option>
+            <option value="dl_failed" {% if status == "dl_failed" %} selected="selected" {% endif %}>{% trans 'Download Failed' %}</option>
             <option value="downloading" {% if status == "downloading" %} selected="selected" {% endif %}>{% trans 'Downloading' %}</option>
           </select>
         </div>
