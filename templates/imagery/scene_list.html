@@ -7,7 +7,7 @@
   <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#search-form" aria-expanded="false" aria-controls="search-form">
   {% trans 'Filter Scenes' %}
   </button>
-  <div class="collapse" id="search-form">
+  <div class="collapse {% if queries %} in {% endif %}" id="search-form">
     <form class="form-horizontal formtype">
       <div class="row form-line">
         <div class="col-lg-3">
