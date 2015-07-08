@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, url
+from django.views.generic import TemplateView
 
 from .views import SceneListView, SceneDetailView, cloud_rate_view
 
@@ -11,4 +12,7 @@ urlpatterns = patterns('',
         cloud_rate_view,
         name='cloud-rate'
         ),
+    url(r'^resources/$',
+        TemplateView.as_view(template_name='imagery/resources.html'),
+        name='resources'),
 )
