@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-06 18:00-0300\n"
-"PO-Revision-Date: 2015-07-06 18:01-0300\n"
+"POT-Creation-Date: 2015-07-08 10:28-0300\n"
+"PO-Revision-Date: 2015-07-08 10:30-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -131,6 +131,11 @@ msgstr "Taxa de Nuvens Máxima"
 #: imagery/templates/imagery/scene_list.html:57
 msgid "Start Date"
 msgstr "Data Inicial"
+
+#: imagery/templates/imagery/scene_list.html:57
+#: imagery/templates/imagery/scene_list.html:59
+msgid "en-US"
+msgstr "pt-BR"
 
 #: imagery/templates/imagery/scene_list.html:58
 msgid "to"
