@@ -51,7 +51,7 @@ class TestGetBounds(TestCase):
             ]
         self.assertEqual(get_bounds('LT52270592011295CUB01'), coords)
 
-    def test_L7_bounds(self):
+    def test_L7_bounds_2004_present(self):
         coords = [
             [-54.1274, 2.37448],
             [-52.43042, 2.12839],
@@ -60,3 +60,13 @@ class TestGetBounds(TestCase):
             [-54.1274, 2.37448]
             ]
         self.assertEqual(get_bounds('LE72270592015154CUB00'), coords)
+
+    def test_L7_bounds_until_2003(self):
+        coords = [
+            [-61.9403, -12.0854],
+            [-60.1977, -12.3374],
+            [-60.551, -13.9749],
+            [-62.3059, -13.721],
+            [-61.9403, -12.0854],
+            ]
+        self.assertEqual(get_bounds('LE72300692003142EDC00'), coords)

@@ -47,7 +47,10 @@ def get_bounds(scene_name):
     if scene_name[2] == '5':
         url_code = '3119'
     elif scene_name[2] == '7':
-        url_code = '3373'
+        if int(scene_name[9:13]) < 2004:
+            url_code = '3372'
+        else:
+            url_code = '3373'
     elif scene_name[2] == '8':
         url_code = '4923'
 
