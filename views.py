@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.db.models import Avg
 
 from .models import Scene
+from .utils import three_digit
 
 
 class SceneListView(ListView):
@@ -27,9 +28,9 @@ class SceneListView(ListView):
         if self.name:
             queryset = queryset.filter(name__icontains=self.name)
         if self.path:
-            queryset = queryset.filter(path=self.path)
+            queryset = queryset.filter(path=three_digit(self.path))
         if self.row:
-            queryset = queryset.filter(row=self.row)
+            queryset = queryset.filter(row=three_digit(self.row))
         if self.status:
             queryset = queryset.filter(status=self.status)
         if self.sat:
