@@ -14,9 +14,9 @@ class TestInspectImageryDir(TestCase):
 
     def setUp(self):
         self.folder = mkdtemp()
-        mkdir(join(self.folder, 'LC80010012015001LGN00'))
-        f = open(join(self.folder, 'LC80010012015001LGN00',
-            'LC80010012015001LGN00_B1.TIF'), 'w')
+        mkdir(join(self.folder, 'LC82200662015001LGN00'))
+        f = open(join(self.folder, 'LC82200662015001LGN00',
+            'LC82200662015001LGN00_B1.TIF'), 'w')
         f.close()
 
     def test_command(self):
@@ -28,13 +28,13 @@ class TestInspectImageryDir(TestCase):
         scene = Scene.objects.all()[0]
         image = Image.objects.all()[0]
         self.assertEqual(scene.sat, 'L8')
-        self.assertEqual(scene.path, '001')
-        self.assertEqual(scene.row, '001')
+        self.assertEqual(scene.path, '220')
+        self.assertEqual(scene.row, '066')
         self.assertEqual(scene.date, date(2015, 1, 1))
         self.assertEqual(scene.status, 'processed')
-        self.assertEqual(scene.name, 'LC80010012015001LGN00')
+        self.assertEqual(scene.name, 'LC82200662015001LGN00')
 
-        self.assertEqual(image.name, 'LC80010012015001LGN00_B1.TIF')
+        self.assertEqual(image.name, 'LC82200662015001LGN00_B1.TIF')
         self.assertEqual(image.type, 'B1')
         self.assertEqual(image.scene, scene)
 
@@ -43,13 +43,13 @@ class TestCreateScene(TestCase):
 
     def setUp(self):
         self.folder = mkdtemp()
-        mkdir(join(self.folder, 'LC80010012015001LGN00'))
-        f = open(join(self.folder, 'LC80010012015001LGN00',
-            'LC80010012015001LGN00_B1.TIF'), 'w')
+        mkdir(join(self.folder, 'LC82200662015001LGN00'))
+        f = open(join(self.folder, 'LC82200662015001LGN00',
+            'LC82200662015001LGN00_B1.TIF'), 'w')
         f.close()
 
     def test_command(self):
-        call_command('create_scene', join(self.folder, 'LC80010012015001LGN00'))
+        call_command('create_scene', join(self.folder, 'LC82200662015001LGN00'))
 
         self.assertEqual(Scene.objects.all().count(), 1)
         self.assertEqual(Image.objects.all().count(), 1)
@@ -57,13 +57,13 @@ class TestCreateScene(TestCase):
         scene = Scene.objects.all()[0]
         image = Image.objects.all()[0]
         self.assertEqual(scene.sat, 'L8')
-        self.assertEqual(scene.path, '001')
-        self.assertEqual(scene.row, '001')
+        self.assertEqual(scene.path, '220')
+        self.assertEqual(scene.row, '066')
         self.assertEqual(scene.date, date(2015, 1, 1))
         self.assertEqual(scene.status, 'processed')
-        self.assertEqual(scene.name, 'LC80010012015001LGN00')
+        self.assertEqual(scene.name, 'LC82200662015001LGN00')
 
-        self.assertEqual(image.name, 'LC80010012015001LGN00_B1.TIF')
+        self.assertEqual(image.name, 'LC82200662015001LGN00_B1.TIF')
         self.assertEqual(image.type, 'B1')
         self.assertEqual(image.scene, scene)
 

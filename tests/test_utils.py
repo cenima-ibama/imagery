@@ -7,7 +7,8 @@ from shutil import rmtree
 
 from django.test import TestCase
 
-from ..utils import three_digit, calendar_date, download, get_bounds
+from ..utils import three_digit, calendar_date, download
+from ..utils import get_bounds, get_cloud_rate
 
 
 class TestThreeDigit(TestCase):
@@ -37,6 +38,15 @@ class TestDownload(TestCase):
 
     def tearDown(self):
         rmtree('imagery/tests/LC80030172015001LGN00/')
+
+
+class TestGetCloudRate(TestCase):
+
+    def test_get_cloud_rate(self):
+        self.assertEqual(get_cloud_rate('LC80020662015186LGN00'), 87.58)
+        self.assertEqual(get_cloud_rate('LE72270592015154CUB00'), 42.04)
+        self.assertEqual(get_cloud_rate('LE72300692003142EDC00'), 7.84)
+        self.assertEqual(get_cloud_rate('LT52270592011295CUB01'), 92.02)
 
 
 class TestGetBounds(TestCase):

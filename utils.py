@@ -2,10 +2,22 @@
 from pyquery import PyQuery
 from lc8_download import lc8
 
-from os.path import join
+from os.path import join, isfile
 from datetime import date, timedelta
 
 from django.conf import settings
+
+
+def get_metadata_code(scene_name):
+    if scene_name[2] == '5':
+        return '3119'
+    elif scene_name[2] == '7':
+        if int(scene_name[9:13]) < 2004:
+            return '3372'
+        else:
+            return '3373'
+    elif scene_name[2] == '8':
+        return '4923'
 
 
 def three_digit(number):
@@ -36,23 +48,24 @@ def get_cloud_rate(scene_name):
     """Read the MTL file and return the cloud_rate of the scene."""
     sat = 'L%s' % scene_name[2]
     mtl_path = join(settings.MEDIA_ROOT, sat, scene_name, scene_name + '_MTL.txt')
-    with open(mtl_path, 'r') as f:
-        lines = f.readlines()
-        cloud_rate = [float(line.split(' = ')[-1]) for line in lines if 'CLOUD_COVER' in line][0]
-        return cloud_rate
+
+    if isfile(mtl_path):
+        with open(mtl_path, 'r') as f:
+            lines = f.readlines()
+            cloud_rate = [float(line.split(' = ')[-1]) for line in lines if 'CLOUD_COVER' in line][0]
+            return cloud_rate
+    else:
+        url_code = get_metadata_code(scene_name)
+        metadata = PyQuery(
+            'http://earthexplorer.usgs.gov/metadata/%s/%s/' % (url_code, scene_name)
+        )
+        metadata = metadata.text()[metadata.text().find('Cloud Cover '):]
+        return float(metadata.split(' ')[2])
 
 
 def get_bounds(scene_name):
     """Use Earth Explorer metadata to get bounds of a Scene"""
-    if scene_name[2] == '5':
-        url_code = '3119'
-    elif scene_name[2] == '7':
-        if int(scene_name[9:13]) < 2004:
-            url_code = '3372'
-        else:
-            url_code = '3373'
-    elif scene_name[2] == '8':
-        url_code = '4923'
+    url_code = get_metadata_code(scene_name)
 
     metadata = PyQuery(
         'http://earthexplorer.usgs.gov/fgdc/%s/%s/' % (url_code, scene_name)
