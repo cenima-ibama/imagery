@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import date
-from os.path import join
+from os.path import join, isfile
 from os import makedirs
 from shutil import rmtree
 
@@ -139,6 +139,11 @@ class TestImage(TestCase):
                 type='B4',
                 scene=self.scene
                 )
+
+    def test_delete_with_post_delete(self):
+        self.image.delete()
+        self.assertEqual(Image.objects.all().count(), 0)
+        self.assertFalse(isfile(self.image.file_path()))
 
     def tearDown(self):
         rmtree(self.image_folder)

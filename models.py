@@ -12,6 +12,8 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Polygon
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 from django.conf import settings
 from .utils import three_digit, calendar_date, download
@@ -170,6 +172,12 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Image, self).save(*args, **kwargs)
+
+
+@receiver(post_delete, sender=Image)
+def post_delete_image(sender, instance, *args, **kwargs):
+    if instance.file_exists():
+        remove(instance.file_path())
 
 
 @python_2_unicode_compatible
