@@ -70,7 +70,7 @@ def inspect_dir(dir, status='processed'):
 
 
 def delete_unneeded_bands(bands=['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
-    'B9', 'B11', 'ndvi']):
+    'B9', 'B10', 'B11', 'ndvi']):
     """Delete images of bands B1 to B11 and NDVI of scenes older than 32 days.
     """
 
@@ -79,4 +79,4 @@ def delete_unneeded_bands(bands=['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
         scene__date__lt=date.today() - timedelta(days=32)
     )
     images.delete()
-    print('%s images deleted.', images.count())
+    print('%s images deleted.' % images.count())
