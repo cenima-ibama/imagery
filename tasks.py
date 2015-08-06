@@ -78,5 +78,6 @@ def delete_unneeded_bands(bands=['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
         type__in=bands,
         scene__date__lt=date.today() - timedelta(days=32)
     )
+    num = images.count()
     images.delete()
-    print('%s images deleted.' % images.count())
+    print('%s images deleted.' % num)
