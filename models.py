@@ -176,6 +176,9 @@ class Image(models.Model):
 
 @receiver(post_delete, sender=Image)
 def post_delete_image(sender, instance, *args, **kwargs):
+    """Overwrites post_delete method of Image Model to delete also the file
+    fisically in the disk.
+    """
     if instance.file_exists():
         remove(instance.file_path())
 
