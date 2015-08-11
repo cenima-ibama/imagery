@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from lc8_download.lc8 import RemoteFileDoesntExist
 from indicar.process import Process
+from createhdr.createhdr import ReadTif
 
 from os.path import getsize, join, isfile
 from os import remove
@@ -70,9 +71,11 @@ class Scene(models.Model):
 
                 rgb = process.make_img([6, 5, 4])
                 if rgb is not False:
-                    Image.objects.get_or_create(name=rgb.split('/')[-1],
+                    image = Image.objects.get_or_create(name=rgb.split('/')[-1],
                         type='r6g5b4',
                         scene=self)
+                    tif = ReadTif(image[0].file_path())
+                    tif.write_hdr()
 
                 ndvi = process.make_ndvi()
                 if ndvi is not False:
