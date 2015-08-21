@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from celery import group, shared_task
+
 from os import listdir
 from datetime import date, timedelta
 
@@ -15,10 +17,15 @@ def download_all():
         sd.check_last_scene()
 
 
+@shared_task
+def process_scene(scene):
+    return scene.process()
+
+
 def process_all():
     """Process all scenes that have status 'downloaded'."""
-    for scene in Scene.objects.filter(status='downloaded'):
-        scene.process()
+    scenes = Scene.objects.filter(status='downloaded')
+    group(process_scene.s(scene) for scene in scenes)().get()
 
 
 def inspect_dir(dir, status='processed'):
@@ -74,10 +81,8 @@ def delete_unneeded_bands(bands=['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
     """Delete images of bands B1 to B11 and NDVI of scenes older than 32 days.
     """
 
-    images = Image.objects.filter(
-        type__in=bands,
-        scene__date__lt=date.today() - timedelta(days=32)
-    )
+    images = Image.objects.filter(type__in=bands,
+        scene__date__lt=date.today() - timedelta(days=32))
     num = images.count()
     images.delete()
     print('%s images deleted.' % num)
