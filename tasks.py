@@ -10,12 +10,15 @@ from .models import Scene, Image, ScheduledDownload
 from .utils import calendar_date, get_bounds, get_cloud_rate
 
 
-@shared_task
-def download_all():
+@shared_task(bind=True)
+def download_all(self):
     """Download all new Scenes of ScheduledDownloads."""
-    for sd in ScheduledDownload.objects.all():
-        sd.download_new_scene()
-        sd.check_last_scene()
+    try:
+        for sd in ScheduledDownload.objects.all():
+            sd.download_new_scene()
+            sd.check_last_scene()
+    except:
+        raise self.retry(countdown=10)
 
 
 @shared_task
@@ -27,7 +30,7 @@ def process_scene(scene):
 def process_all():
     """Process all scenes that have status 'downloaded'."""
     scenes = Scene.objects.filter(status='downloaded')
-    group(process_scene.s(scene) for scene in scenes)().get()
+    group(process_scene.s(scene) for scene in scenes)()
 
 
 def inspect_dir(dir, status='processed'):
