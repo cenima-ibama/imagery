@@ -10,6 +10,7 @@ from .models import Scene, Image, ScheduledDownload
 from .utils import calendar_date, get_bounds, get_cloud_rate
 
 
+@shared_task
 def download_all():
     """Download all new Scenes of ScheduledDownloads."""
     for sd in ScheduledDownload.objects.all():
@@ -22,6 +23,7 @@ def process_scene(scene):
     return scene.process()
 
 
+@shared_task
 def process_all():
     """Process all scenes that have status 'downloaded'."""
     scenes = Scene.objects.filter(status='downloaded')
