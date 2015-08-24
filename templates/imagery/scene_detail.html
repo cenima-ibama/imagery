@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{{ scene.name }}{% endblock title %}
+{% block title %}{% trans 'Scene' %} {{ scene.name }}{% endblock title %}
 
 <h1>{% block page_title %}{{ scene.name }}{% endblock page_title %}</h1>
 
