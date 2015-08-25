@@ -10,19 +10,19 @@
   <div class="collapse {% if queries %} in {% endif %}" id="search-form">
     <form class="form-horizontal formtype">
       <div class="row form-line">
-        <div class="col-lg-3">
+        <div class="col-xs-12 col-md-3">
           <label>{% trans 'Scene' %}</label>
           <input id="scene" class="form-control" type="text" placeholder="{% trans 'Scene' %}" value="{{ name }}"/>
         </div>
-        <div class="col-lg-1">
+        <div class="col-xs-6 col-md-1">
           <label>Path</label>
           <input id="path" class="form-control numberInput" type="number" placeholder="Path" min="0" max="233" value="{{ path }}"/>
         </div>
-        <div class="col-lg-1">
+        <div class="col-xs-6 col-md-1">
           <label>Row</label>
           <input id="row" class="form-control numberInput" type="number" placeholder="Row" min="0" max="248" value="{{ row }}"/>
         </div>
-        <div class="col-lg-2">
+        <div class="col-xs-6 col-md-2">
           <label class="pull-center">{% trans 'Satellite' %}</label>
           <select id="sat" class="form-control" value="{{ sat }}">
             <option value="" default {% if not sat %} selected="selected" {% endif %}>{% trans 'Satellite' %}</option>
@@ -31,7 +31,7 @@
             <option value="L8" {% if sat == "L8" %} selected="selected" {% endif %}>Landsat 8</option>
           </select>
         </div>
-        <div class="col-lg-2 input-control">
+        <div class="col-xs-6 col-md-2 input-control">
           <label class="pull-center">{% trans 'Status' %}</label>
           <select id="status" class="form-control">
             <option value="" default {% if not status %} selected="selected" {% endif %}>{% trans 'Status' %}</option>
@@ -45,13 +45,13 @@
         </div>
       </div>
       <div class="row form-line">
-        <div class="col-lg-4">
+        <div class="col-xs-12 col-md-4">
           <label class="text-center">{% trans 'Max Cloud Rate' %}</label>
           <div class="input-group slider-margin">
             <b>0% </b><input id="cloudRange" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="{{ max_cloud }}" data-slider-tooltip="show"/><b> 100%</b>
           </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-xs-12 col-md-3">
           <label>{% trans 'Date' %}</label>
           <div class="input-group">
             <input id="startDate" class="form-control" data-provide="datepicker" data-date-orientation="top left" placeholder="{% trans 'Start Date' %}" data-date-autoclose="true" value="{{ start }}" data-date-format="yyyy-mm-dd" data-date-language="{% trans 'en-US' %}">
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="col-lg-2 pull-right">
-          <a id="search" class="btn btn-primary" href="#"> {% trans 'Search' %}</a>
+          <a id="search" class="btn btn-primary" href="#" search> {% trans 'Search' %}</a>
         </div>
       </div>
     </form>
@@ -83,7 +83,7 @@
             <tr>
               <td><a href="{% url 'imagery:scene' scene.name %}">{{ scene.name }}</a>
               <td>{{ scene.get_sat_display }}</td>
-              <td>{% if scene.cloud_rate >= 0 %}{{ scene.cloud_rate }}%{% endif %}</td>
+              <td>{{ scene.cloud_rate|default_if_none:'--' }}%</td>
               <td>{{ scene.date|date:"SHORT_DATE_FORMAT" }}</td>
               <td>{{ scene.get_status_display }}</td>
             </tr>
