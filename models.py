@@ -71,11 +71,19 @@ class Scene(models.Model):
 
                 rgb = process.make_img([6, 5, 4])
                 if rgb is not False:
-                    image = Image.objects.get_or_create(name=rgb.split('/')[-1],
+                    image = Image.objects.get_or_create(
+                        name=rgb.split('/')[-1],
                         type='r6g5b4',
-                        scene=self)
+                        scene=self
+                    )
+                    # create HDR file for the RGB image
                     tif = ReadTif(image[0].file_path())
-                    tif.write_hdr()
+                    hdr_name = tif.write_hdr()
+                    Image.objects.get_or_create(
+                        name=hdr_name.split('/')[-1],
+                        type='hdr',
+                        scene=self
+                    )
 
                 ndvi = process.make_ndvi()
                 if ndvi is not False:
