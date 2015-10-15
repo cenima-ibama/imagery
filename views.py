@@ -105,32 +105,47 @@ def login_view(request):
                 return redirect(reverse('imagery:index'))
             else:
                 msg = _('Your account is not active, Please contact the system administrator')
-                return render_to_response('imagery/login_user.html', {'msg' : msg}, context_instance=context)
+                return render_to_response(
+                    'imagery/login_user.html',
+                    {'msg': msg}, context_instance=context
+                )
         else:
             msg = _('Invalid username or password')
-            return render_to_response('imagery/login_user.html', {'msg' : msg}, context_instance=context)
+            return render_to_response(
+                'imagery/login_user.html',
+                {'msg': msg}, context_instance=context
+            )
     else:
-        return render_to_response('imagery/login_user.html', context_instance=context)
+        return render_to_response('imagery/login_user.html',
+            context_instance=context)
 
 
-def logout_view (request):
+def logout_view(request):
     if request.user.is_authenticated():
         logout(request)
     return redirect(reverse('imagery:index'))
 
 
-def scheduling_view (request):
+def scheduling_view(request):
     context = RequestContext(request)
     if request.POST:
         form = SchedulingForm(request.POST)
         if form.is_valid:
-            model = PastSceneDownload(scene=request.POST.get('scene'), user=request.user)
+            model = PastSceneDownload(
+                scene=request.POST.get('scene'),
+                user=request.user
+            )
             model.save()
             form = SchedulingForm()
             return render_to_response(
                 'imagery/scheduling.html',
-                {'msg': _('Download scene %s scheduled' % model.scene), 'form' : form },
-                context_instance=context)
+                {'msg': _('Download scene %s scheduled' % model.scene), 'form': form},
+                context_instance=context
+            )
     else:
         form = SchedulingForm()
-    return render_to_response('imagery/scheduling.html', { 'form' : form }, context_instance=context)
+    return render_to_response(
+        'imagery/scheduling.html',
+        {'form': form},
+        context_instance=context
+    )

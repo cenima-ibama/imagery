@@ -346,9 +346,11 @@ class PastSceneDownload(models.Model):
         ('created', "Created"),
         ('downloading', 'Downloading'),
         ('downloaded', 'Downloaded'),
-        ('not_found', 'Not found'))
+        ('not_found', 'Not found')
+    )
 
     scene = models.CharField(max_length=28)
     user = models.ForeignKey(User)
     creation_date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=32, choices=status_options, default='created')
+    status = models.CharField(max_length=32, choices=status_options,
+        default='created')
