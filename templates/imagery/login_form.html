@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<form action="{% url 'imagery:login' %}" method="post" role="form">{% csrf_token %}
+  {% if next %}
+    <input type="hidden" name="next" value="{{ next }}" />
+  {% endif %}
+  <div class="form-group">
+    <label for="username">{% trans 'Username' %}:</label><br />
+    <input type="text" name="username" value=""><br />
+    <label for="password">{% trans 'Password' %}:</label><br />
+    <input type="password" name="password" value="" id="password">
+  </div>
+  <button type="submit" class="btn btn-primary">{% trans 'Login' %}</button>
+</form>

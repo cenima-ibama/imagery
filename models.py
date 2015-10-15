@@ -15,6 +15,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 from django.conf import settings
 from .utils import three_digit, calendar_date, download
@@ -338,3 +339,16 @@ class ScheduledDownload(models.Model):
     class Meta:
         verbose_name = _('Scheduled Download')
         verbose_name_plural = _('Scheduled Downloads')
+
+
+class PastSceneDownload(models.Model):
+    status_options = (
+        ('created', "Created"),
+        ('downloading', 'Downloading'),
+        ('downloaded', 'Downloaded'),
+        ('not_found', 'Not found'))
+
+    scene = models.CharField(max_length=28)
+    user = models.ForeignKey(User)
+    creation_date = models.DateField(auto_now_add=True)
+    status = models.CharField(max_length=32, choices=status_options, default='created')
