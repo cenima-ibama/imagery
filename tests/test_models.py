@@ -7,9 +7,11 @@ from shutil import rmtree
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.contrib.gis.geos import Polygon
+from django.contrib.auth.models import User
+
 
 from django.conf import settings
-from ..models import Scene, Image, ScheduledDownload
+from ..models import Scene, Image, ScheduledDownload, PastSceneDownload
 from ..utils import three_digit
 
 
@@ -248,3 +250,36 @@ class TestScheduledDownload(TestCase):
         rmtree(downloaded[2][0].replace('/LC82200662015017LGN00_BQA.TIF', ''))
 
         self.assertEqual(self.sd2.download_new_scene(['BQA']), [])
+
+
+class TestPastSceneDownload(TestCase):
+
+    def setUp(self):
+        Scene.objects.create(
+            path='227',
+            row='059',
+            sat='L7',
+            date=date(2015, 6, 3),
+            name='LE72270592015154CUB00',
+            cloud_rate=20.3,
+            status='downloading'
+        )
+        self.user = User.objects.create_user('user', 'i@t.com', 'password')
+
+    def test_past_scene_creation(self):
+        with self.assertRaises(ValidationError):
+            PastSceneDownload.objects.create(
+                scene='LE72270592015154CUB00',
+                user=self.user
+            )
+
+        PastSceneDownload.objects.create(
+                scene='LE72270592015138CUB00',
+                user=self.user
+            )
+        self.assertEqual(PastSceneDownload.objects.count(), 1)
+        with self.assertRaises(ValidationError):
+            PastSceneDownload.objects.create(
+                scene='LE72270592015138CUB00',
+                user=self.user
+            )

@@ -139,7 +139,8 @@ def scheduling_view(request):
             form = SchedulingForm()
             return render_to_response(
                 'imagery/scheduling.html',
-                {'msg': _('Download scene %s scheduled' % model.scene), 'form': form},
+                {'msg': _('Scene %s was scheduled to download.' % model.scene),
+                    'form': form},
                 context_instance=context
             )
     else:

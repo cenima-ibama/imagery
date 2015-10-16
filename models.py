@@ -349,8 +349,22 @@ class PastSceneDownload(models.Model):
         ('not_found', 'Not found')
     )
 
-    scene = models.CharField(max_length=28)
+    scene = models.CharField(max_length=28, unique=True)
     user = models.ForeignKey(User)
     creation_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=32, choices=status_options,
         default='created')
+
+    def clean(self):
+        self.clean_fields()
+        try:
+            Scene.objects.get(name=self.scene)
+            raise ValidationError(
+                _('The scene you want is already on our database.')
+                )
+        except Scene.DoesNotExist:
+            pass
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(PastSceneDownload, self).save(*args, **kwargs)
