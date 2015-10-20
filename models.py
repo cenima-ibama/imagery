@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from lc8_download.lc8 import RemoteFileDoesntExist
+from lc8_download.lc8 import DownloaderErrors
 from indicar.process import Process
 from createhdr.createhdr import ReadTif
 
@@ -291,7 +291,7 @@ class ScheduledDownload(models.Model):
                     else:
                         remove(path)
                 return downloaded
-            except RemoteFileDoesntExist:
+            except DownloaderErrors:
                 return []
 
     def check_last_scene(self, bands=[4, 5, 6, 'BQA']):
@@ -341,6 +341,17 @@ class ScheduledDownload(models.Model):
         verbose_name_plural = _('Scheduled Downloads')
 
 
+def validate_scene_name(value):
+    """Validator for the scene_name field of PastSceneDownload Model."""
+    try:
+        Scene.objects.get(name=value)
+        raise ValidationError(
+            _('The scene you want is already on our database.')
+            )
+    except Scene.DoesNotExist:
+        pass
+
+
 class PastSceneDownload(models.Model):
     status_options = (
         ('created', "Created"),
@@ -349,22 +360,15 @@ class PastSceneDownload(models.Model):
         ('not_found', 'Not found')
     )
 
-    scene = models.CharField(max_length=28, unique=True)
+    scene_name = models.CharField(max_length=28, unique=True,
+        validators=[validate_scene_name])
     user = models.ForeignKey(User)
     creation_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=32, choices=status_options,
         default='created')
 
-    def clean(self):
-        self.clean_fields()
-        try:
-            Scene.objects.get(name=self.scene)
-            raise ValidationError(
-                _('The scene you want is already on our database.')
-                )
-        except Scene.DoesNotExist:
-            pass
-
     def save(self, *args, **kwargs):
-        self.full_clean()
+        self.validate_unique()
         super(PastSceneDownload, self).save(*args, **kwargs)
+
+

@@ -130,16 +130,16 @@ def scheduling_view(request):
     context = RequestContext(request)
     if request.POST:
         form = SchedulingForm(request.POST)
-        if form.is_valid:
-            model = PastSceneDownload(
-                scene=request.POST.get('scene'),
+        if form.is_valid():
+            psd = PastSceneDownload(
+                scene_name=request.POST.get('scene_name'),
                 user=request.user
             )
-            model.save()
+            psd.save()
             form = SchedulingForm()
             return render_to_response(
                 'imagery/scheduling.html',
-                {'msg': _('Scene %s was scheduled to download.' % model.scene),
+                {'msg': _('Scene %s was scheduled to download.' % psd.scene_name),
                     'form': form},
                 context_instance=context
             )

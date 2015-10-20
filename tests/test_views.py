@@ -3,6 +3,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 
 from ..models import Scene, PastSceneDownload
 
@@ -58,7 +59,15 @@ class TestLoginLogoutView(TestCase):
 class TestSchedulingView(TestCase):
 
     def setUp(self):
-        self.scene = 'LC80010012015001LGN00'
+        Scene.objects.create(
+            path='227',
+            row='059',
+            sat='L7',
+            date=date(2015, 6, 3),
+            name='LE72270592015154CUB00',
+            cloud_rate=20.3,
+            status='downloading'
+        )
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
 
     def test_unlogged_response(self):
@@ -68,7 +77,7 @@ class TestSchedulingView(TestCase):
     def test_logged_response(self):
         response = self.client.post(
             reverse('imagery:scheduling'),
-            {'scene': self.scene}
+            {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 302)
 
@@ -77,9 +86,21 @@ class TestSchedulingView(TestCase):
             {'username': self.user.username, 'password': 'password'}
         )
         self.assertIn('_auth_user_id', self.client.session)
+
         response = self.client.post(
             reverse('imagery:scheduling'),
-            {'scene': self.scene}
+            {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 200)
+
+        # test uniqueness validation
+        response = self.client.post(
+            reverse('imagery:scheduling'),
+            {'scene_name': 'LC80010012015001LGN00'}
+        )
+        # test validation of scene_name field
+        response = self.client.post(
+            reverse('imagery:scheduling'),
+            {'scene_name': 'LE72270592015154CUB00'}
+        )
         self.assertEqual(PastSceneDownload.objects.count(), 1)

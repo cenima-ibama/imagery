@@ -2,8 +2,9 @@
 from django import forms
 from .models import PastSceneDownload
 
+
 class SchedulingForm (forms.ModelForm):
 
     class Meta:
         model = PastSceneDownload
-        fields = ['scene']
+        fields = ['scene_name']

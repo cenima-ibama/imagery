@@ -38,8 +38,10 @@ def calendar_date(year, day):
     return date(int(year), 1, 1) + timedelta(int(day) - 1)
 
 
-def download(scene_name, bands, path=join(settings.MEDIA_ROOT, 'L8')):
+def download(scene_name, bands, path=None):
     """Call the lc8_download library to download Landsat 8 imagery."""
+    if path is None:
+        path = join(settings.MEDIA_ROOT, get_sat_code(scene_name))
     scene = lc8.Downloader(scene_name)
     return scene.download(bands, path, metadata=True)
 
@@ -86,3 +88,8 @@ def get_bounds(scene_name):
     if coords[0] != coords[-1]:
         coords.append(coords[0])
     return coords
+
+
+def get_sat_code(scene_name):
+    """Return the code of the satellite of the scene."""
+    return 'L%s' % (scene_name[2])

@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 from celery import group, shared_task
+from lc8_download.lc8 import DownloaderErrors
 
 from os import listdir
+from os.path import join, getsize, isfile
 from datetime import date, timedelta
 
 from django.contrib.gis.geos import Polygon
+from django.conf import settings
 
-from .models import Scene, Image, ScheduledDownload
-from .utils import calendar_date, get_bounds, get_cloud_rate
+from .models import Scene, Image, ScheduledDownload, PastSceneDownload
+from .utils import calendar_date, get_bounds, get_cloud_rate, download
+from .utils import get_sat_code
 
 
 @shared_task(bind=True)
@@ -19,6 +23,41 @@ def download_all(self):
             sd.check_last_scene()
     except:
         raise self.retry(countdown=10)
+
+
+@shared_task
+def download_all_past_scenes(self):
+    """Download all pending PastScenes."""
+    for past_scene in PastSceneDownload.objects.filter(status='created'):
+        download(past_scene)
+
+
+def download_past_scene(past_scene):
+    sat = get_sat_code(past_scene.scene_name)
+    if sat == 'L8':
+        bands = [6, 5, 4, 'BQA']
+    else:
+        bands = [5, 4, 3]
+
+    try:
+        past_scene.status = 'downloading'
+        past_scene.save()
+        complete = False
+        while complete is False:
+            downloaded = download(past_scene.scene_name, bands)
+            complete = True
+            for path, size in downloaded:
+                if isfile(path) and getsize(path) != size:
+                    complete = False
+                    break
+
+        inspect_dir(join(settings.MEDIA_ROOT, sat, past_scene.scene_name),
+            'downloaded')
+        past_scene.status = 'downloaded'
+        past_scene.save()
+    except DownloaderErrors:
+        past_scene.status = 'Not found'
+        past_scene.save()
 
 
 @shared_task

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from lc8_download.lc8 import RemoteFileDoesntExist
+from lc8_download.lc8 import DownloaderErrors
 
 from datetime import date
 from os.path import isfile
@@ -8,7 +8,7 @@ from shutil import rmtree
 from django.test import TestCase
 
 from ..utils import three_digit, calendar_date, download
-from ..utils import get_bounds, get_cloud_rate
+from ..utils import get_bounds, get_cloud_rate, get_sat_code
 
 
 class TestThreeDigit(TestCase):
@@ -28,7 +28,7 @@ class TestCalendarDate(TestCase):
 class TestDownload(TestCase):
 
     def test_download(self):
-        with self.assertRaises(RemoteFileDoesntExist):
+        with self.assertRaises(DownloaderErrors):
             download('LC80010012015367LGN00', [11], 'imagery/tests/')
 
         download('LC80030172015001LGN00', [11], 'imagery/tests/')
@@ -80,3 +80,12 @@ class TestGetBounds(TestCase):
             [-61.9403, -12.0854],
             ]
         self.assertEqual(get_bounds('LE72300692003142EDC00'), coords)
+
+
+class TestGetSatCode(TestCase):
+
+    def test_get_sat_code(self):
+        self.assertEqual(get_sat_code('LC80020662015186LGN00'), 'L8')
+        self.assertEqual(get_sat_code('LO80020662015186LGN00'), 'L8')
+        self.assertEqual(get_sat_code('LE72300692003142EDC00'), 'L7')
+        self.assertEqual(get_sat_code('LT52300692003142CUB00'), 'L5')
