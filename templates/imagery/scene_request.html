@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-<h1>{% block page_title %}{% trans 'Scene Request' %}{% endblock page_title %}</h1>
+<h1>{% block page_title %}{% trans 'Request Scene' %}{% endblock page_title %}</h1>
 
 {% block content %}
+  {% if msg %}
+    <div class="alert alert-success">{{ msg }}</div>
+  {% endif %}
 
-{% if msg %}
-  <div class="alert alert-success">{{ msg }}</div>
-{% endif %}
-
-<form action="{% url 'imagery:scene-request' %}" method="post" role="form" class="form-group">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">{% trans 'Send' %}</button>
-</form>
-
+  <form action="{% url 'imagery:scene-request' %}" method="post" role="form" class="form-group">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% trans 'Send' %}</button>
+  </form>
 {% endblock content %}

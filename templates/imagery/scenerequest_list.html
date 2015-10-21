@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+<h1>{% block page_title %}{% trans 'My Scene Requests' %}{% endblock page_title %}</h1>
+
+{% block content %}
+  {% if scenes %}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>{% trans 'Scene' %}</th>
+            <th>{% trans 'Creation Date' %}</th>
+            <th>{% trans 'Status' %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for scene in scenes %}
+            <tr>
+              <td>{{ scene.scene_name }}</a>
+              <td>{{ scene.creation_date|date:"SHORT_DATE_FORMAT" }}</td>
+              <td>{{ scene.get_status_display }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-danger">{% trans 'No scene requests found.' %}</div>
+  {% endif %}
+{% endblock content %}

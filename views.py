@@ -150,3 +150,12 @@ def scene_request_view(request):
         {'form': form},
         context_instance=context
     )
+
+
+class SceneRequestListView(ListView):
+    model = SceneRequest
+    context_object_name = 'scenes'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return SceneRequest.objects.filter(user=self.request.user)

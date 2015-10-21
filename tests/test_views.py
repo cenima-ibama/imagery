@@ -103,3 +103,10 @@ class TestSceneRequestView(TestCase):
             {'scene_name': 'LE72270592015154CUB00'}
         )
         self.assertEqual(SceneRequest.objects.count(), 1)
+
+
+class TestSceneRequestListView(TestCase):
+
+    def test_SceneRequestListView_response(self):
+        response = client.get(reverse('imagery:scene-request-list'))
+        self.assertEqual(response.status_code, 200)

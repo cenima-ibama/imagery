@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-21 13:18-0200\n"
-"PO-Revision-Date: 2015-10-21 13:19-0200\n"
+"POT-Creation-Date: 2015-10-21 14:20-0200\n"
+"PO-Revision-Date: 2015-10-21 14:28-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -48,6 +48,7 @@ msgstr "Processada"
 #: imagery/templates/imagery/scene_list.html:14
 #: imagery/templates/imagery/scene_list.html:15
 #: imagery/templates/imagery/scene_list.html:74
+#: imagery/templates/imagery/scenerequest_list.html:12
 msgid "Scene"
 msgstr "Cena"
 
@@ -95,13 +96,13 @@ msgstr "Não encontrada"
 msgid "Scene name"
 msgstr "Nome da cena"
 
-#: imagery/models.py:381 imagery/templates/imagery/scene_request.html:4
+#: imagery/models.py:381
 msgid "Scene Request"
-msgstr "Pedido de Cena"
+msgstr "Solicitação de Cena"
 
 #: imagery/models.py:382
 msgid "Scene Requests"
-msgstr "Pedidos de Cena"
+msgstr "Solicitações de Cena"
 
 #: imagery/templates/imagery/cloud_rate.html:4
 msgid "Cloud rates of the last 16 days"
@@ -120,18 +121,28 @@ msgstr "Taxa de Nuvens"
 msgid "No scenes founds in these days."
 msgstr "Nenhuma cena encontrada nestes dias."
 
-#: imagery/templates/imagery/login_form.html:8
+#: imagery/templates/imagery/login_form.html:9
 msgid "Username"
 msgstr "Nome de usuário"
 
-#: imagery/templates/imagery/login_form.html:10
+#: imagery/templates/imagery/login_form.html:11
 msgid "Password"
 msgstr "Senha"
 
-#: imagery/templates/imagery/login_form.html:13
-#: imagery/templates/imagery/login_user.html:6
+#: imagery/templates/imagery/login_form.html:14
+#: imagery/templates/imagery/login_menu.html:18
+#: imagery/templates/imagery/login_menu.html:28
+#: imagery/templates/imagery/login_page.html:5
 msgid "Login"
 msgstr "Entrar"
+
+#: imagery/templates/imagery/login_menu.html:10
+msgid "Logout"
+msgstr "Sair"
+
+#: imagery/templates/imagery/login_menu.html:26
+msgid "Close"
+msgstr "Fechar"
 
 #: imagery/templates/imagery/scene_detail.html:13
 #: imagery/templates/imagery/scene_list.html:55
@@ -147,6 +158,7 @@ msgstr "Taxa de Nuvens"
 #: imagery/templates/imagery/scene_list.html:35
 #: imagery/templates/imagery/scene_list.html:37
 #: imagery/templates/imagery/scene_list.html:78
+#: imagery/templates/imagery/scenerequest_list.html:14
 msgid "Status"
 msgstr "Status"
 
@@ -221,9 +233,25 @@ msgstr "Anterior"
 msgid "Next"
 msgstr "Próxima"
 
-#: imagery/templates/imagery/scene_request.html:15
+#: imagery/templates/imagery/scene_request.html:4
+msgid "Request Scene"
+msgstr "Solicitar cena"
+
+#: imagery/templates/imagery/scene_request.html:14
 msgid "Send"
 msgstr "Enviar"
+
+#: imagery/templates/imagery/scenerequest_list.html:4
+msgid "My Scene Requests"
+msgstr "Minhas Solicitações de Cena"
+
+#: imagery/templates/imagery/scenerequest_list.html:13
+msgid "Creation Date"
+msgstr "Data de Criação"
+
+#: imagery/templates/imagery/scenerequest_list.html:29
+msgid "No scene requests found."
+msgstr "Nenhuma solicitação de cena encontrada."
 
 #: imagery/views.py:107
 msgid "Your account is not active, Please contact the system administrator"
