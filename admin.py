@@ -1,6 +1,6 @@
 from django.contrib.gis import admin
 
-from .models import Scene, Image, ScheduledDownload
+from .models import Scene, Image, ScheduledDownload, SceneRequest
 
 
 class SceneAdmin(admin.OSMGeoAdmin):
@@ -24,6 +24,14 @@ class ScheduledDownloadAdmin(admin.ModelAdmin):
     list_filter = ['path', 'row']
 
 
+class SceneRequestAdmin(admin.ModelAdmin):
+
+    list_display = ['scene_name', 'user', 'creation_date', 'status']
+    list_filter = ['status', 'creation_date']
+    search_fields = ['scene_name', 'user']
+
+
 admin.site.register(Scene, SceneAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(ScheduledDownload, ScheduledDownloadAdmin)
+admin.site.register(SceneRequest, SceneRequestAdmin)

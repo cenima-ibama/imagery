@@ -153,6 +153,8 @@ class Scene(models.Model):
 
     class Meta:
         ordering = ['-date', 'path', 'row']
+        verbose_name = _('Scene')
+        verbose_name_plural = _('Scenes')
 
 
 @python_2_unicode_compatible
@@ -163,7 +165,7 @@ class Image(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     type = models.CharField(max_length=30)
-    creation_date = models.DateField(auto_now_add=True)
+    creation_date = models.DateField(_('Creation date'), auto_now_add=True)
     scene = models.ForeignKey(Scene, related_name='images')
 
     def __str__(self):
@@ -185,6 +187,10 @@ class Image(models.Model):
         self.full_clean()
         super(Image, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = _('Image')
+        verbose_name_plural = _('Images')
+
 
 @receiver(post_delete, sender=Image)
 def post_delete_image(sender, instance, *args, **kwargs):
@@ -201,7 +207,7 @@ class ScheduledDownload(models.Model):
 
     path = models.CharField(max_length=3)
     row = models.CharField(max_length=3)
-    creation_date = models.DateField(auto_now_add=True)
+    creation_date = models.DateField(_('Creation date'), auto_now_add=True)
 
     def __str__(self):
         return 'L8 %s-%s' % (self.path, self.row)
@@ -354,16 +360,16 @@ def validate_scene_name(value):
 
 class SceneRequest(models.Model):
     status_options = (
-        ('created', "Created"),
-        ('downloading', 'Downloading'),
-        ('downloaded', 'Downloaded'),
-        ('not_found', 'Not found')
+        ('pending', _('Pending')),
+        ('downloading', _('Downloading')),
+        ('downloaded', _('Downloaded')),
+        ('not_found', _('Not found'))
     )
 
     scene_name = models.CharField(_('Scene name'), max_length=28, unique=True,
         validators=[validate_scene_name])
     user = models.ForeignKey(User)
-    creation_date = models.DateField(auto_now_add=True)
+    creation_date = models.DateField(_('Creation date'), auto_now_add=True)
     status = models.CharField(max_length=32, choices=status_options,
         default='created')
 
