@@ -112,11 +112,11 @@ def login_view(request):
         else:
             msg = _('Invalid username or password')
             return render_to_response(
-                'imagery/login_user.html',
+                'imagery/login_page.html',
                 {'msg': msg}, context_instance=context
             )
     else:
-        return render_to_response('imagery/login_user.html',
+        return render_to_response('imagery/login_page.html',
             context_instance=context)
 
 

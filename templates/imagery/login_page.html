@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load i18n %}
 
@@ -9,6 +8,7 @@
   {% if msg %}
     <div class="alert alert-danger" role="alert">{{ msg }}</div>
   {% endif %}
-
-  {% include 'imagery/login_form.html' %}
+  <div class="col-xs-12 col-md-3">
+    {% include 'imagery/login_form.html' %}
+  </div>
 {% endblock content %}
