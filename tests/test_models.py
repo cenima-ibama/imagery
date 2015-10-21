@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 
 
 from django.conf import settings
-from ..models import Scene, Image, ScheduledDownload, PastSceneDownload
+from ..models import Scene, Image, ScheduledDownload, SceneRequest
 from ..utils import three_digit
 
 
@@ -252,22 +252,22 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(self.sd2.download_new_scene(['BQA']), [])
 
 
-class TestPastSceneDownload(TestCase):
+class TestSceneRequest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
 
     def test_past_scene_creation(self):
 
-        PastSceneDownload.objects.create(
+        SceneRequest.objects.create(
                 scene_name='LE72270592015138CUB00',
                 user=self.user
             )
-        self.assertEqual(PastSceneDownload.objects.count(), 1)
+        self.assertEqual(SceneRequest.objects.count(), 1)
 
         with self.assertRaises(ValidationError):
-            PastSceneDownload.objects.create(
+            SceneRequest.objects.create(
                 scene_name='LE72270592015138CUB00',
                 user=self.user
             )
-        self.assertEqual(PastSceneDownload.objects.count(), 1)
+        self.assertEqual(SceneRequest.objects.count(), 1)

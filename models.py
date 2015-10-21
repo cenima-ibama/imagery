@@ -352,7 +352,7 @@ def validate_scene_name(value):
         pass
 
 
-class PastSceneDownload(models.Model):
+class SceneRequest(models.Model):
     status_options = (
         ('created', "Created"),
         ('downloading', 'Downloading'),
@@ -360,7 +360,7 @@ class PastSceneDownload(models.Model):
         ('not_found', 'Not found')
     )
 
-    scene_name = models.CharField(max_length=28, unique=True,
+    scene_name = models.CharField(_('Scene name'), max_length=28, unique=True,
         validators=[validate_scene_name])
     user = models.ForeignKey(User)
     creation_date = models.DateField(auto_now_add=True)
@@ -369,6 +369,10 @@ class PastSceneDownload(models.Model):
 
     def save(self, *args, **kwargs):
         self.validate_unique()
-        super(PastSceneDownload, self).save(*args, **kwargs)
+        super(SceneRequest, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _('Scene Request')
+        verbose_name_plural = _('Scene Requests')
 
 

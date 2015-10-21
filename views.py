@@ -8,8 +8,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import Avg
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from .forms import SchedulingForm
-from .models import Scene, PastSceneDownload
+from .forms import SceneRequestForm
+from .models import Scene, SceneRequest
 from .utils import three_digit
 
 
@@ -126,27 +126,27 @@ def logout_view(request):
     return redirect(reverse('imagery:index'))
 
 
-def scheduling_view(request):
+def scene_request_view(request):
     context = RequestContext(request)
     if request.POST:
-        form = SchedulingForm(request.POST)
+        form = SceneRequestForm(request.POST)
         if form.is_valid():
-            psd = PastSceneDownload(
+            scene_request = SceneRequest(
                 scene_name=request.POST.get('scene_name'),
                 user=request.user
             )
-            psd.save()
-            form = SchedulingForm()
+            scene_request.save()
+            form = SceneRequestForm()
             return render_to_response(
-                'imagery/scheduling.html',
-                {'msg': _('Scene %s was scheduled to download.' % psd.scene_name),
+                'imagery/scene_request.html',
+                {'msg': _('Scene %s was scheduled to download.' % scene_request.scene_name),
                     'form': form},
                 context_instance=context
             )
     else:
-        form = SchedulingForm()
+        form = SceneRequestForm()
     return render_to_response(
-        'imagery/scheduling.html',
+        'imagery/scene_request.html',
         {'form': form},
         context_instance=context
     )

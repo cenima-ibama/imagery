@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from .models import PastSceneDownload
+from .models import SceneRequest
 
 
-class SchedulingForm (forms.ModelForm):
+class SceneRequestForm (forms.ModelForm):
 
     class Meta:
-        model = PastSceneDownload
+        model = SceneRequest
         fields = ['scene_name']

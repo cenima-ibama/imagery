@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 
-from .views import SceneListView, SceneDetailView, cloud_rate_view, login_view, logout_view, scheduling_view
+from .views import SceneListView, SceneDetailView, cloud_rate_view, login_view
+from .views import logout_view, scene_request_view
 
 
 urlpatterns = patterns('',
@@ -13,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^$', SceneListView.as_view(), name='index'),
     url(r'^scene/(?P<slug>\w+)/$', SceneDetailView.as_view(), name='scene'),
     url(r'^cloud-rate/$', cloud_rate_view, name='cloud-rate'),
-    url(r'^scheduling/$', login_required(scheduling_view, login_url='/login/'), name='scheduling')
+    url(r'^scene-request/$', login_required(scene_request_view,
+        login_url='/login/'), name='scene-request')
 )

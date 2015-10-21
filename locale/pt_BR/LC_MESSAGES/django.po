@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-08 10:28-0300\n"
-"PO-Revision-Date: 2015-07-08 10:30-0300\n"
+"POT-Creation-Date: 2015-10-21 13:08-0200\n"
+"PO-Revision-Date: 2015-10-21 13:08-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -16,43 +16,59 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.5\n"
 
-#: imagery/models.py:32 imagery/templates/imagery/scene_list.html:43
+#: imagery/models.py:36 imagery/templates/imagery/scene_list.html:43
 msgid "Downloading"
 msgstr "Download em andamento"
 
-#: imagery/models.py:33 imagery/templates/imagery/scene_list.html:42
+#: imagery/models.py:37 imagery/templates/imagery/scene_list.html:42
 msgid "Download Failed"
 msgstr "Download falhou"
 
-#: imagery/models.py:34 imagery/templates/imagery/scene_list.html:41
+#: imagery/models.py:38 imagery/templates/imagery/scene_list.html:41
 msgid "Downloaded"
 msgstr "Download finalizado"
 
-#: imagery/models.py:35 imagery/templates/imagery/scene_list.html:40
+#: imagery/models.py:39 imagery/templates/imagery/scene_list.html:40
 msgid "Processing"
 msgstr "Processando"
 
-#: imagery/models.py:36
+#: imagery/models.py:40
 msgid "Processing Failed"
 msgstr "Processamento falhou"
 
-#: imagery/models.py:37 imagery/templates/imagery/scene_list.html:38
+#: imagery/models.py:41 imagery/templates/imagery/scene_list.html:38
 msgid "Processed"
 msgstr "Processada"
 
-#: imagery/models.py:307
+#: imagery/models.py:330
 msgid "There is already a scheduled scene with this path and row."
 msgstr "Já existe uma cena com esse mesmo path e row."
 
-#: imagery/models.py:317
+#: imagery/models.py:340
 msgid "Scheduled Download"
 msgstr "Download Agendado"
 
-#: imagery/models.py:318
+#: imagery/models.py:341
 msgid "Scheduled Downloads"
 msgstr "Downloads Agendados"
+
+#: imagery/models.py:349
+msgid "The scene you want is already on our database."
+msgstr "A cena que você deseja já está disponível em nosso banco de dados."
+
+#: imagery/models.py:363
+msgid "Scene name"
+msgstr "Nome da cena"
+
+#: imagery/models.py:375 imagery/templates/imagery/scene_request.html:4
+msgid "Scene Request"
+msgstr "Pedido de Cena"
+
+#: imagery/models.py:376
+msgid "Scene Requests"
+msgstr "Pedidos de Cena"
 
 #: imagery/templates/imagery/cloud_rate.html:4
 msgid "Cloud rates of the last 16 days"
@@ -70,6 +86,26 @@ msgstr "Taxa de Nuvens"
 #: imagery/templates/imagery/cloud_rate.html:25
 msgid "No scenes founds in these days."
 msgstr "Nenhuma cena encontrada nestes dias."
+
+#: imagery/templates/imagery/login_form.html:8
+msgid "Username"
+msgstr "Nome de usuário"
+
+#: imagery/templates/imagery/login_form.html:10
+msgid "Password"
+msgstr "Senha"
+
+#: imagery/templates/imagery/login_form.html:13
+#: imagery/templates/imagery/login_user.html:6
+msgid "Login"
+msgstr "Entrar"
+
+#: imagery/templates/imagery/scene_detail.html:4
+#: imagery/templates/imagery/scene_list.html:14
+#: imagery/templates/imagery/scene_list.html:15
+#: imagery/templates/imagery/scene_list.html:74
+msgid "Scene"
+msgstr "Cena"
 
 #: imagery/templates/imagery/scene_detail.html:13
 #: imagery/templates/imagery/scene_list.html:55
@@ -107,12 +143,6 @@ msgstr "Catálogo Landsat"
 #: imagery/templates/imagery/scene_list.html:8
 msgid "Filter Scenes"
 msgstr "Filtrar Cenas"
-
-#: imagery/templates/imagery/scene_list.html:14
-#: imagery/templates/imagery/scene_list.html:15
-#: imagery/templates/imagery/scene_list.html:74
-msgid "Scene"
-msgstr "Cena"
 
 #: imagery/templates/imagery/scene_list.html:26
 #: imagery/templates/imagery/scene_list.html:28
@@ -168,3 +198,28 @@ msgstr "Anterior"
 #: imagery/templates/imagery/scene_list.html:108
 msgid "Next"
 msgstr "Próxima"
+
+#: imagery/templates/imagery/scene_request.html:15
+msgid "Send"
+msgstr "Enviar"
+
+#: imagery/views.py:107
+msgid "Your account is not active, Please contact the system administrator"
+msgstr "Sua conta não está ativa, por favor contate o administrador do sistema"
+
+#: imagery/views.py:113
+msgid "Invalid username or password"
+msgstr "Nome de usuário ou senha inválido"
+
+#: imagery/views.py:142
+#, python-format
+msgid "Scene %s was scheduled to download."
+msgstr "Cena %s foi agendada para download."
+
+#~ msgid "Schedule"
+#~ msgstr "Agendar"
+
+#, fuzzy
+#~| msgid "Downloading"
+#~ msgid "Download Scheduling"
+#~ msgstr "Download em andamento"

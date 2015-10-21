@@ -9,14 +9,14 @@ from datetime import date, timedelta
 from django.contrib.gis.geos import Polygon
 from django.conf import settings
 
-from .models import Scene, Image, ScheduledDownload, PastSceneDownload
+from .models import Scene, Image, ScheduledDownload, SceneRequest
 from .utils import calendar_date, get_bounds, get_cloud_rate, download
 from .utils import get_sat_code
 
 
 @shared_task(bind=True)
 def download_all(self):
-    """Download all new Scenes of ScheduledDownloads."""
+    """Download all new Scenes of Schedulepast_dDownloads."""
     try:
         for sd in ScheduledDownload.objects.all():
             sd.download_new_scene()
@@ -26,38 +26,38 @@ def download_all(self):
 
 
 @shared_task
-def download_all_past_scenes(self):
-    """Download all pending PastScenes."""
-    for past_scene in PastSceneDownload.objects.filter(status='created'):
-        download(past_scene)
+def download_all_scene_requests(self):
+    """Download all pending SceneRequests."""
+    for scene in SceneRequest.objects.filter(status='created'):
+        download(scene)
 
 
-def download_past_scene(past_scene):
-    sat = get_sat_code(past_scene.scene_name)
+def download_scene_request(scene_request):
+    sat = get_sat_code(scene_request.scene_name)
     if sat == 'L8':
         bands = [6, 5, 4, 'BQA']
     else:
         bands = [5, 4, 3]
 
     try:
-        past_scene.status = 'downloading'
-        past_scene.save()
+        scene_request.status = 'downloading'
+        scene_request.save()
         complete = False
         while complete is False:
-            downloaded = download(past_scene.scene_name, bands)
+            downloaded = download(scene_request.scene_name, bands)
             complete = True
             for path, size in downloaded:
                 if isfile(path) and getsize(path) != size:
                     complete = False
                     break
 
-        inspect_dir(join(settings.MEDIA_ROOT, sat, past_scene.scene_name),
+        inspect_dir(join(settings.MEDIA_ROOT, sat, scene_request.scene_name),
             'downloaded')
-        past_scene.status = 'downloaded'
-        past_scene.save()
+        scene_request.status = 'downloaded'
+        scene_request.save()
     except DownloaderErrors:
-        past_scene.status = 'Not found'
-        past_scene.save()
+        scene_request.status = 'Not found'
+        scene_request.save()
 
 
 @shared_task

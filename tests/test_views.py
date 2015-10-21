@@ -3,9 +3,8 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
 
-from ..models import Scene, PastSceneDownload
+from ..models import Scene, SceneRequest
 
 client = Client()
 
@@ -56,7 +55,7 @@ class TestLoginLogoutView(TestCase):
         self.assertRedirects(response, reverse('imagery:index'))
 
 
-class TestSchedulingView(TestCase):
+class TestSceneRequestView(TestCase):
 
     def setUp(self):
         Scene.objects.create(
@@ -71,12 +70,12 @@ class TestSchedulingView(TestCase):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
 
     def test_unlogged_response(self):
-        response = self.client.get(reverse('imagery:scheduling'))
-        self.assertRedirects(response, '/login/?next=/scheduling/')
+        response = self.client.get(reverse('imagery:scene-request'))
+        self.assertRedirects(response, '/login/?next=/scene-request/')
 
     def test_logged_response(self):
         response = self.client.post(
-            reverse('imagery:scheduling'),
+            reverse('imagery:scene-request'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 302)
@@ -88,19 +87,19 @@ class TestSchedulingView(TestCase):
         self.assertIn('_auth_user_id', self.client.session)
 
         response = self.client.post(
-            reverse('imagery:scheduling'),
+            reverse('imagery:scene-request'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 200)
 
         # test uniqueness validation
         response = self.client.post(
-            reverse('imagery:scheduling'),
+            reverse('imagery:scene-request'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         # test validation of scene_name field
         response = self.client.post(
-            reverse('imagery:scheduling'),
+            reverse('imagery:scene-request'),
             {'scene_name': 'LE72270592015154CUB00'}
         )
-        self.assertEqual(PastSceneDownload.objects.count(), 1)
+        self.assertEqual(SceneRequest.objects.count(), 1)
