@@ -29,7 +29,7 @@ def download_all(self):
 def download_all_scene_requests(self):
     """Download all pending SceneRequests."""
     for scene in SceneRequest.objects.filter(status='created'):
-        download(scene)
+        download_scene_request(scene)
 
 
 def download_scene_request(scene_request):
