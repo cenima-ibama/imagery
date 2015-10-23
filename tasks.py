@@ -26,42 +26,47 @@ def download_all(self):
 
 
 @shared_task
-def download_all_scene_requests(self):
+def download_all_scene_requests():
     """Download all pending SceneRequests."""
-    for scene in SceneRequest.objects.filter(status='created'):
+    for scene in SceneRequest.objects.filter(status='pending'):
         download_scene_request(scene)
 
 
 def download_scene_request(scene_request):
-    sat = get_sat_code(scene_request.scene_name)
-    if sat == 'L8':
-        bands = [6, 5, 4, 'BQA']
+    """Download a SceneRequest. It needs to receive a SceneRequest object."""
+    if scene_request.status != 'downloaded':
+        sat = get_sat_code(scene_request.scene_name)
+        if sat == 'L8':
+            bands = [6, 5, 4, 'BQA']
+        else:
+            bands = [5, 4, 3]
+
+        try:
+            scene_request.status = 'downloading'
+            scene_request.save()
+            complete = False
+            while complete is False:
+                downloaded = download(scene_request.scene_name, bands)
+                complete = True
+                for path, size in downloaded:
+                    if isfile(path) and getsize(path) != size:
+                        complete = False
+                        break
+
+            inspect_dir(join(settings.MEDIA_ROOT, sat, scene_request.scene_name),
+                'downloaded')
+            scene_request.status = 'downloaded'
+            scene_request.save()
+        except DownloaderErrors:
+            scene_request.status = 'Not found'
+            scene_request.save()
     else:
-        bands = [5, 4, 3]
-
-    try:
-        scene_request.status = 'downloading'
-        scene_request.save()
-        complete = False
-        while complete is False:
-            downloaded = download(scene_request.scene_name, bands)
-            complete = True
-            for path, size in downloaded:
-                if isfile(path) and getsize(path) != size:
-                    complete = False
-                    break
-
-        inspect_dir(join(settings.MEDIA_ROOT, sat, scene_request.scene_name),
-            'downloaded')
-        scene_request.status = 'downloaded'
-        scene_request.save()
-    except DownloaderErrors:
-        scene_request.status = 'Not found'
-        scene_request.save()
+        print('The Scene Request %s was already downloaded.' % scene_request.scene_name)
 
 
 @shared_task
 def process_scene(scene):
+    """Process a Scene. It needs to receive a Scene object."""
     return scene.process()
 
 
