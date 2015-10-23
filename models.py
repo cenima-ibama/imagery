@@ -371,7 +371,7 @@ class SceneRequest(models.Model):
     user = models.ForeignKey(User)
     creation_date = models.DateField(_('Creation date'), auto_now_add=True)
     status = models.CharField(max_length=32, choices=status_options,
-        default='created')
+        default='pending')
 
     def save(self, *args, **kwargs):
         self.validate_unique()

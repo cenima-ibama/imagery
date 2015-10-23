@@ -28,10 +28,11 @@ def download_all(self):
 @shared_task
 def download_all_scene_requests():
     """Download all pending SceneRequests."""
-    for scene in SceneRequest.objects.filter(status='pending'):
-        download_scene_request(scene)
+    scenes = SceneRequest.objects.filter(status='pending')
+    group(download_scene_request.s(scene) for scene in scenes)()
 
 
+@shared_task
 def download_scene_request(scene_request):
     """Download a SceneRequest. It needs to receive a SceneRequest object."""
     if scene_request.status != 'downloaded':
