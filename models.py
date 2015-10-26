@@ -137,6 +137,7 @@ class Scene(models.Model):
                 int(self.row), self.date.year, self.name)
 
     def dir(self):
+        """Return the folder where the files of the scenes are saved."""
         return join(settings.MEDIA_ROOT, self.sat, self.name)
 
     def save(self, *args, **kwargs):
@@ -351,6 +352,9 @@ def validate_scene_name(value):
 
 
 class SceneRequest(models.Model):
+    """Model to receive requests of download of past Scenes. It can download
+    Landsat 5, 7 and 8 from AWS or Google Earth Engine.
+    """
     status_options = (
         ('pending', _('Pending')),
         ('downloading', _('Downloading')),
@@ -366,6 +370,7 @@ class SceneRequest(models.Model):
         default='pending')
 
     def scene_url(self):
+        """Return the URL of the Scene if it was already downloaded."""
         if self.status == 'downloaded':
             return reverse('imagery:scene', args=[self.scene_name])
         else:
