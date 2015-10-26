@@ -17,7 +17,11 @@
         <tbody>
           {% for scene in scenes %}
             <tr>
-              <td>{{ scene.scene_name }}</a>
+              {% if scene.status == 'downloaded' %}
+                <td><a href="{{ scene.scene_url }}">{{ scene.scene_name }}</a></td>
+              {% else %}
+                <td>{{ scene.scene_name }}</td>
+              {% endif %}
               <td>{{ scene.creation_date|date:"SHORT_DATE_FORMAT" }}</td>
               <td>{{ scene.get_status_display }}</td>
             </tr>
