@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from lc8_download.lc8 import DownloaderErrors
 from indicar.process import Process
-from createhdr.createhdr import ReadTif
 
 from os.path import getsize, join, isfile
 from os import remove
@@ -16,6 +15,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from django.conf import settings
 from .utils import three_digit, calendar_date, download
@@ -72,17 +72,9 @@ class Scene(models.Model):
 
                 rgb = process.make_img([6, 5, 4])
                 if rgb is not False:
-                    image = Image.objects.get_or_create(
+                    Image.objects.get_or_create(
                         name=rgb.split('/')[-1],
                         type='r6g5b4',
-                        scene=self
-                    )
-                    # create HDR file for the RGB image
-                    tif = ReadTif(image[0].file_path())
-                    hdr_name = tif.write_hdr()
-                    Image.objects.get_or_create(
-                        name=hdr_name.split('/')[-1],
-                        type='hdr',
                         scene=self
                     )
 
@@ -372,6 +364,12 @@ class SceneRequest(models.Model):
     creation_date = models.DateField(_('Creation date'), auto_now_add=True)
     status = models.CharField(max_length=32, choices=status_options,
         default='pending')
+
+    def scene_url(self):
+        if self.status == 'downloaded':
+            return reverse('imagery:scene', args=[self.scene_name])
+        else:
+            return None
 
     def save(self, *args, **kwargs):
         self.validate_unique()

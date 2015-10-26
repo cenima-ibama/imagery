@@ -107,6 +107,16 @@ class TestSceneRequestView(TestCase):
 
 class TestSceneRequestListView(TestCase):
 
+    def setUp(self):
+        self.user = User.objects.create_user('user', 'i@t.com', 'password')
+
     def test_SceneRequestListView_response(self):
-        response = client.get(reverse('imagery:scene-request-list'))
+        response = self.client.get(reverse('imagery:scene-request-list'))
+        self.assertEqual(response.status_code, 302)
+
+        self.client.post(
+            reverse('imagery:login'),
+            {'username': self.user.username, 'password': 'password'}
+        )
+        response = self.client.get(reverse('imagery:scene-request-list'))
         self.assertEqual(response.status_code, 200)

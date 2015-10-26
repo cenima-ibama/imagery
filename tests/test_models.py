@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.contrib.gis.geos import Polygon
 from django.contrib.auth.models import User
-
+from django.core.urlresolvers import reverse
 
 from django.conf import settings
 from ..models import Scene, Image, ScheduledDownload, SceneRequest
@@ -256,18 +256,40 @@ class TestSceneRequest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
+        self.scene_request = SceneRequest.objects.create(
+                scene_name='LC82270592015001CUB00',
+                user=self.user
+            )
 
     def test_past_scene_creation(self):
 
-        SceneRequest.objects.create(
-                scene_name='LE72270592015138CUB00',
+        self.assertEqual(SceneRequest.objects.count(), 1)
+        self.assertEqual(self.scene_request.status, 'pending')
+
+        with self.assertRaises(ValidationError):
+            SceneRequest.objects.create(
+                scene_name='LC82270592015001CUB00',
                 user=self.user
             )
         self.assertEqual(SceneRequest.objects.count(), 1)
 
-        with self.assertRaises(ValidationError):
-            SceneRequest.objects.create(
-                scene_name='LE72270592015138CUB00',
-                user=self.user
-            )
-        self.assertEqual(SceneRequest.objects.count(), 1)
+    def test_scene_url_method(self):
+        self.assertEqual(self.scene_request.scene_url(), None)
+
+        # mock scene_request download
+        scene = Scene.objects.create(
+            path='227',
+            row='059',
+            sat='L8',
+            date=date(2015, 1, 1),
+            name='LC82270592015001CUB00',
+            cloud_rate=20.3,
+            status='downloading'
+        )
+        self.scene_request.status = 'downloaded'
+        self.scene_request.save()
+        #test scene_url method
+        self.assertEqual(
+            self.scene_request.scene_url(),
+            reverse('imagery:scene', args=[scene.name])
+        )

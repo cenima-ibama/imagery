@@ -25,11 +25,11 @@ def download_all(self):
         raise self.retry(countdown=10)
 
 
-@shared_task
-def download_all_scene_requests():
+@shared_task(bind=True)
+def download_all_scene_requests(self):
     """Download all pending SceneRequests."""
-    scenes = SceneRequest.objects.filter(status='pending')
-    group(download_scene_request.s(scene) for scene in scenes)()
+    for scene in SceneRequest.objects.filter(status='pending'):
+        download_scene_request(scene)
 
 
 @shared_task
