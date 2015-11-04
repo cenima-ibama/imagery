@@ -2,8 +2,9 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 
-from .views import SceneListView, SceneDetailView, cloud_rate_view, login_view
-from .views import logout_view, scene_request_view, SceneRequestListView
+from .views import (SceneListView, SceneDetailView, cloud_rate_view, login_view,
+    logout_view, request_scene_view, SceneRequestByUserListView,
+    NotFoundSceneRequestListView)
 
 
 urlpatterns = patterns('',
@@ -12,10 +13,13 @@ urlpatterns = patterns('',
     url(r'^$', SceneListView.as_view(), name='index'),
     url(r'^scene/(?P<slug>\w+)/$', SceneDetailView.as_view(), name='scene'),
     url(r'^cloud-rate/$', cloud_rate_view, name='cloud-rate'),
-    url(r'^scene-request/$',
-        login_required(scene_request_view, login_url='/login/'),
-        name='scene-request'),
-    url(r'^scene-request-list/$',
-        login_required(SceneRequestListView.as_view(), login_url='/login/'),
-        name='scene-request-list'),
+    url(r'^request-scene/$',
+        login_required(request_scene_view, login_url='/login/'),
+        name='request-scene'),
+    url(r'^user-scene-request/$',
+        login_required(SceneRequestByUserListView.as_view(), login_url='/login/'),
+        name='user-scene-request'),
+    url(r'^not-found-scene-request/$',
+        NotFoundSceneRequestListView.as_view(),
+        name='not-found-scene-request'),
 )

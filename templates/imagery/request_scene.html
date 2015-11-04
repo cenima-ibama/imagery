@@ -8,7 +8,7 @@
     <div class="alert alert-success">{{ msg }}</div>
   {% endif %}
 
-  <form action="{% url 'imagery:scene-request' %}" method="post" role="form" class="form-group">
+  <form action="{% url 'imagery:request-scene' %}" method="post" role="form" class="form-group">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">{% trans 'Send' %}</button>

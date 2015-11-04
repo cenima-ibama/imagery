@@ -70,12 +70,12 @@ class TestSceneRequestView(TestCase):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
 
     def test_unlogged_response(self):
-        response = self.client.get(reverse('imagery:scene-request'))
-        self.assertRedirects(response, '/login/?next=/scene-request/')
+        response = self.client.get(reverse('imagery:request-scene'))
+        self.assertRedirects(response, '/login/?next=/request-scene/')
 
     def test_logged_response(self):
         response = self.client.post(
-            reverse('imagery:scene-request'),
+            reverse('imagery:request-scene'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 302)
@@ -87,36 +87,69 @@ class TestSceneRequestView(TestCase):
         self.assertIn('_auth_user_id', self.client.session)
 
         response = self.client.post(
-            reverse('imagery:scene-request'),
+            reverse('imagery:request-scene'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 200)
 
         # test uniqueness validation
-        response = self.client.post(
-            reverse('imagery:scene-request'),
+        self.client.post(
+            reverse('imagery:request-scene'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         # test validation of scene_name field
-        response = self.client.post(
-            reverse('imagery:scene-request'),
+        self.client.post(
+            reverse('imagery:request-scene'),
             {'scene_name': 'LE72270592015154CUB00'}
         )
+        response = self.client.post(
+            reverse('imagery:request-scene'),
+            {'scene_name': 'LE72270592015154CUB00_'}
+        )
+        response = self.client.post(
+            reverse('imagery:request-scene'),
+            {'scene_name': 'AE72270592015154CUB00'}
+        )
+        response = self.client.post(
+            reverse('imagery:request-scene'),
+            {'scene_name': 'LE42270592015154CUB00'}
+        )
+        response = self.client.post(
+            reverse('imagery:request-scene'),
+            {'scene_name': 'LE72270592015154CUB0'}
+        )
+
         self.assertEqual(SceneRequest.objects.count(), 1)
 
 
-class TestSceneRequestListView(TestCase):
+class TestSceneRequestViews(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
+        self.user2 = User.objects.create_user('another_user', 'i@t.com', 'password')
+        self.scene_request = SceneRequest.objects.create(
+                scene_name='LC82270592015001CUB00',
+                user=self.user
+        )
+        self.scene_request = SceneRequest.objects.create(
+                scene_name='LC82260592015001CUB00',
+                user=self.user2,
+                status='not_found'
+        )
 
     def test_SceneRequestListView_response(self):
-        response = self.client.get(reverse('imagery:scene-request-list'))
+        response = self.client.get(reverse('imagery:user-scene-request'))
         self.assertEqual(response.status_code, 302)
 
         self.client.post(
             reverse('imagery:login'),
             {'username': self.user.username, 'password': 'password'}
         )
-        response = self.client.get(reverse('imagery:scene-request-list'))
+        response = self.client.get(reverse('imagery:user-scene-request'))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['scenes'].count(), 1)
+
+    def test_NotFoundSceneRequestListView_response(self):
+        response = self.client.get(reverse('imagery:not-found-scene-request'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['scenes'].count(), 1)

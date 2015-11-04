@@ -126,7 +126,7 @@ def logout_view(request):
     return redirect(reverse('imagery:index'))
 
 
-def scene_request_view(request):
+def request_scene_view(request):
     context = RequestContext(request)
     if request.POST:
         form = SceneRequestForm(request.POST)
@@ -138,7 +138,7 @@ def scene_request_view(request):
             scene_request.save()
             form = SceneRequestForm()
             return render_to_response(
-                'imagery/scene_request.html',
+                'imagery/request_scene.html',
                 {'msg': _('Scene %s was scheduled to download.' % scene_request.scene_name),
                     'form': form},
                 context_instance=context
@@ -146,16 +146,31 @@ def scene_request_view(request):
     else:
         form = SceneRequestForm()
     return render_to_response(
-        'imagery/scene_request.html',
+        'imagery/request_scene.html',
         {'form': form},
         context_instance=context
     )
 
 
 class SceneRequestListView(ListView):
+    """Base view to all SceneRequestListViews."""
     model = SceneRequest
     context_object_name = 'scenes'
-    paginate_by = 20
+
+
+class SceneRequestByUserListView(SceneRequestListView):
+    """List Scene Requests by User."""
+    template_name = 'imagery/user_scenerequest_list.html'
 
     def get_queryset(self):
         return SceneRequest.objects.filter(user=self.request.user)
+
+
+class NotFoundSceneRequestListView(SceneRequestListView):
+    """List Scene Requests that were not found on AWS or Google Earth Engine
+    Servers.
+    """
+    template_name = 'imagery/not_found_scenerequest.html'
+
+    def get_queryset(self):
+        return SceneRequest.objects.filter(status='not_found')

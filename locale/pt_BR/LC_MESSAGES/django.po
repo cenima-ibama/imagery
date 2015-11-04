@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-21 14:20-0200\n"
-"PO-Revision-Date: 2015-10-21 14:28-0200\n"
+"POT-Creation-Date: 2015-11-04 14:57-0200\n"
+"PO-Revision-Date: 2015-11-04 14:59-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.5\n"
 
-#: imagery/models.py:36 imagery/models.py:364
+#: imagery/models.py:36 imagery/models.py:367
 #: imagery/templates/imagery/scene_list.html:43
 msgid "Downloading"
 msgstr "Download em andamento"
@@ -27,7 +27,7 @@ msgstr "Download em andamento"
 msgid "Download Failed"
 msgstr "Download falhou"
 
-#: imagery/models.py:38 imagery/models.py:365
+#: imagery/models.py:38 imagery/models.py:368
 #: imagery/templates/imagery/scene_list.html:41
 msgid "Downloaded"
 msgstr "Download finalizado"
@@ -44,63 +44,71 @@ msgstr "Processamento falhou"
 msgid "Processed"
 msgstr "Processada"
 
-#: imagery/models.py:156 imagery/templates/imagery/scene_detail.html:4
+#: imagery/models.py:149 imagery/templates/imagery/scene_detail.html:4
 #: imagery/templates/imagery/scene_list.html:14
 #: imagery/templates/imagery/scene_list.html:15
 #: imagery/templates/imagery/scene_list.html:74
-#: imagery/templates/imagery/scenerequest_list.html:12
+#: imagery/templates/imagery/user_scenerequest_list.html:12
 msgid "Scene"
 msgstr "Cena"
 
-#: imagery/models.py:157
+#: imagery/models.py:150
 msgid "Scenes"
 msgstr "Cenas"
 
-#: imagery/models.py:168 imagery/models.py:210 imagery/models.py:372
+#: imagery/models.py:161 imagery/models.py:203 imagery/models.py:375
 msgid "Creation date"
 msgstr "Data de criação"
 
-#: imagery/models.py:191
+#: imagery/models.py:184
 msgid "Image"
 msgstr "Imagem"
 
-#: imagery/models.py:192 imagery/templates/imagery/scene_detail.html:37
+#: imagery/models.py:185 imagery/templates/imagery/scene_detail.html:37
 msgid "Images"
 msgstr "Imagens"
 
-#: imagery/models.py:336
+#: imagery/models.py:329
 msgid "There is already a scheduled scene with this path and row."
 msgstr "Já existe uma cena com esse mesmo path e row."
 
-#: imagery/models.py:346
+#: imagery/models.py:339
 msgid "Scheduled Download"
 msgstr "Download Agendado"
 
-#: imagery/models.py:347
+#: imagery/models.py:340
 msgid "Scheduled Downloads"
 msgstr "Downloads Agendados"
 
-#: imagery/models.py:355
+#: imagery/models.py:348
 msgid "The scene you want is already on our database."
 msgstr "A cena que você deseja já está disponível em nosso banco de dados."
 
-#: imagery/models.py:363
+#: imagery/models.py:353
+msgid "The scene name needs to have 21 characters."
+msgstr "O nome da cena deve ter 21 caracteres."
+
+#: imagery/models.py:357
+msgid "Wrong scene name. Please check it."
+msgstr "Nome de Cena errado. Por favor, verifique."
+
+#: imagery/models.py:366
 msgid "Pending"
 msgstr "Pendente"
 
-#: imagery/models.py:366
+#: imagery/models.py:369
 msgid "Not found"
 msgstr "Não encontrada"
 
-#: imagery/models.py:369
+#: imagery/models.py:372
 msgid "Scene name"
 msgstr "Nome da cena"
 
-#: imagery/models.py:381
+#: imagery/models.py:392
 msgid "Scene Request"
 msgstr "Solicitação de Cena"
 
-#: imagery/models.py:382
+#: imagery/models.py:393
 msgid "Scene Requests"
 msgstr "Solicitações de Cena"
 
@@ -144,6 +152,18 @@ msgstr "Sair"
 msgid "Close"
 msgstr "Fechar"
 
+#: imagery/templates/imagery/not_found_scenerequest.html:4
+msgid "Not Found Scene Requests"
+msgstr "Solicitações de Cena não encontradas"
+
+#: imagery/templates/imagery/request_scene.html:4
+msgid "Request Scene"
+msgstr "Solicitar cena"
+
+#: imagery/templates/imagery/request_scene.html:14
+msgid "Send"
+msgstr "Enviar"
+
 #: imagery/templates/imagery/scene_detail.html:13
 #: imagery/templates/imagery/scene_list.html:55
 #: imagery/templates/imagery/scene_list.html:77
@@ -158,7 +178,7 @@ msgstr "Taxa de Nuvens"
 #: imagery/templates/imagery/scene_list.html:35
 #: imagery/templates/imagery/scene_list.html:37
 #: imagery/templates/imagery/scene_list.html:78
-#: imagery/templates/imagery/scenerequest_list.html:14
+#: imagery/templates/imagery/user_scenerequest_list.html:14
 msgid "Status"
 msgstr "Status"
 
@@ -233,23 +253,15 @@ msgstr "Anterior"
 msgid "Next"
 msgstr "Próxima"
 
-#: imagery/templates/imagery/scene_request.html:4
-msgid "Request Scene"
-msgstr "Solicitar cena"
-
-#: imagery/templates/imagery/scene_request.html:14
-msgid "Send"
-msgstr "Enviar"
-
-#: imagery/templates/imagery/scenerequest_list.html:4
+#: imagery/templates/imagery/user_scenerequest_list.html:4
 msgid "My Scene Requests"
 msgstr "Minhas Solicitações de Cena"
 
-#: imagery/templates/imagery/scenerequest_list.html:13
+#: imagery/templates/imagery/user_scenerequest_list.html:13
 msgid "Creation Date"
 msgstr "Data de Criação"
 
-#: imagery/templates/imagery/scenerequest_list.html:29
+#: imagery/templates/imagery/user_scenerequest_list.html:33
 msgid "No scene requests found."
 msgstr "Nenhuma solicitação de cena encontrada."
 

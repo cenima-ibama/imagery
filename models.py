@@ -45,7 +45,7 @@ class Scene(models.Model):
     row = models.CharField(max_length=3)
     sat = models.CharField('Satellite', choices=sat_options, max_length=50)
     date = models.DateField()
-    name = models.CharField(max_length=28, unique=True)
+    name = models.CharField(max_length=21, unique=True)
     cloud_rate = models.FloatField(null=True, blank=True)
     geom = models.PolygonField(srid=4674, null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
@@ -348,7 +348,14 @@ def validate_scene_name(value):
             _('The scene you want is already on our database.')
             )
     except Scene.DoesNotExist:
-        pass
+        if len(value) != 21:
+            raise ValidationError(
+            _('The scene name needs to have 21 characters.')
+            )
+        elif not value.startswith('L') or value[2] not in ['5', '7', '8']:
+            raise ValidationError(
+            _('Wrong scene name. Please check it.')
+            )
 
 
 class SceneRequest(models.Model):
@@ -362,7 +369,7 @@ class SceneRequest(models.Model):
         ('not_found', _('Not found'))
     )
 
-    scene_name = models.CharField(_('Scene name'), max_length=28, unique=True,
+    scene_name = models.CharField(_('Scene name'), max_length=21, unique=True,
         validators=[validate_scene_name])
     user = models.ForeignKey(User)
     creation_date = models.DateField(_('Creation date'), auto_now_add=True)
@@ -381,6 +388,7 @@ class SceneRequest(models.Model):
         super(SceneRequest, self).save(*args, **kwargs)
 
     class Meta:
+        ordering = ['-creation_date', 'scene_name']
         verbose_name = _('Scene Request')
         verbose_name_plural = _('Scene Requests')
 

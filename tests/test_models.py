@@ -90,6 +90,16 @@ class TestScene(TestCase):
                 status='downloading'
                 )
 
+        with self.assertRaises(ValidationError):
+            Scene.objects.create(
+                path='001',
+                row='001',
+                sat='L8',
+                date=date(2015, 1, 1),
+                name='LC80010012015001LGN00_123',
+                status='downloading'
+                )
+
 
 class TestImage(TestCase):
 
