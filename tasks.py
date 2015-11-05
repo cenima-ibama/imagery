@@ -16,7 +16,7 @@ from .utils import get_sat_code
 
 @shared_task(bind=True)
 def download_all(self):
-    """Download all new Scenes of Schedulepast_dDownloads."""
+    """Download all new Scenes of ScheduledDownloads."""
     try:
         for sd in ScheduledDownload.objects.all():
             sd.download_new_scene()
