@@ -376,6 +376,9 @@ class SceneRequest(models.Model):
     status = models.CharField(max_length=32, choices=status_options,
         default='pending')
 
+    def __str__(self):
+        return self.scene_name
+
     def scene_url(self):
         """Return the URL of the Scene if it was already downloaded."""
         if self.status == 'downloaded':
