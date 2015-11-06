@@ -28,7 +28,7 @@ class SceneRequestAdmin(admin.ModelAdmin):
 
     list_display = ['scene_name', 'user', 'creation_date', 'status']
     list_filter = ['status', 'creation_date']
-    search_fields = ['scene_name', 'user']
+    search_fields = ['scene_name']
 
 
 admin.site.register(Scene, SceneAdmin)
