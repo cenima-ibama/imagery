@@ -6,6 +6,9 @@ from os.path import join, isfile
 from datetime import date, timedelta
 
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 def get_metadata_code(scene_name):
@@ -93,3 +96,11 @@ def get_bounds(scene_name):
 def get_sat_code(scene_name):
     """Return the code of the satellite of the scene."""
     return 'L%s' % (scene_name[2])
+
+
+def send_multipart_email(subject, html_template, from_email, to_email):
+    html = render_to_string(html_template)
+    text_content = strip_tags(html)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(html, "text/html")
+    msg.send()

@@ -6,9 +6,10 @@ from os.path import isfile
 from shutil import rmtree
 
 from django.test import TestCase
+from django.core import mail
 
-from ..utils import three_digit, calendar_date, download
-from ..utils import get_bounds, get_cloud_rate, get_sat_code
+from ..utils import (three_digit, calendar_date, download, get_bounds,
+    get_cloud_rate, get_sat_code, send_multipart_email)
 
 
 class TestThreeDigit(TestCase):
@@ -89,3 +90,10 @@ class TestGetSatCode(TestCase):
         self.assertEqual(get_sat_code('LO80020662015186LGN00'), 'L8')
         self.assertEqual(get_sat_code('LE72300692003142EDC00'), 'L7')
         self.assertEqual(get_sat_code('LT52300692003142CUB00'), 'L5')
+
+
+class TestSendEmail(TestCase):
+
+    def test_send_email(self):
+        send_multipart_email('test', '404.html', 'sender@m.com', 'dest@m.com')
+        self.assertEqual(len(mail.outbox), 1)
