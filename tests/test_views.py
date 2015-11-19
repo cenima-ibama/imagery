@@ -131,7 +131,7 @@ class TestSceneRequestViews(TestCase):
                 scene_name='LC82270592015001CUB00',
                 user=self.user
         )
-        self.scene_request = SceneRequest.objects.create(
+        self.scene_request2 = SceneRequest.objects.create(
                 scene_name='LC82260592015001CUB00',
                 user=self.user2,
                 status='not_found'
@@ -153,3 +153,31 @@ class TestSceneRequestViews(TestCase):
         response = self.client.get(reverse('imagery:not-found-scene-request'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['scenes'].count(), 1)
+
+    def test_SceneRequestDeleteView_unlogged_response(self):
+        url = reverse('imagery:delete-scene-request', args=[self.scene_request.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(SceneRequest.objects.count(), 2)
+
+    def test_SceneRequestDeleteView_logged_response(self):
+        url = reverse('imagery:delete-scene-request', args=[self.scene_request.pk])
+
+        self.client.post(
+            reverse('imagery:login'),
+            {'username': self.user.username, 'password': 'password'}
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(url)
+
+        url = reverse('imagery:delete-scene-request', args=[self.scene_request2.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+        self.assertEqual(SceneRequest.objects.count(), 1)

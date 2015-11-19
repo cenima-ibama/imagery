@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-04 14:57-0200\n"
-"PO-Revision-Date: 2015-11-04 14:59-0200\n"
+"POT-Creation-Date: 2015-11-19 16:45-0200\n"
+"PO-Revision-Date: 2015-11-19 16:48-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.5\n"
 
-#: imagery/models.py:36 imagery/models.py:367
+#: imagery/models.py:36 imagery/models.py:368
 #: imagery/templates/imagery/scene_list.html:43
 msgid "Downloading"
 msgstr "Download em andamento"
@@ -27,7 +27,7 @@ msgstr "Download em andamento"
 msgid "Download Failed"
 msgstr "Download falhou"
 
-#: imagery/models.py:38 imagery/models.py:368
+#: imagery/models.py:38 imagery/models.py:369
 #: imagery/templates/imagery/scene_list.html:41
 msgid "Downloaded"
 msgstr "Download finalizado"
@@ -56,7 +56,7 @@ msgstr "Cena"
 msgid "Scenes"
 msgstr "Cenas"
 
-#: imagery/models.py:161 imagery/models.py:203 imagery/models.py:375
+#: imagery/models.py:161 imagery/models.py:203 imagery/models.py:376
 msgid "Creation date"
 msgstr "Data de criação"
 
@@ -68,47 +68,47 @@ msgstr "Imagem"
 msgid "Images"
 msgstr "Imagens"
 
-#: imagery/models.py:329
+#: imagery/models.py:330
 msgid "There is already a scheduled scene with this path and row."
 msgstr "Já existe uma cena com esse mesmo path e row."
 
-#: imagery/models.py:339
+#: imagery/models.py:340
 msgid "Scheduled Download"
 msgstr "Download Agendado"
 
-#: imagery/models.py:340
+#: imagery/models.py:341
 msgid "Scheduled Downloads"
 msgstr "Downloads Agendados"
 
-#: imagery/models.py:348
+#: imagery/models.py:349
 msgid "The scene you want is already on our database."
 msgstr "A cena que você deseja já está disponível em nosso banco de dados."
 
-#: imagery/models.py:353
+#: imagery/models.py:354
 msgid "The scene name needs to have 21 characters."
 msgstr "O nome da cena deve ter 21 caracteres."
 
-#: imagery/models.py:357
+#: imagery/models.py:358
 msgid "Wrong scene name. Please check it."
 msgstr "Nome de Cena errado. Por favor, verifique."
 
-#: imagery/models.py:366
+#: imagery/models.py:367
 msgid "Pending"
 msgstr "Pendente"
 
-#: imagery/models.py:369
+#: imagery/models.py:370
 msgid "Not found"
 msgstr "Não encontrada"
 
-#: imagery/models.py:372
+#: imagery/models.py:373
 msgid "Scene name"
 msgstr "Nome da cena"
 
-#: imagery/models.py:392
+#: imagery/models.py:396
 msgid "Scene Request"
 msgstr "Solicitação de Cena"
 
-#: imagery/models.py:393
+#: imagery/models.py:397
 msgid "Scene Requests"
 msgstr "Solicitações de Cena"
 
@@ -253,6 +253,22 @@ msgstr "Anterior"
 msgid "Next"
 msgstr "Próxima"
 
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:4
+msgid "Delete scene request"
+msgstr "Apagar Solicitação de Cena"
+
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:7
+msgid "Do you really want to delete the scene request"
+msgstr "Você realmente deseja apagar a solicitação de cena"
+
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:9
+msgid "Yes, I'm sure"
+msgstr "Sim, tenho certeza"
+
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:10
+msgid "No, don't delete"
+msgstr "Não, não apague"
+
 #: imagery/templates/imagery/user_scenerequest_list.html:4
 msgid "My Scene Requests"
 msgstr "Minhas Solicitações de Cena"
@@ -261,19 +277,19 @@ msgstr "Minhas Solicitações de Cena"
 msgid "Creation Date"
 msgstr "Data de Criação"
 
-#: imagery/templates/imagery/user_scenerequest_list.html:33
+#: imagery/templates/imagery/user_scenerequest_list.html:37
 msgid "No scene requests found."
 msgstr "Nenhuma solicitação de cena encontrada."
 
-#: imagery/views.py:107
+#: imagery/views.py:108
 msgid "Your account is not active, Please contact the system administrator"
 msgstr "Sua conta não está ativa, por favor contate o administrador do sistema"
 
-#: imagery/views.py:113
+#: imagery/views.py:114
 msgid "Invalid username or password"
 msgstr "Nome de usuário ou senha inválido"
 
-#: imagery/views.py:142
+#: imagery/views.py:150
 #, python-format
 msgid "Scene %s was scheduled to download."
 msgstr "Cena %s foi agendada para download."

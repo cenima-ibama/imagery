@@ -1,24 +1,18 @@
 from datetime import date, timedelta
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, DeleteView
 from django.template import RequestContext
 from django.shortcuts import render, redirect, render_to_response
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Avg
 from django.utils.translation import ugettext, ugettext_lazy as _
-from django.core.urlresolvers import reverse_lazy
 
 from .forms import SceneRequestForm
 from .models import Scene, SceneRequest
 from .utils import three_digit
 
-class SceneListDelete(DeleteView):
-    model = SceneRequest
-    template_name = 'imagery/scene_delete.html'
-
-    success_url = reverse_lazy('imagery:index')
-    # success_url = reverse('imagery:index')
 
 class SceneListView(ListView):
     model = Scene
@@ -133,6 +127,13 @@ def logout_view(request):
     return redirect(reverse('imagery:index'))
 
 
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view, login_url='imagery:login')
+
+
 def request_scene_view(request):
     context = RequestContext(request)
     if request.POST:
@@ -181,3 +182,16 @@ class NotFoundSceneRequestListView(SceneRequestListView):
 
     def get_queryset(self):
         return SceneRequest.objects.filter(status='not_found')
+
+
+class SceneRequestDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete SceneRequest objects. Only the user that created the SceneRequest
+    can delete it.
+    """
+    model = SceneRequest
+    context_object_name = 'scenerequest'
+    success_url = reverse_lazy('imagery:user-scene-request')
+
+    def get_queryset(self):
+        qs = super(SceneRequestDeleteView, self).get_queryset()
+        return qs.filter(user=self.request.user)
