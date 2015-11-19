@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %} <title>Projetos - Apagar o Projeto {{ object }}</title> {% endblock title %}
+
+{% block content %}
+
+<form action="" method="post">{% csrf_token %}
+  <h3>Deseja Apagar "{{ object }}"?</h3>
+  <br/>
+  <button type="submit" class="btn btn-primary">Remover</button>
+</form>
+{% endblock content %}
+                        
