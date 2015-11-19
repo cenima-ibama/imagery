@@ -229,10 +229,11 @@ class ScheduledDownload(models.Model):
 
     def next_scene_name(self):
         """Return the name of the next Scene for this path and row. If there
-        isn't any registered Scene, it will return the name with the date of
-        today.
+        isn't any registered Scene or the last registered Scene is older than 32
+        days, it will return the scene name with the date of today.
         """
-        if self.last_scene() is not None:
+        if self.last_scene() is not None and \
+            (self.creation_date - self.last_scene().date <= timedelta(32)):
             first_part = self.last_scene().name[:13]
             end = self.last_scene().name[16:]
             day = three_digit(int(self.last_scene().day()) + 16)
@@ -324,10 +325,10 @@ class ScheduledDownload(models.Model):
     def clean(self):
         self.clean_fields()
         try:
-            ScheduledDownload.objects.get(path=self.path, row=self.row)
-            raise ValidationError(
-                _('There is already a scheduled scene with this path and row.')
-                )
+            if self != ScheduledDownload.objects.get(path=self.path, row=self.row):
+                raise ValidationError(
+                    _('There is already a scheduled scene with this path and row.')
+                    )
         except self.DoesNotExist:
             pass
 

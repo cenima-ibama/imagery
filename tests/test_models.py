@@ -164,6 +164,7 @@ class TestImage(TestCase):
 class TestScheduledDownload(TestCase):
 
     def setUp(self):
+        self.today_number = three_digit(date.today().timetuple().tm_yday)
         self.sd = ScheduledDownload.objects.create(path='220', row='066')
         self.sd2 = ScheduledDownload.objects.create(path='999', row='002')
 
@@ -192,33 +193,42 @@ class TestScheduledDownload(TestCase):
     def test_has_new_scene(self):
         self.assertEqual(self.sd.has_new_scene(), True)
 
-        day_number = three_digit(date.today().timetuple().tm_yday)
         Scene.objects.create(
             path='220',
             row='066',
             sat='L8',
             date=date.today(),
-            name='LC82200662015%sLGN00' % day_number,
+            name='LC82200662015%sLGN00' % self.today_number,
             cloud_rate=20.3,
             status='downloading'
         )
 
         self.assertEqual(self.sd.has_new_scene(), False)
         self.assertEqual(self.sd.last_scene().name,
-            'LC82200662015%sLGN00' % day_number)
+            'LC82200662015%sLGN00' % self.today_number)
 
         self.assertEqual(self.sd2.has_new_scene(), True)
 
     def test_next_scene_name(self):
+        self.assertEqual(
+            self.sd.next_scene_name(),
+            'LC8220066%s%sLGN00' % (date.today().year, self.today_number)
+        )
+        self.sd.creation_date = date(2015, 1, 1)
+        self.sd.save()
         self.assertEqual(self.sd.next_scene_name(), 'LC82200662015017LGN00')
-        year = date.today().year
-        day = three_digit(date.today().timetuple().tm_yday)
+
         self.assertEqual(
             self.sd2.next_scene_name(),
-            'LC8999002%s%sLGN00' % (year, day)
+            'LC8999002%s%sLGN00' % (date.today().year, self.today_number)
         )
 
     def test_create_scene(self):
+        # mock creation_date to 2015-01-01, so we will have a correct date
+        # to download a new scene
+        self.sd.creation_date = date(2015, 1, 1)
+        self.sd.save()
+
         scene = self.sd.create_scene()[0]
         self.assertIsInstance(scene, Scene)
         self.assertEqual(scene.path, '220')
@@ -227,6 +237,11 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(scene.sat, 'L8')
 
     def test_create_image(self):
+        # mock creation_date to 2015-01-01, so we will have a correct date
+        # to download a new scene
+        self.sd.creation_date = date(2015, 1, 1)
+        self.sd.save()
+
         self.sd.create_scene()
         image = self.sd.create_image('LC82200662015017LGN00_BQA.TIF')[0]
         self.assertIsInstance(image, Image)
@@ -234,6 +249,11 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(image.scene.name, 'LC82200662015017LGN00')
 
     def test_download(self):
+        # mock creation_date to 2015-01-01, so we will have a correct date
+        # to download a new scene
+        self.sd.creation_date = date(2015, 1, 1)
+        self.sd.save()
+
         downloaded = self.sd.download_new_scene([10, 11])
         self.assertEqual(len(downloaded), 2)
 
