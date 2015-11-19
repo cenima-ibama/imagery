@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 
 from .views import (SceneListView, SceneDetailView, cloud_rate_view, login_view,
     logout_view, request_scene_view, SceneRequestByUserListView,
-    NotFoundSceneRequestListView)
+    NotFoundSceneRequestListView, SceneListDelete)
 
 
 urlpatterns = patterns('',
+    url(r'^imagery/delete/(?P<pk>\d+)/$', login_required(SceneListDelete.as_view(), login_url='/login/'), name='delete_scene'),
     url(r'^login/$', login_view, name='login'),
     url(r'^logout/$', logout_view, name='logout'),
     url(r'^$', SceneListView.as_view(), name='index'),

@@ -12,6 +12,7 @@
             <th>{% trans 'Scene' %}</th>
             <th>{% trans 'Creation Date' %}</th>
             <th>{% trans 'Status' %}</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@
               {% endif %}
               <td>{{ scene.creation_date|date:"SHORT_DATE_FORMAT" }}</td>
               <td>{{ scene.get_status_display }}</td>
+              <td><a href="{{ scene.get_scene_delete_url }}">Remover</a></td>
             </tr>
           {% endfor %}
         </tbody>

@@ -1,17 +1,24 @@
 from datetime import date, timedelta
 
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView
 from django.template import RequestContext
 from django.shortcuts import render, redirect, render_to_response
 from django.core.urlresolvers import reverse
 from django.db.models import Avg
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.core.urlresolvers import reverse_lazy
 
 from .forms import SceneRequestForm
 from .models import Scene, SceneRequest
 from .utils import three_digit
 
+class SceneListDelete(DeleteView):
+    model = SceneRequest
+    template_name = 'imagery/scene_delete.html'
+
+    success_url = reverse_lazy('imagery:index')
+    # success_url = reverse('imagery:index')
 
 class SceneListView(ListView):
     model = Scene

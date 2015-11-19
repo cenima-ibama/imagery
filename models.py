@@ -390,6 +390,9 @@ class SceneRequest(models.Model):
         self.validate_unique()
         super(SceneRequest, self).save(*args, **kwargs)
 
+    def get_scene_delete_url(self):
+            return u"/imagery/delete/%i" % self.id
+
     class Meta:
         ordering = ['-creation_date', 'scene_name']
         verbose_name = _('Scene Request')
