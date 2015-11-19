@@ -373,7 +373,7 @@ class SceneRequest(models.Model):
     scene_name = models.CharField(_('Scene name'), max_length=21, unique=True,
         validators=[validate_scene_name])
     user = models.ForeignKey(User)
-    creation_date = models.DateField(_('Creation date'), auto_now_add=True)
+    creation_date = models.DateTimeField(_('Creation date'), auto_now_add=True)
     status = models.CharField(max_length=32, choices=status_options,
         default='pending')
 
