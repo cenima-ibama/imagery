@@ -95,5 +95,5 @@ class TestGetSatCode(TestCase):
 class TestSendEmail(TestCase):
 
     def test_send_email(self):
-        send_multipart_email('test', '404.html', 'sender@m.com', 'dest@m.com')
+        send_multipart_email('test', '404.html', 'sender@m.com', ['dest@m.com'])
         self.assertEqual(len(mail.outbox), 1)

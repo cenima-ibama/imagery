@@ -101,6 +101,6 @@ def get_sat_code(scene_name):
 def send_multipart_email(subject, html_template, from_email, to_email):
     html = render_to_string(html_template)
     text_content = strip_tags(html)
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to_email)
     msg.attach_alternative(html, "text/html")
     msg.send()

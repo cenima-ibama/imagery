@@ -11,7 +11,7 @@ from django.conf import settings
 
 from .models import Scene, Image, ScheduledDownload, SceneRequest
 from .utils import calendar_date, get_bounds, get_cloud_rate, download
-from .utils import get_sat_code
+from .utils import get_sat_code, send_multipart_email
 
 
 @shared_task(bind=True)
@@ -136,3 +136,29 @@ def delete_unneeded_bands(bands=['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
     num = images.count()
     images.delete()
     print('%s images deleted.' % num)
+
+
+@shared_task
+def not_found_scenes_alert():
+    """Send email if there are Scene Requests that were not found in AWS and
+    Google Earth servers and need manual download.
+    """
+    yesterday = date.today() - timedelta(days=1)
+    if SceneRequest.objects.filter(status='not_found',
+        creation_date__gte=yesterday).count() > 0:
+        try:
+            send_multipart_email(
+                subject='Not Found Scene Requests',
+                html_template='imagery/email_not_found_scenerequests.html',
+                from_email=settings.SERVER_EMAIL,
+                to_email=settings.NOT_FOUND_SCENES_ADMIN_EMAILS
+                )
+        except AttributeError:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(
+                """There are scene requests that require manual download but we
+                could not send email because the variables SERVER_EMAIL or
+                NOT_FOUND_SCENES_ADMIN_EMAILS are not configured in your
+                settings."""
+            )
