@@ -50,8 +50,6 @@ class Scene(models.Model):
     geom = models.PolygonField(srid=4674, null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
 
-    objects = models.GeoManager()
-
     def __str__(self):
         return '%s %s-%s %s' % (self.sat, self.path, self.row, self.date.strftime('%x'))
 

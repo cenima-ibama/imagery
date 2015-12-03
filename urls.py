@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
 from .views import (SceneListView, SceneDetailView, cloud_rate_view, login_view,
@@ -7,10 +7,12 @@ from .views import (SceneListView, SceneDetailView, cloud_rate_view, login_view,
     NotFoundSceneRequestListView, SceneRequestDeleteView)
 
 
-urlpatterns = patterns('',
+app_name = 'imagery'
+
+urlpatterns = [
+    url(r'^$', SceneListView.as_view(), name='index'),
     url(r'^login/$', login_view, name='login'),
     url(r'^logout/$', logout_view, name='logout'),
-    url(r'^$', SceneListView.as_view(), name='index'),
     url(r'^scene/(?P<slug>\w+)/$', SceneDetailView.as_view(), name='scene'),
     url(r'^cloud-rate/$', cloud_rate_view, name='cloud-rate'),
     url(r'^request-scene/$',
@@ -25,4 +27,4 @@ urlpatterns = patterns('',
     url(r'^scene-request/(?P<pk>\d+)/delete/$',
         SceneRequestDeleteView.as_view(),
         name='delete-scene-request'),
-)
+]
