@@ -5,7 +5,7 @@
 
 {% block content %}
   <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#search-form" aria-expanded="false" aria-controls="search-form">
-  {% trans 'Filter Scenes' %}
+    {% trans 'Filter Scenes' %}
   </button>
   <div class="collapse {% if queries %} in {% endif %}" id="search-form">
     <form class="form-horizontal formtype">
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="col-lg-2 pull-right">
-          <a id="search" class="btn btn-primary" href="#" search> {% trans 'Search' %}</a>
+          <a id="search" class="btn btn-primary" href="{% url 'imagery:index' %}" search> {% trans 'Search' %}</a>
         </div>
       </div>
     </form>
