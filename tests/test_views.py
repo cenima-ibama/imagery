@@ -34,6 +34,24 @@ class TestSceneDetailView(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class TestGeoSceneDetailView(TestCase):
+
+    def setUp(self):
+        self.scene = Scene.objects.create(
+            path='001',
+            row='001',
+            sat='L8',
+            date=date(2015, 1, 1),
+            name='LC80010012015001LGN00',
+            cloud_rate=20.3,
+            status='downloading'
+            )
+
+    def test_scene_detail_response(self):
+        response = client.get(reverse('imagery:geoscene', args=[self.scene.name]))
+        self.assertEqual(response.status_code, 200)
+
+
 class TestCloudRateView(TestCase):
 
     def test_cloud_rate_view(self):

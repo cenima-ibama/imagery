@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+
+<script type="text/javascript">
+  var map = L.map('map');
+  var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  });
+  osm.addTo(map);
+
+  $.getJSON("{% url geojson_url scene_name %}?format=json", function(data) {
+    var geoJSON = L.geoJson(data);
+    geoJSON.addTo(map);
+    map.fitBounds(geoJSON);
+  });
+</script>

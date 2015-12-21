@@ -48,6 +48,28 @@
     </div>
   </div>
   <div class='col-md-6 col-xs-12'>
-    <img src='{{ scene.quicklook }}' alt='{% trans 'Quicklook of the scene' %} {{ scene.name }}' class='img-responsive'>
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation"><a href="#quicklook" aria-controls="quicklook" role="tab" data-toggle="tab">{% trans 'Quicklook' %}</a></li>
+      <li role="presentation" class="active"><a href="#map_pane" aria-controls="map_pane" role="tab" data-toggle="tab">{% trans 'Map' %}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane" id="quicklook">
+        <img src='{{ scene.quicklook }}' alt='{% trans 'Quicklook of the scene' %} {{ scene.name }}' class='img-responsive'>
+      </div>
+      <div role="tabpanel" class="tab-pane active" id="map_pane">
+        <div id="map"></div>
+      </div>
+    </div>
   </div>
+
 {% endblock content %}
+
+
+{% block extra_js %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $('a[href="#quicklook"]').click()
+    })
+  </script>
+  {% include "imagery/scene_map.html" with scene_name=scene.name geojson_url="imagery:geoscene" %}
+{% endblock extra_js %}

@@ -1,3 +1,5 @@
+from rest_framework.generics import RetrieveAPIView
+
 from datetime import date, timedelta
 
 from django.contrib.auth import authenticate, login, logout
@@ -11,6 +13,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from .forms import SceneRequestForm
 from .models import Scene, SceneRequest
+from .serializers import SceneSerializer
 from .utils import three_digit
 
 
@@ -83,6 +86,12 @@ class SceneDetailView(DetailView):
     model = Scene
     context_object_name = 'scene'
     slug_field = 'name'
+
+
+class GeoSceneDetailView(RetrieveAPIView):
+    queryset = Scene.objects.all()
+    serializer_class = SceneSerializer
+    lookup_field = 'name'
 
 
 def cloud_rate_view(request):
