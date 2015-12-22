@@ -13,4 +13,7 @@
     geoJSON.addTo(map);
     map.fitBounds(geoJSON);
   });
+  map.on('load', function(){
+      $('a[href="#quicklook"]').click();
+  })
 </script>

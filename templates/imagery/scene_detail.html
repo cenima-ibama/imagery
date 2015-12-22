@@ -66,10 +66,5 @@
 
 
 {% block extra_js %}
-  <script type="text/javascript">
-    $(document).ready(function(){
-        $('a[href="#quicklook"]').click()
-    })
-  </script>
   {% include "imagery/scene_map.html" with scene_name=scene.name geojson_url="imagery:geoscene" %}
 {% endblock extra_js %}
