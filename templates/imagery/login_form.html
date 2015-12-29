@@ -1,6 +1,5 @@
 {% load i18n %}
 
-
 <form action="{% url 'imagery:login' %}" method="post" role="form">{% csrf_token %}
   {% if next %}
     <input type="hidden" name="next" value="{{ next }}" />

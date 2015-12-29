@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block page_title %}<h1>{% trans 'Request Scene' %}</h1>{% endblock page_title %}
+{% block title %}{% trans 'Request Landsat scene' %}{% endblock title %}
+
+{% block page_title %}<h1 class="page-header">{% trans 'Request Landsat scene' %}</h1>{% endblock page_title %}
 
 {% block content %}
+  <p>
+    {% url 'imagery:user-scene-request' as the_url %}
+    {% blocktrans %}Request the download of any Landsat 5, 7 or 8 scene.
+      The scene will be downloaded and processed automatically. See your
+      <a href="{{ the_url }}">Scene Requests status</a>.{% endblocktrans %}
+  </p>
+
   {% if msg %}
     <div class="alert alert-success">{{ msg }}</div>
   {% endif %}

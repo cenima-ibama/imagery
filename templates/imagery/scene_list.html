@@ -2,7 +2,9 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block page_title %}<h1>{% trans 'Landsat Catalog' %}</h1>{% endblock page_title %}
+{% block title %}{% trans 'Landsat Catalog' %}{% endblock title %}
+
+{% block page_title %}<h1 class="page-header">{% trans 'Landsat Catalog' %}</h1>{% endblock page_title %}
 
 {% block content %}
   <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#search-form" aria-expanded="false" aria-controls="search-form">

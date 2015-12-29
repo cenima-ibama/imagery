@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-21 11:47-0200\n"
-"PO-Revision-Date: 2015-12-21 12:34-0200\n"
+"POT-Creation-Date: 2015-12-29 16:37-0200\n"
+"PO-Revision-Date: 2015-12-29 16:38-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -19,20 +19,20 @@ msgstr ""
 "X-Generator: Poedit 1.8.6\n"
 
 #: imagery/models.py:36 imagery/models.py:366
-#: imagery/templates/imagery/scene_list.html:44
+#: imagery/templates/imagery/scene_list.html:46
 msgid "Downloading"
 msgstr "Download em andamento"
 
-#: imagery/models.py:37 imagery/templates/imagery/scene_list.html.py:43
+#: imagery/models.py:37 imagery/templates/imagery/scene_list.html.py:45
 msgid "Download Failed"
 msgstr "Download falhou"
 
 #: imagery/models.py:38 imagery/models.py:367
-#: imagery/templates/imagery/scene_list.html:42
+#: imagery/templates/imagery/scene_list.html:44
 msgid "Downloaded"
 msgstr "Download finalizado"
 
-#: imagery/models.py:39 imagery/templates/imagery/scene_list.html.py:41
+#: imagery/models.py:39 imagery/templates/imagery/scene_list.html.py:43
 msgid "Processing"
 msgstr "Processando"
 
@@ -40,15 +40,15 @@ msgstr "Processando"
 msgid "Processing Failed"
 msgstr "Processamento falhou"
 
-#: imagery/models.py:41 imagery/templates/imagery/scene_list.html.py:39
+#: imagery/models.py:41 imagery/templates/imagery/scene_list.html.py:41
 msgid "Processed"
 msgstr "Processada"
 
 #: imagery/models.py:147 imagery/templates/imagery/scene_detail.html.py:4
-#: imagery/templates/imagery/scene_list.html:15
-#: imagery/templates/imagery/scene_list.html:16
-#: imagery/templates/imagery/scene_list.html:75
-#: imagery/templates/imagery/user_scenerequest_list.html:12
+#: imagery/templates/imagery/scene_list.html:17
+#: imagery/templates/imagery/scene_list.html:18
+#: imagery/templates/imagery/scene_list.html:77
+#: imagery/templates/imagery/user_scenerequest_list.html:14
 msgid "Scene"
 msgstr "Cena"
 
@@ -121,7 +121,7 @@ msgid "Day"
 msgstr "Dia"
 
 #: imagery/templates/imagery/cloud_rate.html:12
-#: imagery/templates/imagery/scene_list.html:77
+#: imagery/templates/imagery/scene_list.html:79
 msgid "Cloud Rate"
 msgstr "Taxa de Nuvens"
 
@@ -129,18 +129,19 @@ msgstr "Taxa de Nuvens"
 msgid "No scenes founds in these days."
 msgstr "Nenhuma cena encontrada nestes dias."
 
-#: imagery/templates/imagery/login_form.html:9
+#: imagery/templates/imagery/login_form.html:8
 msgid "Username"
 msgstr "Nome de usuário"
 
-#: imagery/templates/imagery/login_form.html:11
+#: imagery/templates/imagery/login_form.html:10
 msgid "Password"
 msgstr "Senha"
 
-#: imagery/templates/imagery/login_form.html:14
+#: imagery/templates/imagery/login_form.html:13
 #: imagery/templates/imagery/login_menu.html:18
 #: imagery/templates/imagery/login_menu.html:28
-#: imagery/templates/imagery/login_page.html:5
+#: imagery/templates/imagery/login_page.html:4
+#: imagery/templates/imagery/login_page.html:6
 msgid "Login"
 msgstr "Entrar"
 
@@ -153,20 +154,33 @@ msgid "Close"
 msgstr "Fechar"
 
 #: imagery/templates/imagery/not_found_scenerequest.html:4
+#: imagery/templates/imagery/not_found_scenerequest.html:6
 msgid "Not Found Scene Requests"
 msgstr "Solicitações de Cena não encontradas"
 
 #: imagery/templates/imagery/request_scene.html:4
-msgid "Request Scene"
-msgstr "Solicitar cena"
+#: imagery/templates/imagery/request_scene.html:6
+msgid "Request Landsat scene"
+msgstr "Solicitar cena Landsat"
 
-#: imagery/templates/imagery/request_scene.html:14
+#: imagery/templates/imagery/request_scene.html:11
+#, python-format
+msgid ""
+"Request the download of any Landsat 5, 7 or 8 scene.\n"
+"      The scene will be downloaded and processed automatically. See your\n"
+"      <a href=\"%(the_url)s\">Scene Requests status</a>."
+msgstr ""
+"Solicite o download de qualquer cena Landsat 5, 7 ou 8.\n"
+"     O download e processamento da cena será realizado automaticamente. Veja o\n"
+"      <a href=\"%(the_url)s\">status das suas solicitações de cena</a>."
+
+#: imagery/templates/imagery/request_scene.html:23
 msgid "Send"
 msgstr "Enviar"
 
 #: imagery/templates/imagery/scene_detail.html:13
-#: imagery/templates/imagery/scene_list.html:56
-#: imagery/templates/imagery/scene_list.html:78
+#: imagery/templates/imagery/scene_list.html:58
+#: imagery/templates/imagery/scene_list.html:80
 msgid "Date"
 msgstr "Data"
 
@@ -175,10 +189,10 @@ msgid "Cloud rate"
 msgstr "Taxa de Nuvens"
 
 #: imagery/templates/imagery/scene_detail.html:29
-#: imagery/templates/imagery/scene_list.html:36
 #: imagery/templates/imagery/scene_list.html:38
-#: imagery/templates/imagery/scene_list.html:79
-#: imagery/templates/imagery/user_scenerequest_list.html:14
+#: imagery/templates/imagery/scene_list.html:40
+#: imagery/templates/imagery/scene_list.html:81
+#: imagery/templates/imagery/user_scenerequest_list.html:16
 msgid "Status"
 msgstr "Status"
 
@@ -199,93 +213,96 @@ msgid "Quicklook of the scene"
 msgstr "Pré-visualização da cena"
 
 #: imagery/templates/imagery/scene_list.html:5
+#: imagery/templates/imagery/scene_list.html:7
 msgid "Landsat Catalog"
 msgstr "Catálogo Landsat"
 
-#: imagery/templates/imagery/scene_list.html:9
+#: imagery/templates/imagery/scene_list.html:11
 msgid "Filter Scenes"
 msgstr "Filtrar Cenas"
 
-#: imagery/templates/imagery/scene_list.html:27
 #: imagery/templates/imagery/scene_list.html:29
-#: imagery/templates/imagery/scene_list.html:76
+#: imagery/templates/imagery/scene_list.html:31
+#: imagery/templates/imagery/scene_list.html:78
 msgid "Satellite"
 msgstr "Satélite"
 
-#: imagery/templates/imagery/scene_list.html:40
+#: imagery/templates/imagery/scene_list.html:42
 msgid "Process Failed"
 msgstr "Processamento falhou"
 
-#: imagery/templates/imagery/scene_list.html:50
+#: imagery/templates/imagery/scene_list.html:52
 msgid "Max Cloud Rate"
 msgstr "Taxa de Nuvens Máxima"
 
-#: imagery/templates/imagery/scene_list.html:58
+#: imagery/templates/imagery/scene_list.html:60
 msgid "Start Date"
 msgstr "Data Inicial"
 
-#: imagery/templates/imagery/scene_list.html:58
 #: imagery/templates/imagery/scene_list.html:60
+#: imagery/templates/imagery/scene_list.html:62
 msgid "en-US"
 msgstr "pt-BR"
 
-#: imagery/templates/imagery/scene_list.html:59
+#: imagery/templates/imagery/scene_list.html:61
 msgid "to"
 msgstr "a"
 
-#: imagery/templates/imagery/scene_list.html:60
+#: imagery/templates/imagery/scene_list.html:62
 msgid "End Date"
 msgstr "Data Final"
 
-#: imagery/templates/imagery/scene_list.html:64
+#: imagery/templates/imagery/scene_list.html:66
 msgid "Search"
 msgstr "Buscar"
 
-#: imagery/templates/imagery/scene_list.html:96
+#: imagery/templates/imagery/scene_list.html:98
 msgid "No scenes found."
 msgstr "Nenhuma cena encontrada."
 
-#: imagery/templates/imagery/scene_list.html:101
+#: imagery/templates/imagery/scene_list.html:103
 msgid "Page"
 msgstr "Página"
 
-#: imagery/templates/imagery/scene_list.html:101
+#: imagery/templates/imagery/scene_list.html:103
 msgid "of"
 msgstr "de"
 
-#: imagery/templates/imagery/scene_list.html:105
+#: imagery/templates/imagery/scene_list.html:107
 msgid "Previous"
 msgstr "Anterior"
 
-#: imagery/templates/imagery/scene_list.html:109
+#: imagery/templates/imagery/scene_list.html:111
 msgid "Next"
 msgstr "Próxima"
 
 #: imagery/templates/imagery/scenerequest_confirm_delete.html:4
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:6
 msgid "Delete scene request"
 msgstr "Apagar Solicitação de Cena"
 
-#: imagery/templates/imagery/scenerequest_confirm_delete.html:7
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:9
 msgid "Do you really want to delete the scene request"
 msgstr "Você realmente deseja apagar a solicitação de cena"
 
-#: imagery/templates/imagery/scenerequest_confirm_delete.html:9
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:11
 msgid "Yes, I'm sure"
 msgstr "Sim, tenho certeza"
 
-#: imagery/templates/imagery/scenerequest_confirm_delete.html:10
+#: imagery/templates/imagery/scenerequest_confirm_delete.html:12
 msgid "No, don't delete"
 msgstr "Não, não apague"
 
 #: imagery/templates/imagery/user_scenerequest_list.html:4
-msgid "My Scene Requests"
-msgstr "Minhas Solicitações de Cena"
+#: imagery/templates/imagery/user_scenerequest_list.html:6
+msgid "My Landsat scene requests"
+msgstr "Minhas solicitações de cenas Landsat"
 
-#: imagery/templates/imagery/user_scenerequest_list.html:13
+#: imagery/templates/imagery/user_scenerequest_list.html:15
 msgid "Creation Date"
 msgstr "Data de Criação"
 
-#: imagery/templates/imagery/user_scenerequest_list.html:37
+#: imagery/templates/imagery/user_scenerequest_list.html:39
 msgid "No scene requests found."
 msgstr "Nenhuma solicitação de cena encontrada."
 

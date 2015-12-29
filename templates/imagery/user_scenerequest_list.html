@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block page_title %}<h1>{% trans 'My Scene Requests' %}</h1>{% endblock page_title %}
+{% block title %}{% trans 'My Landsat scene requests' %}{% endblock title %}
+
+{% block page_title %}<h1 class="page-header">{% trans 'My Landsat scene requests' %}</h1>{% endblock page_title %}
 
 {% block content %}
   {% if scenes %}
