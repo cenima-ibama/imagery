@@ -3,10 +3,10 @@
 
 {% block title %}{% trans 'Scene' %} {{ scene.name }}{% endblock title %}
 
-<h1>{% block page_title %}{{ scene.name }}{% endblock page_title %}</h1>
+{% block page_title %}<h1>{{ scene.name }}</h1>{% endblock page_title %}
 
 {% block content %}
-  <div class='col-md-6 col-xs-12'>
+  <div class='col-sm-6 col-xs-12'>
     <h3>{{ scene.get_sat_display }} {{ scene.path}} / {{ scene.row }}</h3>
     <div class='panel panel-default'>
       <div class='panel-heading'>
@@ -47,7 +47,7 @@
       </div>
     </div>
   </div>
-  <div class='col-md-6 col-xs-12'>
+  <div class='col-sm-6 col-xs-12'>
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation"><a href="#quicklook" aria-controls="quicklook" role="tab" data-toggle="tab">{% trans 'Quicklook' %}</a></li>
       <li role="presentation" class="active"><a href="#map_pane" aria-controls="map_pane" role="tab" data-toggle="tab">{% trans 'Map' %}</a></li>
