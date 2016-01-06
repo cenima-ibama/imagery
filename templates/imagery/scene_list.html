@@ -4,10 +4,10 @@
 
 {% block title %}{% trans 'Landsat Catalog' %}{% endblock title %}
 
-{% block page_title %}<h1 class="page-header">{% trans 'Landsat Catalog' %}</h1>{% endblock page_title %}
+{% block page_title %}<h3 class="page-header">{% trans 'Landsat Catalog' %}</h3>{% endblock page_title %}
 
 {% block content %}
-  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#search-form" aria-expanded="false" aria-controls="search-form">
+  <button class="btn btn-default margin" type="button" data-toggle="collapse" data-target="#search-form" aria-expanded="false" aria-controls="search-form">
     {% trans 'Filter Scenes' %}
   </button>
   <div class="collapse {% if queries %} in {% endif %}" id="search-form">
