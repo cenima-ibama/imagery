@@ -77,11 +77,14 @@ def get_bounds(scene_name):
         )
     metadata = metadata.text()[
         metadata.text().find('G-Ring_Latitude:'):
-        metadata.text().find('\n  Keywords:')]
-    coords = metadata.replace(' ', '') \
-                .replace('G-Ring_Latitude:', '') \
-                .replace('G-Ring_Longitude:', '')\
-                .split('\n')
+        metadata.text().find('\n  Keywords:')
+        ]
+    coords = (
+        metadata.replace(' ', '')
+        .replace('G-Ring_Latitude:', '')
+        .replace('G-Ring_Longitude:', '')
+        .split('\n')
+        )
     coords = [float(coord) for coord in coords if coord != '']
     # create a list of lists with the coordinates
     coords = [coords[i:i + 2] for i in range(0, len(coords), 2)]

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-29 16:37-0200\n"
-"PO-Revision-Date: 2015-12-29 16:38-0200\n"
+"POT-Creation-Date: 2016-01-07 10:50-0200\n"
+"PO-Revision-Date: 2016-01-07 10:51-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -18,33 +18,54 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.6\n"
 
-#: imagery/models.py:36 imagery/models.py:366
+#: imagery/models.py:37 imagery/models.py:382
 #: imagery/templates/imagery/scene_list.html:46
 msgid "Downloading"
 msgstr "Download em andamento"
 
-#: imagery/models.py:37 imagery/templates/imagery/scene_list.html.py:45
+#: imagery/models.py:38 imagery/templates/imagery/scene_list.html.py:45
 msgid "Download Failed"
 msgstr "Download falhou"
 
-#: imagery/models.py:38 imagery/models.py:367
+#: imagery/models.py:39 imagery/models.py:383
 #: imagery/templates/imagery/scene_list.html:44
 msgid "Downloaded"
 msgstr "Download finalizado"
 
-#: imagery/models.py:39 imagery/templates/imagery/scene_list.html.py:43
+#: imagery/models.py:40 imagery/templates/imagery/scene_list.html.py:43
 msgid "Processing"
 msgstr "Processando"
 
-#: imagery/models.py:40
+#: imagery/models.py:41
 msgid "Processing Failed"
 msgstr "Processamento falhou"
 
-#: imagery/models.py:41 imagery/templates/imagery/scene_list.html.py:41
+#: imagery/models.py:42 imagery/templates/imagery/scene_list.html.py:41
 msgid "Processed"
 msgstr "Processada"
 
-#: imagery/models.py:147 imagery/templates/imagery/scene_detail.html.py:4
+#: imagery/models.py:47 imagery/templates/imagery/scene_list.html.py:29
+#: imagery/templates/imagery/scene_list.html:31
+#: imagery/templates/imagery/scene_list.html:78
+msgid "Satellite"
+msgstr "Satélite"
+
+#: imagery/models.py:48 imagery/templates/imagery/scene_detail.html.py:13
+#: imagery/templates/imagery/scene_list.html:58
+#: imagery/templates/imagery/scene_list.html:80
+msgid "Date"
+msgstr "Data"
+
+#: imagery/models.py:49 imagery/models.py:173
+msgid "Name"
+msgstr "Nome"
+
+#: imagery/models.py:50 imagery/templates/imagery/cloud_rate.html.py:12
+#: imagery/templates/imagery/scene_list.html:79
+msgid "Cloud Rate"
+msgstr "Taxa de Nuvens"
+
+#: imagery/models.py:154 imagery/templates/imagery/scene_detail.html.py:4
 #: imagery/templates/imagery/scene_list.html:17
 #: imagery/templates/imagery/scene_list.html:18
 #: imagery/templates/imagery/scene_list.html:77
@@ -52,63 +73,67 @@ msgstr "Processada"
 msgid "Scene"
 msgstr "Cena"
 
-#: imagery/models.py:148
+#: imagery/models.py:155
 msgid "Scenes"
 msgstr "Cenas"
 
-#: imagery/models.py:159 imagery/models.py:201 imagery/models.py:374
+#: imagery/models.py:174
+msgid "Type"
+msgstr "Tipo"
+
+#: imagery/models.py:175 imagery/models.py:217 imagery/models.py:390
 msgid "Creation date"
 msgstr "Data de criação"
 
-#: imagery/models.py:182
+#: imagery/models.py:198
 msgid "Image"
 msgstr "Imagem"
 
-#: imagery/models.py:183 imagery/templates/imagery/scene_detail.html.py:37
+#: imagery/models.py:199 imagery/templates/imagery/scene_detail.html.py:37
 msgid "Images"
 msgstr "Imagens"
 
-#: imagery/models.py:328
+#: imagery/models.py:344
 msgid "There is already a scheduled scene with this path and row."
 msgstr "Já existe uma cena com esse mesmo path e row."
 
-#: imagery/models.py:338
+#: imagery/models.py:354
 msgid "Scheduled Download"
 msgstr "Download Agendado"
 
-#: imagery/models.py:339
+#: imagery/models.py:355
 msgid "Scheduled Downloads"
 msgstr "Downloads Agendados"
 
-#: imagery/models.py:347
+#: imagery/models.py:363
 msgid "The scene you want is already on our database."
 msgstr "A cena que você deseja já está disponível em nosso banco de dados."
 
-#: imagery/models.py:352
+#: imagery/models.py:368
 msgid "The scene name needs to have 21 characters."
 msgstr "O nome da cena deve ter 21 caracteres."
 
-#: imagery/models.py:356
+#: imagery/models.py:372
 msgid "Wrong scene name. Please check it."
 msgstr "Nome de Cena errado. Por favor, verifique."
 
-#: imagery/models.py:365
+#: imagery/models.py:381
 msgid "Pending"
 msgstr "Pendente"
 
-#: imagery/models.py:368
+#: imagery/models.py:384
 msgid "Not found"
 msgstr "Não encontrada"
 
-#: imagery/models.py:371
+#: imagery/models.py:387
 msgid "Scene name"
 msgstr "Nome da cena"
 
-#: imagery/models.py:394
+#: imagery/models.py:410
 msgid "Scene Request"
 msgstr "Solicitação de Cena"
 
-#: imagery/models.py:395
+#: imagery/models.py:411
 msgid "Scene Requests"
 msgstr "Solicitações de Cena"
 
@@ -119,11 +144,6 @@ msgstr "Taxas de nuvens dos últimos 16 dias"
 #: imagery/templates/imagery/cloud_rate.html:11
 msgid "Day"
 msgstr "Dia"
-
-#: imagery/templates/imagery/cloud_rate.html:12
-#: imagery/templates/imagery/scene_list.html:79
-msgid "Cloud Rate"
-msgstr "Taxa de Nuvens"
 
 #: imagery/templates/imagery/cloud_rate.html:25
 msgid "No scenes founds in these days."
@@ -171,18 +191,13 @@ msgid ""
 "      <a href=\"%(the_url)s\">Scene Requests status</a>."
 msgstr ""
 "Solicite o download de qualquer cena Landsat 5, 7 ou 8.\n"
-"     O download e processamento da cena será realizado automaticamente. Veja o\n"
+"     O download e processamento da cena será realizado automaticamente. Veja "
+"o\n"
 "      <a href=\"%(the_url)s\">status das suas solicitações de cena</a>."
 
 #: imagery/templates/imagery/request_scene.html:23
 msgid "Send"
 msgstr "Enviar"
-
-#: imagery/templates/imagery/scene_detail.html:13
-#: imagery/templates/imagery/scene_list.html:58
-#: imagery/templates/imagery/scene_list.html:80
-msgid "Date"
-msgstr "Data"
 
 #: imagery/templates/imagery/scene_detail.html:21
 msgid "Cloud rate"
@@ -220,12 +235,6 @@ msgstr "Catálogo Landsat"
 #: imagery/templates/imagery/scene_list.html:11
 msgid "Filter Scenes"
 msgstr "Filtrar Cenas"
-
-#: imagery/templates/imagery/scene_list.html:29
-#: imagery/templates/imagery/scene_list.html:31
-#: imagery/templates/imagery/scene_list.html:78
-msgid "Satellite"
-msgstr "Satélite"
 
 #: imagery/templates/imagery/scene_list.html:42
 msgid "Process Failed"

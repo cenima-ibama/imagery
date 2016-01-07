@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 from lc8_download.lc8 import DownloaderErrors
 from indicar.process import Process
 
-from os.path import getsize, join, isfile
+from os.path import getsize, join, isfile, exists
 from os import remove
 from datetime import date, timedelta
+from shutil import rmtree
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.gis.db import models
@@ -43,10 +44,10 @@ class Scene(models.Model):
 
     path = models.CharField(max_length=3)
     row = models.CharField(max_length=3)
-    sat = models.CharField('Satellite', choices=sat_options, max_length=50)
-    date = models.DateField()
-    name = models.CharField(max_length=21, unique=True)
-    cloud_rate = models.FloatField(null=True, blank=True)
+    sat = models.CharField(_('Satellite'), choices=sat_options, max_length=50)
+    date = models.DateField(_('Date'))
+    name = models.CharField(_('Name'), max_length=21, unique=True)
+    cloud_rate = models.FloatField(_('Cloud Rate'), null=True, blank=True)
     geom = models.PolygonField(srid=4674, null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
 
@@ -78,15 +79,19 @@ class Scene(models.Model):
 
                 ndvi = process.make_ndvi()
                 if ndvi is not False:
-                    Image.objects.get_or_create(name=ndvi.split('/')[-1],
+                    Image.objects.get_or_create(
+                        name=ndvi.split('/')[-1],
                         type='ndvi',
-                        scene=self)
+                        scene=self
+                        )
 
                 detection = process.change_detection()
                 if detection is not False:
-                    Image.objects.get_or_create(name=detection.split('/')[-1],
+                    Image.objects.get_or_create(
+                        name=detection.split('/')[-1],
                         type='detection',
-                        scene=self)
+                        scene=self
+                        )
 
                 if rgb and ndvi:
                     self.status = 'processed'
@@ -108,9 +113,11 @@ class Scene(models.Model):
                 rgb = process.make_img([5, 4, 3])
 
                 if rgb is not False:
-                    Image.objects.get_or_create(name=rgb.split('/')[-1],
+                    Image.objects.get_or_create(
+                        name=rgb.split('/')[-1],
                         type='r5g4b3',
-                        scene=self)
+                        scene=self
+                        )
                     self.status = 'processed'
                     self.save()
                 else:
@@ -148,14 +155,23 @@ class Scene(models.Model):
         verbose_name_plural = _('Scenes')
 
 
+@receiver(post_delete, sender=Scene)
+def post_delete_scene(sender, instance, *args, **kwargs):
+    """Overwrites post_delete method of Scene Model to delete also the file
+    fisically in the disk.
+    """
+    if exists(instance.dir()):
+        rmtree(instance.dir())
+
+
 @python_2_unicode_compatible
 class Image(models.Model):
     """Class to register the image files. All Images are associated with
     one Scene object.False
     """
 
-    name = models.CharField(max_length=100, unique=True)
-    type = models.CharField(max_length=30)
+    name = models.CharField(_('Name'), max_length=100, unique=True)
+    type = models.CharField(_('Type'), max_length=30)
     creation_date = models.DateField(_('Creation date'), auto_now_add=True)
     scene = models.ForeignKey(Scene, related_name='images')
 
@@ -393,5 +409,3 @@ class SceneRequest(models.Model):
         ordering = ['-creation_date', 'scene_name']
         verbose_name = _('Scene Request')
         verbose_name_plural = _('Scene Requests')
-
-

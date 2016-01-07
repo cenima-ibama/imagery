@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import date
-from os.path import join, isfile
+from os.path import join, isfile, exists
 from os import makedirs
 from shutil import rmtree
 
@@ -66,18 +66,30 @@ class TestScene(TestCase):
             status='downloading'
             )
 
-        self.assertEqual(Scene.objects.all().count(), 4)
+        self.assertEqual(Scene.objects.count(), 4)
+
+    def test_delete(self):
+        # create mock scene directory
+        if not exists(self.scene.dir()):
+            makedirs(self.scene.dir())
+
+        self.scene.delete()
+        self.assertFalse(exists(self.scene.dir()))
+        self.assertEqual(Scene.objects.count(), 2)
 
     def test_quicklook(self):
-        self.assertEqual(self.scene.quicklook(),
+        self.assertEqual(
+            self.scene.quicklook(),
             'http://earthexplorer.usgs.gov/browse/landsat_8/2015/001/001/LC80010012015001LGN00.jpg'
-        )
-        self.assertEqual(self.l7.quicklook(),
+            )
+        self.assertEqual(
+            self.l7.quicklook(),
             'http://earthexplorer.usgs.gov/browse/etm/227/59/2015/LE72270592015154CUB00_REFL.jpg'
-        )
-        self.assertEqual(self.l5.quicklook(),
+            )
+        self.assertEqual(
+            self.l5.quicklook(),
             'http://earthexplorer.usgs.gov/browse/tm/227/59/2011/LT52270592011295CUB01_REFL.jpg'
-        )
+            )
 
     def test_validation(self):
         with self.assertRaises(ValidationError):
@@ -120,18 +132,23 @@ class TestImage(TestCase):
             scene=self.scene
             )
 
-        self.image_folder = join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00')
-        makedirs(self.image_folder)
-        f = open(join(self.image_folder, 'LC80010012015001LGN00_B4.TIF'), 'w')
+        # create mock scene directory
+        if not exists(self.image.scene.dir()):
+            makedirs(self.image.scene.dir())
+
+        # create a mock TIF file
+        f = open(self.image.file_path(), 'w')
         f.close()
 
     def test_creation(self):
         self.assertEqual(self.image.__str__(), 'LC80010012015001LGN00_B4.TIF')
-        self.assertEqual(self.image.file_path(),
+        self.assertEqual(
+            self.image.file_path(),
             join(settings.MEDIA_ROOT, 'L8/LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
             )
         self.assertTrue(self.image.file_exists())
-        self.assertEqual(self.image.url(),
+        self.assertEqual(
+            self.image.url(),
             join(settings.MEDIA_URL, 'L8/LC80010012015001LGN00/LC80010012015001LGN00_B4.TIF')
             )
 
@@ -158,7 +175,7 @@ class TestImage(TestCase):
         self.assertFalse(isfile(self.image.file_path()))
 
     def tearDown(self):
-        rmtree(self.image_folder)
+        rmtree(self.image.scene.dir())
 
 
 class TestScheduledDownload(TestCase):
@@ -201,11 +218,13 @@ class TestScheduledDownload(TestCase):
             name='LC82200662015%sLGN00' % self.today_number,
             cloud_rate=20.3,
             status='downloading'
-        )
+            )
 
         self.assertEqual(self.sd.has_new_scene(), False)
-        self.assertEqual(self.sd.last_scene().name,
-            'LC82200662015%sLGN00' % self.today_number)
+        self.assertEqual(
+        self.sd.last_scene().name,
+            'LC82200662015%sLGN00' % self.today_number
+            )
 
         self.assertEqual(self.sd2.has_new_scene(), True)
 
@@ -221,7 +240,7 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(
             self.sd2.next_scene_name(),
             'LC8999002%s%sLGN00' % (date.today().year, self.today_number)
-        )
+            )
 
     def test_create_scene(self):
         # mock creation_date to 2015-01-01, so we will have a correct date
@@ -265,18 +284,24 @@ class TestScheduledDownload(TestCase):
         self.assertEqual(scene.geom, bounds)
         self.assertEqual(scene.status, 'downloading')
 
-        self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_B10.TIF'),
-        Image)
-        self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_B11.TIF'),
-        Image)
+        self.assertIsInstance(
+            Image.objects.get(name='LC82200662015017LGN00_B10.TIF'),
+            Image
+            )
+        self.assertIsInstance(
+            Image.objects.get(name='LC82200662015017LGN00_B11.TIF'),
+            Image
+            )
 
         self.assertEqual(self.sd.check_last_scene([10, 11]), [])
         self.assertEqual(self.sd.last_scene().status, 'downloaded')
 
         downloaded = self.sd.check_last_scene([10, 11, 'BQA'])
         self.assertEqual(len(downloaded), 3)
-        self.assertIsInstance(Image.objects.get(name='LC82200662015017LGN00_BQA.TIF'),
-        Image)
+        self.assertIsInstance(
+            Image.objects.get(name='LC82200662015017LGN00_BQA.TIF'),
+            Image
+            )
         rmtree(downloaded[2][0].replace('/LC82200662015017LGN00_BQA.TIF', ''))
 
         self.assertEqual(self.sd2.download_new_scene(['BQA']), [])
@@ -287,8 +312,8 @@ class TestSceneRequest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
         self.scene_request = SceneRequest.objects.create(
-                scene_name='LC82270592015001CUB00',
-                user=self.user
+            scene_name='LC82270592015001CUB00',
+            user=self.user
             )
 
     def test_past_scene_creation(self):
@@ -300,7 +325,7 @@ class TestSceneRequest(TestCase):
             SceneRequest.objects.create(
                 scene_name='LC82270592015001CUB00',
                 user=self.user
-            )
+                )
         self.assertEqual(SceneRequest.objects.count(), 1)
 
     def test_scene_url_method(self):
@@ -315,11 +340,11 @@ class TestSceneRequest(TestCase):
             name='LC82270592015001CUB00',
             cloud_rate=20.3,
             status='downloading'
-        )
+            )
         self.scene_request.status = 'downloaded'
         self.scene_request.save()
-        #test scene_url method
+        # test scene_url method
         self.assertEqual(
             self.scene_request.scene_url(),
             reverse('imagery:scene', args=[scene.name])
-        )
+            )
