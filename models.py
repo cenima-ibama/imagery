@@ -157,7 +157,7 @@ class Scene(models.Model):
 
 @receiver(post_delete, sender=Scene)
 def post_delete_scene(sender, instance, *args, **kwargs):
-    """Overwrites post_delete method of Scene Model to delete also the file
+    """Overwrites post_delete method of Scene Model to delete also the folder
     fisically in the disk.
     """
     if exists(instance.dir()):
@@ -243,15 +243,16 @@ class ScheduledDownload(models.Model):
 
     def next_scene_name(self):
         """Return the name of the next Scene for this path and row. If there
-        isn't any registered Scene or the last registered Scene is older than 32
-        days, it will return the scene name with the date of today.
+        isn't any registered Scene or the last registered Scene is older than
+        32 days, it will return the scene name with the date of today.
         """
-        if self.last_scene() is not None and \
-            (self.creation_date - self.last_scene().date <= timedelta(32)):
-            first_part = self.last_scene().name[:13]
+        if (self.last_scene() is not None and
+                (self.creation_date - self.last_scene().date <= timedelta(32))):
+            first_part = self.last_scene().name[:9]
             end = self.last_scene().name[16:]
-            day = three_digit(int(self.last_scene().day()) + 16)
-            return '%s%s%s' % (first_part, day, end)
+            next_date = self.last_scene().date + timedelta(days=16)
+            next_day = three_digit(next_date.timetuple().tm_yday)
+            return '%s%s%s%s' % (first_part, next_date.year, next_day, end)
         else:
             year = date.today().year
             day = three_digit(date.today().timetuple().tm_yday)
@@ -365,11 +366,11 @@ def validate_scene_name(value):
     except Scene.DoesNotExist:
         if len(value) != 21:
             raise ValidationError(
-            _('The scene name needs to have 21 characters.')
+                _('The scene name needs to have 21 characters.')
             )
         elif not value.startswith('L') or value[2] not in ['5', '7', '8']:
             raise ValidationError(
-            _('Wrong scene name. Please check it.')
+                _('Wrong scene name. Please check it.')
             )
 
 
