@@ -17,6 +17,7 @@ $(document).ready(function(){
     var maxcloud = $("#cloudRange").val();
     var start = $("#startDate").val();
     var end = $("#endDate").val();
+    var bbox = $("#formBounds").attr('value');
 
     if (scene && scene != "")
       url = url + "name=" + scene + "&";
@@ -34,6 +35,8 @@ $(document).ready(function(){
       url = url + "start=" + start + "&";
     if (end && end != "")
       url = url + "end=" + end + "&";
+    if (bbox && bbox != "")
+      url = url + "bbox=" + bbox + "&";
 
     url = url.substring(0,url.length - 1);
     this.href = url;
