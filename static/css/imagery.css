@@ -1,0 +1,43 @@
+#imageryMap{
+  width: 100%;
+  height: 400px;
+}
+
+.popup_scene_title{
+	margin:  10px 40px !important;
+}
+
+.btn-draw {
+  width: 7em !important;
+  color: #fff !important;
+  background-color: #5cb85c !important;
+  border-color: #4cae4c !important;
+}
+
+.btn-remove {
+  width: 7em !important;
+  color: #fff !important;
+  background-color: #d9534f !important;
+  border-color: #d43f3a !important;
+}
+
+.btn-edit {
+  width: 7em !important;
+  color: #fff !important;
+  background-color: #ec971f !important;
+  border-color: #d58512 !important;
+}
+
+.edit-control {
+  max-width: 7em;
+  width: 7em
+}
+
+.leaflet-draw-actions {
+  right: 82px !important;
+  left: auto !important;
+}
+
+.no-padding-left {
+    padding-left: 0 !important;
+}
