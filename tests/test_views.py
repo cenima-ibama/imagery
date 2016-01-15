@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.contrib.gis.geos import Polygon
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
@@ -50,6 +51,76 @@ class TestGeoSceneDetailView(TestCase):
     def test_scene_detail_response(self):
         response = client.get(reverse('imagery:geoscene', args=[self.scene.name]))
         self.assertEqual(response.status_code, 200)
+
+
+class TestGeoSceneListView(TestCase):
+
+    def setUp(self):
+        self.scene = Scene.objects.create(
+            path='001',
+            row='001',
+            sat='L8',
+            date=date(2015, 1, 1),
+            name='LC80010012015001LGN00',
+            cloud_rate=20.3,
+            status='downloading',
+            geom=Polygon(
+                [
+                    [-54.159229, -11.804765], [-56.405499, -11.291305],
+                    [-55.990002, -9.499491], [-53.755329, -10.006503],
+                    [-54.159229, -11.804765]
+                ])
+            )
+
+        newScene = Scene.objects.create(
+            path='001',
+            row='001',
+            sat='L8',
+            date=date(2015, 2, 2),
+            name='LC80010012015001LGNTD',
+            cloud_rate=21.9,
+            status='downloading',
+            geom=Polygon(
+                [
+                    [-54.159229, -11.804765], [-56.405499, -11.291305],
+                    [-55.990002, -9.499491], [-53.755329, -10.006503],
+                    [-54.159229, -11.804765]
+                ])
+            )
+
+    def test_geo_scene_detail_response(self):
+        response = client.get(reverse('imagery:geoscene-listview'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data.get('features')), 2)
+
+    def test_geo_scene_pagination_response(self):
+
+        for i in range(1,21):
+            Scene.objects.create(
+                path='001',
+                row='001',
+                sat='L8',
+                date=date(2015, 2, 2),
+                name='LC80010012015001LGN'.join("%02d" % i ),
+                cloud_rate=21.9,
+                status='downloading',
+                geom=Polygon(
+                    [
+                        [-54.159229, -11.804765], [-56.405499, -11.291305],
+                        [-55.990002, -9.499491], [-53.755329, -10.006503],
+                        [-54.159229, -11.804765]
+                    ])
+                )
+
+        self.assertEqual(Scene.objects.count(), 22)
+
+        response = client.get(reverse('imagery:geoscene-listview'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data.get('features')), 20)
+
+        response = client.get(reverse('imagery:geoscene-listview'), {'page': 2})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data.get('features')), 2)
 
 
 class TestCloudRateView(TestCase):
