@@ -9,4 +9,4 @@ class SceneSerializer(GeoFeatureModelSerializer):
         model = Scene
         id_field = False
         geo_field = 'geom'
-        fields = []
+        fields = ['name', 'status', 'date']
