@@ -17,7 +17,8 @@
      pageNumber,
      url,
      sceneUrl = 'scene/',
-     layers = {},
+     geoJsonLayer = {},
+     lastSelectedLayer,
      seeOnMap,
      geoJSON;
 
@@ -43,9 +44,9 @@ $(document).ready(function() {
           return { weight: 1 }
         },
         onEachFeature: function (feature, layer) {
-          layers[feature.properties.identifier] = layer;
+          geoJsonLayer[feature.properties.name] = layer;
           var html = [
-            '<p class="scene_title popup_scene_title"><strong>', 
+            '<p class="scene_title"><strong>', 
                 "<a href='", sceneUrl, feature.properties.name ,"'>",
                     feature.properties.name, 
                 '</a>', 

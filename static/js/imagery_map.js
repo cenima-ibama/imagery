@@ -1,5 +1,7 @@
 'use strict';
 
+var seeOnMap;
+
 $(document).ready(function() {
 	var lastBbox,
 		el = $('#formBounds'),
@@ -167,6 +169,7 @@ $(document).ready(function() {
 	}
 
 	seeOnMap = function(id){
+		console.log(id);
 		id = $(id).attr('id');
 
 		if(lastSelectedLayer)
@@ -176,14 +179,14 @@ $(document).ready(function() {
 				fillColor: '#03f',
 			});
 
-		if(layers.hasOwnProperty(id) && layers[id]){
-			lastSelectedLayer = layers[id];
-			layers[id].setStyle({
+		if(geoJsonLayer.hasOwnProperty(id) && geoJsonLayer[id]){
+			lastSelectedLayer = geoJsonLayer[id];
+			geoJsonLayer[id].setStyle({
 				color: 'red',
 				weight: 3,
 				fillColor: 'red',
 			});
-			imageryMap.fitBounds(layers[id].getBounds());
+			imageryMap.fitBounds(geoJsonLayer[id].getBounds());
 		}
 	}
 

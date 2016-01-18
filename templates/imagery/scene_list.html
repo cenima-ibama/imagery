@@ -108,6 +108,14 @@
                   <td>{{ scene.cloud_rate|default_if_none:'--' }}%</td>
                   <td>{{ scene.date|date:"SHORT_DATE_FORMAT" }}</td>
                   <td>{{ scene.get_status_display }}</td>
+                  <td>
+                    <span
+                        class="btn glyphicon glyphicon-eye-open"
+                        href="#"
+                        onclick="seeOnMap(this)"
+                        id="{{ scene.name }}">
+                    </span>
+                 </td>
                 </tr>
               {% endfor %}
             </tbody>
