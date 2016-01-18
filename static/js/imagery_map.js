@@ -169,7 +169,6 @@ $(document).ready(function() {
 	}
 
 	seeOnMap = function(id){
-		console.log(id);
 		id = $(id).attr('id');
 
 		if(lastSelectedLayer)
