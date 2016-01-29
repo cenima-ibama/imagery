@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'imagery/base.html' %}
 {% load i18n %}
 
 {% block title %}{% trans 'Scene' %} {{ scene.name }}{% endblock title %}
@@ -66,5 +66,5 @@
 
 
 {% block extra_js %}
-  {% include "imagery/scene_map.html" with scene_name=scene.name geojson_url="imagery:geoscene" %}
+  {% include "imagery/scene_map.html" with scene_name=scene.name geojson_url="geoscene" %}
 {% endblock extra_js %}

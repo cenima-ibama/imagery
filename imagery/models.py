@@ -398,7 +398,7 @@ class SceneRequest(models.Model):
     def scene_url(self):
         """Return the URL of the Scene if it was already downloaded."""
         if self.status == 'downloaded':
-            return reverse('imagery:scene', args=[self.scene_name])
+            return reverse('scene', args=[self.scene_name])
         else:
             return None
 

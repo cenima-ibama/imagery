@@ -8,7 +8,7 @@ from shutil import rmtree
 from django.test import TestCase
 from django.core import mail
 
-from ..utils import (three_digit, calendar_date, download, get_bounds,
+from imagery.utils import (three_digit, calendar_date, download, get_bounds,
     get_cloud_rate, get_sat_code, send_multipart_email)
 
 
@@ -95,5 +95,10 @@ class TestGetSatCode(TestCase):
 class TestSendEmail(TestCase):
 
     def test_send_email(self):
-        send_multipart_email('test', '404.html', 'sender@m.com', ['dest@m.com'])
+        send_multipart_email(
+            'test',
+            'imagery/email_not_found_scenerequests.html',
+            'sender@m.com',
+            ['dest@m.com']
+        )
         self.assertEqual(len(mail.outbox), 1)

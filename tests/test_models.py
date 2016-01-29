@@ -11,8 +11,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from django.conf import settings
-from ..models import Scene, Image, ScheduledDownload, SceneRequest
-from ..utils import three_digit
+from imagery.models import Scene, Image, ScheduledDownload, SceneRequest
+from imagery.utils import three_digit
 
 
 class TestScene(TestCase):
@@ -175,7 +175,7 @@ class TestImage(TestCase):
         self.assertFalse(isfile(self.image.file_path()))
 
     def tearDown(self):
-        rmtree(self.image.scene.dir())
+        rmtree(settings.MEDIA_ROOT)
 
 
 class TestScheduledDownload(TestCase):
@@ -194,6 +194,9 @@ class TestScheduledDownload(TestCase):
             cloud_rate=20.3,
             status='downloading'
             )
+
+        if not exists(settings.MEDIA_ROOT):
+            makedirs(settings.MEDIA_ROOT)
 
     def test_creation(self):
         self.assertEqual(self.sd.__str__(), 'L8 220-066')
@@ -306,6 +309,9 @@ class TestScheduledDownload(TestCase):
 
         self.assertEqual(self.sd2.download_new_scene(['BQA']), [])
 
+    def tearDown(self):
+        rmtree(settings.MEDIA_ROOT)
+
 
 class TestSceneRequest(TestCase):
 
@@ -346,5 +352,5 @@ class TestSceneRequest(TestCase):
         # test scene_url method
         self.assertEqual(
             self.scene_request.scene_url(),
-            reverse('imagery:scene', args=[scene.name])
+            reverse('scene', args=[scene.name])
             )

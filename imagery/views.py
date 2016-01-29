@@ -18,11 +18,10 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from .forms import SceneRequestForm
 from .models import Scene, SceneRequest
 from .serializers import SceneSerializer
-from .utils import three_digit
 
 
 class SceneFilter(django_filters.FilterSet):
-    start = django_filters.DateFilter(name='date', lookup_type=('gte')) 
+    start = django_filters.DateFilter(name='date', lookup_type=('gte'))
     end = django_filters.DateFilter(name='date', lookup_type=('lte'))
     max_cloud = django_filters.MethodFilter()
     bbox = django_filters.MethodFilter()
@@ -47,7 +46,6 @@ class SceneFilter(django_filters.FilterSet):
 
     def filter_max_cloud(self, queryset, value):
         return queryset.filter(cloud_rate__lte=value)
-
 
 
 class SceneListView(ListView):
@@ -140,7 +138,7 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('imagery:index'))
+                return redirect(reverse('index'))
             else:
                 msg = _('Your account is not active, Please contact the system administrator')
                 return render_to_response(
@@ -154,21 +152,23 @@ def login_view(request):
                 {'msg': msg}, context_instance=context
             )
     else:
-        return render_to_response('imagery/login_page.html',
-            context_instance=context)
+        return render_to_response(
+            'imagery/login_page.html',
+            context_instance=context
+        )
 
 
 def logout_view(request):
     if request.user.is_authenticated():
         logout(request)
-    return redirect(reverse('imagery:index'))
+    return redirect(reverse('index'))
 
 
 class LoginRequiredMixin(object):
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view, login_url='imagery:login')
+        return login_required(view, login_url='login')
 
 
 def request_scene_view(request):
@@ -227,7 +227,7 @@ class SceneRequestDeleteView(LoginRequiredMixin, DeleteView):
     """
     model = SceneRequest
     context_object_name = 'scenerequest'
-    success_url = reverse_lazy('imagery:user-scene-request')
+    success_url = reverse_lazy('user-scene-request')
 
     def get_queryset(self):
         qs = super(SceneRequestDeleteView, self).get_queryset()

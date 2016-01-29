@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 
-from ..models import Scene, SceneRequest
+from imagery.models import Scene, SceneRequest
 
 client = Client()
 
@@ -13,7 +13,7 @@ client = Client()
 class TestIndexView(TestCase):
 
     def test_index_response(self):
-        response = client.get(reverse('imagery:index'))
+        response = client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
 
@@ -31,7 +31,7 @@ class TestSceneDetailView(TestCase):
             )
 
     def test_scene_detail_response(self):
-        response = client.get(reverse('imagery:scene', args=[self.scene.name]))
+        response = client.get(reverse('scene', args=[self.scene.name]))
         self.assertEqual(response.status_code, 200)
 
 
@@ -49,7 +49,7 @@ class TestGeoSceneDetailView(TestCase):
             )
 
     def test_scene_detail_response(self):
-        response = client.get(reverse('imagery:geoscene', args=[self.scene.name]))
+        response = client.get(reverse('geoscene', args=[self.scene.name]))
         self.assertEqual(response.status_code, 200)
 
 
@@ -89,7 +89,7 @@ class TestGeoSceneListView(TestCase):
             )
 
     def test_geo_scene_detail_response(self):
-        response = client.get(reverse('imagery:geoscene-listview'))
+        response = client.get(reverse('geoscene-listview'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data.get('features')), 2)
 
@@ -114,11 +114,11 @@ class TestGeoSceneListView(TestCase):
 
         self.assertEqual(Scene.objects.count(), 22)
 
-        response = client.get(reverse('imagery:geoscene-listview'))
+        response = client.get(reverse('geoscene-listview'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data.get('features')), 20)
 
-        response = client.get(reverse('imagery:geoscene-listview'), {'page': 2})
+        response = client.get(reverse('geoscene-listview'), {'page': 2})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data.get('features')), 2)
 
@@ -126,7 +126,7 @@ class TestGeoSceneListView(TestCase):
 class TestCloudRateView(TestCase):
 
     def test_cloud_rate_view(self):
-        response = client.get(reverse('imagery:cloud-rate'))
+        response = client.get(reverse('cloud-rate'))
         self.assertEqual(response.status_code, 200)
 
 
@@ -136,12 +136,12 @@ class TestLoginLogoutView(TestCase):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
 
     def test_loggin_response(self):
-        response = client.get(reverse('imagery:login'))
+        response = client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
 
     def test_loggout_response(self):
-        response = client.get(reverse('imagery:logout'))
-        self.assertRedirects(response, reverse('imagery:index'))
+        response = client.get(reverse('logout'))
+        self.assertRedirects(response, reverse('index'))
 
 
 class TestSceneRequestView(TestCase):
@@ -159,52 +159,52 @@ class TestSceneRequestView(TestCase):
         self.user = User.objects.create_user('user', 'i@t.com', 'password')
 
     def test_unlogged_response(self):
-        response = self.client.get(reverse('imagery:request-scene'))
+        response = self.client.get(reverse('request-scene'))
         self.assertRedirects(response, '/login/?next=/request-scene/')
 
     def test_logged_response(self):
         response = self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 302)
 
         response = self.client.post(
-            reverse('imagery:login'),
+            reverse('login'),
             {'username': self.user.username, 'password': 'password'}
         )
         self.assertIn('_auth_user_id', self.client.session)
 
         response = self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         self.assertEqual(response.status_code, 200)
 
         # test uniqueness validation
         self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LC80010012015001LGN00'}
         )
         # test validation of scene_name field
         self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LE72270592015154CUB00'}
         )
         response = self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LE72270592015154CUB00_'}
         )
         response = self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'AE72270592015154CUB00'}
         )
         response = self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LE42270592015154CUB00'}
         )
         response = self.client.post(
-            reverse('imagery:request-scene'),
+            reverse('request-scene'),
             {'scene_name': 'LE72270592015154CUB0'}
         )
 
@@ -227,24 +227,24 @@ class TestSceneRequestViews(TestCase):
         )
 
     def test_SceneRequestListView_response(self):
-        response = self.client.get(reverse('imagery:user-scene-request'))
+        response = self.client.get(reverse('user-scene-request'))
         self.assertEqual(response.status_code, 302)
 
         self.client.post(
-            reverse('imagery:login'),
+            reverse('login'),
             {'username': self.user.username, 'password': 'password'}
         )
-        response = self.client.get(reverse('imagery:user-scene-request'))
+        response = self.client.get(reverse('user-scene-request'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['scenes'].count(), 1)
 
     def test_NotFoundSceneRequestListView_response(self):
-        response = self.client.get(reverse('imagery:not-found-scene-request'))
+        response = self.client.get(reverse('not-found-scene-request'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['scenes'].count(), 1)
 
     def test_SceneRequestDeleteView_unlogged_response(self):
-        url = reverse('imagery:delete-scene-request', args=[self.scene_request.pk])
+        url = reverse('delete-scene-request', args=[self.scene_request.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
@@ -254,10 +254,10 @@ class TestSceneRequestViews(TestCase):
         self.assertEqual(SceneRequest.objects.count(), 2)
 
     def test_SceneRequestDeleteView_logged_response(self):
-        url = reverse('imagery:delete-scene-request', args=[self.scene_request.pk])
+        url = reverse('delete-scene-request', args=[self.scene_request.pk])
 
         self.client.post(
-            reverse('imagery:login'),
+            reverse('login'),
             {'username': self.user.username, 'password': 'password'}
         )
 
@@ -265,7 +265,7 @@ class TestSceneRequestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(url)
 
-        url = reverse('imagery:delete-scene-request', args=[self.scene_request2.pk])
+        url = reverse('delete-scene-request', args=[self.scene_request2.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 

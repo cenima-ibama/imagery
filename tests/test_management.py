@@ -7,7 +7,7 @@ from datetime import date
 from django.test import TestCase
 from django.core.management import call_command
 
-from ..models import Scene, Image
+from imagery.models import Scene, Image
 
 
 class TestInspectImageryDir(TestCase):
@@ -66,4 +66,3 @@ class TestCreateScene(TestCase):
         self.assertEqual(image.name, 'LC82200662015001LGN00_B1.TIF')
         self.assertEqual(image.type, 'B1')
         self.assertEqual(image.scene, scene)
-

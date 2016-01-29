@@ -1,0 +1,10 @@
+django>=1.9.0
+psycopg2==2.6.1
+celery==3.1.19
+lc8_download==0.2.1
+pyquery==1.2.9
+djangorestframework==3.3.2
+djangorestframework-gis==0.10
+django-cors-headers==1.1.0
+django-filter==0.12.0
+git+https://github.com/ibamacsr/indicar-tools/#egg=indicar-tools

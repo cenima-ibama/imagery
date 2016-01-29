@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'imagery/base.html' %}
 {% load i18n %}
 
 {% block title %}{% trans 'My Landsat scene requests' %}{% endblock title %}
@@ -27,7 +27,7 @@
               {% endif %}
               <td>{{ scene.creation_date|date:"SHORT_DATE_FORMAT" }}</td>
               <td>{{ scene.get_status_display }}</td>
-              <td><a href="{% url 'imagery:delete-scene-request' scene.pk %}">
+              <td><a href="{% url 'delete-scene-request' scene.pk %}">
                 <span class="text-danger glyphicon glyphicon-remove-circle"></span>
               </a></td>
             </tr>
