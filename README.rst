@@ -2,29 +2,40 @@
 imagery
 =============================
 
-.. image:: https://badge.fury.io/py/imagery.png
-    :target: https://badge.fury.io/py/imagery
+Django application to manage the download and processing of Landsat Imagery
 
-.. image:: https://travis-ci.org/willemarcel/imagery.png?branch=master
-    :target: https://travis-ci.org/willemarcel/imagery
 
-Django application to manage download and processing of Landsat Imagery
-
-Documentation
--------------
-
-The full documentation is at https://imagery.readthedocs.org.
 
 Quickstart
 ----------
 
-Install imagery::
+Install imagery
 
-    pip install imagery
+::
 
-Then use it in a project::
+    pip install git+https://github.com/ibamacsr/imagery.git
 
-    import imagery
+Add imagery and some dependencies to your INSTALLED_APPS:
+
+::
+
+    INSTALLED_APPS=[
+        ...
+        "imagery",
+        "rest_framework",
+        "rest_framework_gis",
+        ...
+    ],
+
+Add a it to your project URL conf:
+
+::
+
+    url(r'^', include("imagery.urls", namespace="imagery")),
+
+Override imagery/base.html template with the same code contained inside the comment blog.
+
+You can use this template as the base.html of your project: https://gist.github.com/willemarcel/13469c1756b4bdb8136f
 
 Features
 --------

@@ -6,15 +6,21 @@ structure and their own.
 
 Example: Developer melding the 2SoD pattern to fit inside with another pattern::
 
+You can use this template as the base.html of your project: https://gist.github.com/willemarcel/13469c1756b4bdb8136f
+
     {% extends "base.html" %}
     {% load static %}
+
+    {% block extra_css %}
+    <link href="{% static 'css/imagery.css' %}" rel="stylesheet">
+    {% endblock extra_css %}
 
     <!-- Their site uses old school block layout -->
     {% block extra_js %}
 
         <!-- Your package using 2SoD block layout -->
         {% block javascript %}
-            <script src="{% static 'js/ninja.js' %}" type="text/javascript"></script>
+            <script src="{% static 'js/imagery.js' %}" type="text/javascript"></script>
         {% endblock javascript %}
 
     {% endblock extra_js %}
