@@ -6,12 +6,11 @@ from rest_framework_gis.pagination import GeoJsonPagination
 from datetime import date, timedelta
 
 from django.contrib.gis.geos import Polygon
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, DeleteView
 from django.template import RequestContext
-from django.shortcuts import render, redirect, render_to_response
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import render, render_to_response
+from django.core.urlresolvers import reverse_lazy
 from django.db.models import Avg
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -128,47 +127,11 @@ def cloud_rate_view(request):
     return render(request, 'imagery/cloud_rate.html', {'cloud_rate_data': data})
 
 
-def login_view(request):
-    context = RequestContext(request)
-    if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect(reverse('index'))
-            else:
-                msg = _('Your account is not active, Please contact the system administrator')
-                return render_to_response(
-                    'imagery/login_user.html',
-                    {'msg': msg}, context_instance=context
-                )
-        else:
-            msg = _('Invalid username or password')
-            return render_to_response(
-                'imagery/login_page.html',
-                {'msg': msg}, context_instance=context
-            )
-    else:
-        return render_to_response(
-            'imagery/login_page.html',
-            context_instance=context
-        )
-
-
-def logout_view(request):
-    if request.user.is_authenticated():
-        logout(request)
-    return redirect(reverse('index'))
-
-
 class LoginRequiredMixin(object):
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view, login_url='login')
+        return login_required(view)
 
 
 def request_scene_view(request):

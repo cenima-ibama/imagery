@@ -1,13 +1,14 @@
 from datetime import date
 
 from django.contrib.gis.geos import Polygon
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 
 from imagery.models import Scene, SceneRequest
 
 client = Client()
+User = get_user_model()
 
 
 class TestIndexView(TestCase):
@@ -130,20 +131,6 @@ class TestCloudRateView(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class TestLoginLogoutView(TestCase):
-
-    def setUp(self):
-        self.user = User.objects.create_user('user', 'i@t.com', 'password')
-
-    def test_loggin_response(self):
-        response = client.get(reverse('login'))
-        self.assertEqual(response.status_code, 200)
-
-    def test_loggout_response(self):
-        response = client.get(reverse('logout'))
-        self.assertRedirects(response, reverse('index'))
-
-
 class TestSceneRequestView(TestCase):
 
     def setUp(self):
@@ -160,7 +147,7 @@ class TestSceneRequestView(TestCase):
 
     def test_unlogged_response(self):
         response = self.client.get(reverse('request-scene'))
-        self.assertRedirects(response, '/login/?next=/request-scene/')
+        self.assertEqual(response.status_code, 302)
 
     def test_logged_response(self):
         response = self.client.post(
@@ -169,11 +156,7 @@ class TestSceneRequestView(TestCase):
         )
         self.assertEqual(response.status_code, 302)
 
-        response = self.client.post(
-            reverse('login'),
-            {'username': self.user.username, 'password': 'password'}
-        )
-        self.assertIn('_auth_user_id', self.client.session)
+        self.client.login(username=self.user.username, password='password')
 
         response = self.client.post(
             reverse('request-scene'),
@@ -230,10 +213,8 @@ class TestSceneRequestViews(TestCase):
         response = self.client.get(reverse('user-scene-request'))
         self.assertEqual(response.status_code, 302)
 
-        self.client.post(
-            reverse('login'),
-            {'username': self.user.username, 'password': 'password'}
-        )
+        self.client.login(username=self.user.username, password='password')
+
         response = self.client.get(reverse('user-scene-request'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['scenes'].count(), 1)
@@ -256,10 +237,7 @@ class TestSceneRequestViews(TestCase):
     def test_SceneRequestDeleteView_logged_response(self):
         url = reverse('delete-scene-request', args=[self.scene_request.pk])
 
-        self.client.post(
-            reverse('login'),
-            {'username': self.user.username, 'password': 'password'}
-        )
+        self.client.login(username=self.user.username, password='password')
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
