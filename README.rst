@@ -25,7 +25,7 @@ Add imagery and some dependencies to your INSTALLED_APPS:
         "rest_framework",
         "rest_framework_gis",
         ...
-    ],
+    ]
 
 Add a it to your project URL conf:
 

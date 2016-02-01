@@ -9,6 +9,6 @@
   <p>{% trans 'Do you really want to delete the scene request' %} <strong>{{ scenerequest }}</strong>?</p>
   <form action="" method="post">{% csrf_token %}
     <button class="btn btn-primary btn-danger" type="submit">{% trans "Yes, I'm sure" %}</button>
-    <a class="btn btn-default" href="{% url 'user-scene-request' %}">{% trans "No, don't delete" %}</a>
+    <a class="btn btn-default" href="{% url 'imagery:user-scene-request' %}">{% trans "No, don't delete" %}</a>
   </form>
 {% endblock content %}

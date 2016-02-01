@@ -66,5 +66,5 @@
 
 
 {% block extra_js %}
-  {% include "imagery/scene_map.html" with scene_name=scene.name geojson_url="geoscene" %}
+  {% include "imagery/scene_map.html" with scene_name=scene.name geojson_url="imagery:geoscene" %}
 {% endblock extra_js %}
