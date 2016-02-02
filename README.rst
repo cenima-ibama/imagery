@@ -5,7 +5,6 @@ imagery
 Django application to manage the download and processing of Landsat Imagery
 
 
-
 Quickstart
 ----------
 
@@ -21,13 +20,14 @@ Add imagery and some dependencies to your INSTALLED_APPS:
 
     INSTALLED_APPS=[
         ...
+        "django.contrib.gis",
         "imagery",
         "rest_framework",
         "rest_framework_gis",
         ...
     ]
 
-Add a it to your project URL conf:
+Add a it to the URL conf of your project:
 
 ::
 
