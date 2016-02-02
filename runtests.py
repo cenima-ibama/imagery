@@ -39,6 +39,7 @@ try:
             ),
         },
         MEDIA_ROOT="tests/media/",
+        SRID=4674,
     )
 
     try:

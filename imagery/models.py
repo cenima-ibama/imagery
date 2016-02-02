@@ -23,6 +23,18 @@ from .utils import three_digit, calendar_date, download
 from .utils import get_bounds, get_cloud_rate
 
 
+try:
+    bands = settings.DOWNLOAD_BANDS
+except AttributeError:
+    bands = [4, 5, 6, 'BQA']
+
+
+try:
+    srid = settings.SRID
+except AttributeError:
+    srid = 4326
+
+
 @python_2_unicode_compatible
 class Scene(models.Model):
     """Class to register the Scenes of Landsat imagery"""
@@ -48,7 +60,7 @@ class Scene(models.Model):
     date = models.DateField(_('Date'))
     name = models.CharField(_('Name'), max_length=21, unique=True)
     cloud_rate = models.FloatField(_('Cloud Rate'), null=True, blank=True)
-    geom = models.PolygonField(srid=4674, null=True, blank=True)
+    geom = models.PolygonField(srid=srid, null=True, blank=True)
     status = models.CharField(choices=status_options, max_length=50)
 
     def __str__(self):
@@ -294,7 +306,7 @@ class ScheduledDownload(models.Model):
             scene=Scene.objects.get(name=image_name.split('_')[0])
             )
 
-    def download_new_scene(self, bands=[4, 5, 6, 'BQA']):
+    def download_new_scene(self, bands):
         """Download the bands B4, B5, B6 and BQA of the next scene."""
         if self.has_new_scene():
             try:
@@ -309,7 +321,7 @@ class ScheduledDownload(models.Model):
             except DownloaderErrors:
                 return []
 
-    def check_last_scene(self, bands=[4, 5, 6, 'BQA']):
+    def check_last_scene(self, bands):
         """Check if the last scene already has all image bands. If not, try to
         download.
         """
