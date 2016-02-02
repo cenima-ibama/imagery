@@ -38,7 +38,10 @@ def download_scene_request(scene_request):
     if scene_request.status != 'downloaded':
         sat = get_sat_code(scene_request.scene_name)
         if sat == 'L8':
-            bands = [6, 5, 4, 'BQA']
+            try:
+                bands = settings.DOWNLOAD_BANDS
+            except AttributeError:
+                bands = [4, 5, 6, 'BQA']
         else:
             bands = [5, 4, 3]
 
