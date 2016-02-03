@@ -14,7 +14,7 @@ Install imagery
 
     pip install git+https://github.com/ibamacsr/imagery.git
 
-Add imagery and some dependencies to your INSTALLED_APPS:
+Add imagery and some dependencies to your `INSTALLED_APPS`:
 
 ::
 
@@ -34,7 +34,7 @@ Add a it to the URL conf of your project:
     url(r'^', include("imagery.urls", namespace="imagery")),
 
 You can define which Landsat bands you want to download by adding the variable
-DOWNLOAD_BANDS to your settings. If you don't define it, the default value will be [4, 5, 6, 'BQA']:
+`DOWNLOAD_BANDS` to your settings. If you don't define it, the default value will be `[4, 5, 6, 'BQA']`:
 
 ::
 
@@ -46,9 +46,9 @@ You can also define another coordinate system if you don't want to use EPSG:4326
 
     SRID = 4674
 
-Override imagery/base.html template with the same code contained inside the comment blog.
+Override `imagery/base.html` template with the same code contained inside the comment block.
 
-You can use this template as the base.html of your project: https://gist.github.com/willemarcel/13469c1756b4bdb8136f
+You can use this template as the `base.html` of your project: https://gist.github.com/willemarcel/13469c1756b4bdb8136f
 
 Features
 --------
