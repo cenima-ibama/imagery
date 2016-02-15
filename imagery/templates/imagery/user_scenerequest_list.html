@@ -21,7 +21,7 @@
           {% for scene in scenes %}
             <tr>
               {% if scene.status == 'downloaded' %}
-                <td><a href="{{ scene.scene_url }}">{{ scene.scene_name }}</a></td>
+                <td><a href="{% url 'imagery:scene' scene.scene_name %}">{{ scene.scene_name }}</a></td>
               {% else %}
                 <td>{{ scene.scene_name }}</td>
               {% endif %}
