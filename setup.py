@@ -32,6 +32,21 @@ if sys.argv[-1] == 'tag':
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
+def get_requirements(filepath):
+    ''' parse a file of requirements and return a list of requirements within
+    '''
+    requirements_file = open(filepath)
+    requirements = []
+    for requirement in requirements_file.readlines():
+        # ignore comments and extra links
+        if not requirement  or requirement.startswith('#') \
+           or requirement.startswith('git')  \
+           or requirement.startswith('http') \
+           or requirement.startswith('-r'):
+            continue
+        requirements.append(requirement)
+    return requirements
+
 setup(
     name='imagery',
     version=version,
@@ -44,8 +59,11 @@ setup(
         'imagery',
     ],
     include_package_data=True,
-    install_requires=[
-    ],
+    install_requires=get_requirements('requirements.txt'),
+    extras_require={
+        'test': get_requirements('requirements-test.txt'),
+        'dev': get_requirements('requirements_dev.txt')
+    },
     license="BSD",
     zip_safe=False,
     keywords='imagery',
@@ -62,6 +80,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',        
+        'Programming Language :: Python :: 3.5',
     ],
 )
