@@ -1,7 +1,7 @@
 django>=1.9.0
 psycopg2==2.6.1
 celery==3.1.19
-lc8_download==0.2.1
+lc8_download==0.3.0
 pyquery==1.2.9
 djangorestframework==3.3.2
 djangorestframework-gis==0.10

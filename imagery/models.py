@@ -313,10 +313,7 @@ class ScheduledDownload(models.Model):
                 downloaded = download(self.next_scene_name(), bands)
                 self.create_scene()
                 for path, size in downloaded:
-                    if getsize(path) == size:
-                        self.create_image(path.split('/')[-1])
-                    else:
-                        remove(path)
+                    self.create_image(path.split('/')[-1])
                 return downloaded
             except DownloaderErrors:
                 return []
@@ -331,10 +328,7 @@ class ScheduledDownload(models.Model):
                 try:
                     downloaded = download(last_scene.name, bands)
                     for path, size in downloaded:
-                        if getsize(path) == size:
-                            self.create_image(path.split('/')[-1])
-                        else:
-                            remove(path)
+                        self.create_image(path.split('/')[-1])
                     return downloaded
                 except RemoteFileDoesntExist:
                     if last_scene.status != 'dl_failed':
