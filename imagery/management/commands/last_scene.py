@@ -99,6 +99,14 @@ class Command(BaseCommand):
             help='''File to put scene names found'''
         )
 
+        parser.add_argument(
+            '--log_file',
+            '-l',
+            dest='log_file',
+            metavar="FILE",
+            help='''File to put logs'''
+        )
+
     def handle(self, **options):
         '''Command execution '''
 
@@ -113,14 +121,16 @@ class Command(BaseCommand):
         schedule = options['schedule']
         output_file = options['output']
         ops_file = options['file']
+        verbosity = options['verbosity']
+        log_file = options['log_file']
 
         logger.info('Options:')
 
         if ops_file:
             paths_rows = self.get_from_file(ops_file, sep)
 
-        if options['verbosity']:
-            self.enable_verbose()
+        if verbosity:
+            self.enable_verbose(verbosity, log_file)
 
         #if not len(paths_rows):
         #    raise Exception('Paths and rows are invalid')
@@ -176,12 +186,20 @@ class Command(BaseCommand):
             raise Exception('Invalid date: %s. Must be in the format dd/mm/yyyy' % str_date)
         return result
 
-    def enable_verbose(self):
+    def enable_verbose(self, level, log_file=None):
         '''Enable to show logs on standard output'''
-        formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+        log_format = '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s'
 
-        handler = logging.StreamHandler()
-        handler.setLevel(logging.DEBUG)
+        log_level = logging.DEBUG if level > 1 else logging.INFO
+
+        if log_file:
+            handler = logging.FileHandler(log_file)
+        else:
+            handler = logging.StreamHandler()
+            log_format = '%(levelname)s - %(message)s'
+
+        formatter = logging.Formatter(log_format)
+        handler.setLevel(log_level)
         handler.setFormatter(formatter)
 
         logger.addHandler(handler)
