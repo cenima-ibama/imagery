@@ -46,6 +46,7 @@ class Scene(models.Model):
         )
 
     status_options = (
+        ('created', _('Created')),
         ('downloading', _('Downloading')),
         ('dl_failed', _('Download Failed')),
         ('downloaded', _('Downloaded')),
@@ -335,6 +336,35 @@ class ScheduledDownload(models.Model):
                         last_scene.status = 'dl_failed'
                         last_scene.save()
                     return []
+
+            elif last_scene.status == 'created':
+                try:
+                    downloaded = download(last_scene.name, bands)
+                    last_scene.status = 'downloaded'
+                except RemoteFileDoesntExist:
+                    if last_scene.status != 'dl_failed':
+                        last_scene.status = 'dl_failed'
+
+                try:
+                    geom = Polygon(get_bounds(self.next_scene_name()))
+                except IndexError:
+                    geom = None
+
+                try:
+                    cloud_rate = get_cloud_rate(self.next_scene_name())
+                except FileNotFoundError:
+                    cloud_rate = None
+
+                last_scene.save()
+
+                if downloaded:
+                    for path, size in downloaded:
+                        self.create_image(path.split('/')[-1])
+                else:
+                    downloaded = []
+
+                return downloaded
+
             else:
                 if last_scene.status == 'downloading':
                     last_scene.status = 'downloaded'

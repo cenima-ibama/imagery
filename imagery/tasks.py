@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from celery import group, shared_task
-from lc8_download.lc8 import DownloaderErrors
+from lc8_download.lc8 import DownloaderErrors, Downloader
+
+import logging
 
 from os import listdir
 from os.path import join, getsize, isfile
@@ -8,11 +10,13 @@ from datetime import date, timedelta
 
 from django.contrib.gis.geos import Polygon
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 from .models import Scene, Image, ScheduledDownload, SceneRequest
 from .utils import calendar_date, get_bounds, get_cloud_rate, download
 from .utils import get_sat_code, send_multipart_email
 
+logger = logging.getLogger(__name__)
 
 @shared_task(bind=True)
 def download_all(self):
@@ -157,11 +161,50 @@ def not_found_scenes_alert():
                 to_email=settings.NOT_FOUND_SCENES_ADMIN_EMAILS
                 )
         except AttributeError:
-            import logging
-            logger = logging.getLogger(__name__)
+
             logger.error(
                 """There are scene requests that require manual download but we
                 could not send email because the variables SERVER_EMAIL or
                 NOT_FOUND_SCENES_ADMIN_EMAILS are not configured in your
                 settings."""
             )
+
+
+def find_last_scene(path, row, min_date=None, max_date=None, prefix='LC8', sufix='LGN00'):
+    '''Search to the earliest scene in the period (min_date, max_date). The
+    default value to max_date is current date, and the min_date is 30 days later
+    to max_date'''
+
+    found = False
+    downloader = None
+    max_date = max_date or date.today()
+    min_date = min_date or max_date - timedelta(days=30)
+    current_date = date(max_date.year, max_date.month, max_date.day)
+
+    logger.info('Starting requests')
+
+    while not downloader and current_date >= min_date:
+
+        logger.info('Searching scene')
+        logger.debug('Date: %s' % current_date)
+        scene_name = create_scene_name(prefix, path, row, current_date, sufix)
+        logger.debug('Scene name: %s' % scene_name)
+        try :
+            downloader = Downloader(scene_name)
+            found = True
+        except DownloaderErrors as error:
+            logger.info('Scene %s not found.' % scene_name)
+
+        current_date -= timedelta(days=1)
+
+    return scene_name if found else None
+
+
+def create_scene_name(prefix, path, row, date, sufix):
+
+    year_day = date.timetuple().tm_yday
+    days = ('%s' % year_day).zfill(3)
+    row = ('%s' % row).zfill(3)
+    path = ('%s' % path).zfill(3)
+    year = date.timetuple().tm_year
+    return '%s%s%s%s%s%s' % (prefix, path, row, year, days, sufix)
