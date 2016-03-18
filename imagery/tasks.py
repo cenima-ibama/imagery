@@ -23,8 +23,8 @@ def download_all(self):
     """Download all new Scenes of ScheduledDownloads."""
     try:
         for sd in ScheduledDownload.objects.all():
-            sd.download_new_scene()
-            sd.check_last_scene()
+            sd.download_new_scene(settings.DOWNLOAD_BANDS)
+            sd.check_last_scene(settings.DOWNLOAD_BANDS)
     except:
         raise self.retry(countdown=10)
 

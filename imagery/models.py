@@ -307,7 +307,7 @@ class ScheduledDownload(models.Model):
             scene=Scene.objects.get(name=image_name.split('_')[0])
             )
 
-    def download_new_scene(self, bands):
+    def band(self, bands):
         """Download the bands B4, B5, B6 and BQA of the next scene."""
         if self.has_new_scene():
             try:
@@ -346,12 +346,12 @@ class ScheduledDownload(models.Model):
                         last_scene.status = 'dl_failed'
 
                 try:
-                    geom = Polygon(get_bounds(self.next_scene_name()))
+                    geom = Polygon(get_bounds(last_scene.name))
                 except IndexError:
                     geom = None
 
                 try:
-                    cloud_rate = get_cloud_rate(self.next_scene_name())
+                    cloud_rate = get_cloud_rate(last_scene.name)
                 except FileNotFoundError:
                     cloud_rate = None
 
