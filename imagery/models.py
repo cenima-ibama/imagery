@@ -346,12 +346,12 @@ class ScheduledDownload(models.Model):
                         last_scene.status = 'dl_failed'
 
                 try:
-                    geom = Polygon(get_bounds(self.next_scene_name()))
+                    geom = Polygon(get_bounds(last_scene.name))
                 except IndexError:
                     geom = None
 
                 try:
-                    cloud_rate = get_cloud_rate(self.next_scene_name())
+                    cloud_rate = get_cloud_rate(last_scene.name)
                 except FileNotFoundError:
                     cloud_rate = None
 
