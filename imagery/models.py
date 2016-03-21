@@ -308,7 +308,7 @@ class ScheduledDownload(models.Model):
             )
 
     def download_new_scene(self, bands):
-        """Download the bands B4, B5, B6 and BQA of the next scene. """
+        """Download the bands B4, B5, B6 and BQA of the next scene."""
         if self.has_new_scene():
             try:
                 downloaded = download(self.next_scene_name(), bands)
