@@ -307,7 +307,7 @@ class ScheduledDownload(models.Model):
             scene=Scene.objects.get(name=image_name.split('_')[0])
             )
 
-    def download_new_scene(self, bands):
+    def band(self, bands):
         """Download the bands B4, B5, B6 and BQA of the next scene."""
         if self.has_new_scene():
             try:
