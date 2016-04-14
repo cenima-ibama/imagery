@@ -240,14 +240,13 @@ def find_last_scene(path, row, min_date=None, max_date=None, prefix='LC8', sufix
 
 
 def create_scene_name(prefix, path, row, date, sufix):
-
+    '''Return the scene name'''
     year_day = date.timetuple().tm_yday
     days = ('%s' % year_day).zfill(3)
     row = ('%s' % row).zfill(3)
     path = ('%s' % path).zfill(3)
     year = date.timetuple().tm_year
     return '%s%s%s%s%s%s' % (prefix, path, row, year, days, sufix)
-
 
 
 @shared_task
@@ -265,8 +264,6 @@ def validate_geometry_not_null(self):
             if last_geom:
                 scene.geom = last_geom.geom
                 scene.save()
-                print('Geometry from %s was updated' % scene.name)
+                logger.info('Geometry from %s was updated' % scene.name)
             else:
-                print('Theres no scenes without geometry')
-
-
+                logger.info("There's no scenes without geometry")
