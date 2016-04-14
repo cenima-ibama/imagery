@@ -247,3 +247,26 @@ def create_scene_name(prefix, path, row, date, sufix):
     path = ('%s' % path).zfill(3)
     year = date.timetuple().tm_year
     return '%s%s%s%s%s%s' % (prefix, path, row, year, days, sufix)
+
+
+
+@shared_task
+def validate_geometry_not_null(self):
+    """Validate geometry on each scene if geometry is None
+    and update geom with a geometry from another scene with the same
+    path and row
+    """
+
+    scenes = Scene.objects.filter(geom__isnull=True)
+
+    for scene in scenes:
+        if Scene.objects.filter(path=scene.path, row=scene.row, geom__isnull=False).count() > 0:
+            last_geom = Scene.objects.filter(path=scene.path, row=scene.row, geom__isnull=False)[0]
+            if last_geom:
+                scene.geom = last_geom.geom
+                scene.save()
+                print('Geometry from %s was updated' % scene.name)
+            else:
+                print('Theres no scenes without geometry')
+
+
