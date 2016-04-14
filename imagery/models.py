@@ -418,7 +418,8 @@ class SceneRequest(models.Model):
         ('pending', _('Pending')),
         ('downloading', _('Downloading')),
         ('downloaded', _('Downloaded')),
-        ('not_found', _('Not found'))
+        ('not_found', _('Not found')),
+        ('dl_failed', _('Download Failed')),
     )
 
     scene_name = models.CharField(_('Scene name'), max_length=21, unique=True,

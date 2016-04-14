@@ -29,7 +29,7 @@ class Command(BaseCommand):
             'path_row',
             nargs='*',
             type=str,
-            help='''path(s) and row(s) to search'''
+            help='''path(s) and row(s) to search, e.g. 231/088'''
         )
 
         parser.add_argument(
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             '-s',
             dest='min_date',
             help='''Minimum date to search the scene.
-                    Default value is 30 days later to current date'''
+                    Default value is 32 days later to current date'''
         )
 
         parser.add_argument(
@@ -53,7 +53,7 @@ class Command(BaseCommand):
             dest='prefix',
             type=str,
             default='LC8',
-            help='''Prefix in the scene name. E. g. LT5'''
+            help='''Prefix in the scene name, e.g. LT5'''
         )
 
         parser.add_argument(
@@ -62,7 +62,7 @@ class Command(BaseCommand):
             dest='sufix',
             type=str,
             default='LGN00',
-            help='''Sufix in the scene name. E. g. LGN00'''
+            help='''Sufix in the scene name, e.g. LGN00'''
         )
 
         parser.add_argument(
@@ -132,8 +132,8 @@ class Command(BaseCommand):
         if verbosity:
             self.enable_verbose(verbosity, log_file)
 
-        #if not len(paths_rows):
-        #    raise Exception('Paths and rows are invalid')
+        if not len(paths_rows):
+            raise Exception('Paths and rows are invalid')
 
         logger.debug('Path and Rows: %s' % paths_rows)
         logger.info('Starting')
@@ -156,14 +156,10 @@ class Command(BaseCommand):
                 min_date,
                 max_date,
                 prefix,
-                sufix
-            )
+                sufix)
 
             if scene_name:
-                logger.info('Scene found: %s' % scene_name)
                 scene_names.append(scene_name)
-            else:
-                logger.info('Scene not found: %s' % scene_name)
 
         if schedule:
             self.schedule_downloads(scene_names)
@@ -188,7 +184,7 @@ class Command(BaseCommand):
 
     def enable_verbose(self, level, log_file=None):
         '''Enable to show logs on standard output'''
-        log_format = '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s'
+        log_format = '[%(asctime)s: %(levelname)s | %(process)d - %(name)s] %(message)s'
 
         log_level = logging.DEBUG if level > 1 else logging.INFO
 
@@ -196,7 +192,7 @@ class Command(BaseCommand):
             handler = logging.FileHandler(log_file)
         else:
             handler = logging.StreamHandler()
-            log_format = '%(levelname)s - %(message)s'
+            log_format = '%(levelname)s :: %(name)s :: %(process)d - %(message)s'
 
         formatter = logging.Formatter(log_format)
         handler.setLevel(log_level)
