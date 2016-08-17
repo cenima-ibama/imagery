@@ -23,8 +23,12 @@ $(document).ready(function(){
       url = url + "name=" + scene + "&";
     if (path && path != "")
       url = url + "path=" + path + "&";
-    if (row && row != "")
-      url = url + "row=" + row + "&";
+    if (row && row != ""){
+        if(row.length < 3){
+          row = "0" + row;
+        }
+        url = url + "row=" + row + "&";
+    }
     if (sat && sat != "")
       url = url + "sat=" + sat + "&";
     if (status && status != "")
